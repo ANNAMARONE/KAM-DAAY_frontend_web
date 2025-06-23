@@ -1,0 +1,13 @@
+:root {
+    --primary: #151D53;
+    --secondary: #FAC710;
+    --background: #F2F3F7;
+    --light-accent: #FDEEB7;
+    --accent: #4353FF;
+  
+    --text-dark: #151D53;
+    --text-light: #ffffff;
+    --font-family-base: 'Inter', sans-serif;
+    --border-radius: 12px;
+  }
+  

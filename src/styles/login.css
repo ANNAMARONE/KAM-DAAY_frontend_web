@@ -1,0 +1,168 @@
+.LoginContaine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    max-width: 1000px; 
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .LcontaineGauche {
+    width: 50%;
+    height: 88.5vh;
+    padding: 30px;
+    color: white;
+    background-image:url('../assets/images/image1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: flex-start;
+    border-radius: 12px 0 0 12px;
+    position: relative;
+  }
+  
+  /* Réduire la taille du logo */
+  .logo {
+    width:294px;
+    height: auto;
+    margin-top: 20%;
+    margin-bottom: 40px;
+    
+  }
+  
+  /* Titre */
+  .LcontaineGauche h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  /* Liste des avantages */
+  .avantages ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .avantages li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .avantages li span {
+    color: #FDEEB7;
+    margin-right: 10px;
+    font-size: 24px;
+  }
+  
+  /* Bloc droit (formulaire) */
+  .LcontainerDroite {
+    width: 50%;
+    height: 95.5vh;
+    background-color: white;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 0 12px 12px 0;
+  }
+  
+  .LcontainerDroite h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+  }
+  
+  .LcontainerDroite form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .LcontainerDroite label {
+    font-weight: bold;
+    margin-top: 12px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .LcontainerDroite input,
+  .LcontainerDroite select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 16px;
+    color: var(--text-dark);
+  }
+  
+  .LcontainerDroite button {
+ background-color: var(--secondary);
+  color: var(--text-dark);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  }
+  .LcontainerDroite button:hover {
+    background-color: var(--accent);
+    color: var(--text-light);
+  }
+  .LcontainerDroite p {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .LcontainerDroite a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .LcontainerDroite a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .LoginContaine {
+      flex-direction: column;
+      height: auto;
+      max-width: 90%;
+    }
+
+    .LcontainerDroite {
+      width: 100%;
+      height: auto;
+    }
+  
+    .LcontaineGauche img {
+      border-radius: 12px 12px 0 0;
+    }
+  
+    .LcontainerDroite {
+      border-radius: 0 0 12px 12px;
+    }
+    .LcontaineGauche {
+        width: 100%;
+        height: auto;
+        border-radius: 12px 12px 0 0;
+        align-items: center;
+        text-align: center;
+      }
+    
+      .logo {
+        width: 60px;
+      }
+  }
+  

@@ -1,0 +1,176 @@
+.RegisterContaine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    max-width: 1000px; 
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .RcontaineGauche {
+    width: 50%;
+    height: 88.5vh;
+    padding: 30px;
+    color: white;
+    background-image:url('../assets/images/image1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: flex-start;
+    border-radius: 12px 0 0 12px;
+    position: relative;
+  }
+  
+  /* Réduire la taille du logo */
+  .logo {
+    width:294px;
+    height: auto;
+    margin-top: 20%;
+    margin-bottom: 40px;
+    
+  }
+  
+  /* Titre */
+  .RcontaineGauche h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  /* Liste des avantages */
+  .avantages ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .avantages li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .avantages li span {
+    color: #FDEEB7;
+    margin-right: 10px;
+    font-size: 24px;
+  }
+  
+  /* Bloc droit (formulaire) */
+  .RcontainerDroite {
+    width: 50%;
+    height: 95.5vh;
+    background-color: white;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 0 12px 12px 0;
+  }
+  
+  .RcontainerDroite h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
+  }
+  
+  .RcontainerDroite form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .RcontainerDroite label {
+    font-weight: bold;
+    margin-top: 12px;
+    display: block;
+    margin-bottom: 5px;
+    
+  }
+  .error {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+  }
+  
+  
+  .RcontainerDroite input,
+  .RcontainerDroite select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 16px;
+    color: var(--text-dark);
+  }
+  
+  .RcontainerDroite button {
+ background-color: var(--secondary);
+  color: var(--text-dark);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  }
+  .RcontainerDroite button:hover {
+    background-color: var(--accent);
+    color: var(--text-light);
+  }
+  .RcontainerDroite p {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .RcontainerDroite a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .RcontainerDroite a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .RegisterContaine {
+      flex-direction: column;
+      height: auto;
+      max-width: 90%;
+    }
+
+    .RcontainerDroite {
+      width: 100%;
+      height: auto;
+    }
+  
+    .RcontaineGauche img {
+      border-radius: 12px 12px 0 0;
+    }
+  
+    .RcontainerDroite {
+      border-radius: 0 0 12px 12px;
+    }
+    .RcontaineGauche {
+        width: 100%;
+        height: auto;
+        border-radius: 12px 12px 0 0;
+        align-items: center;
+        text-align: center;
+      }
+    
+      .logo {
+        width: 60px;
+      }
+  }
+  
