@@ -9,16 +9,18 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login'; // ou utilise navigate()
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    return Promise.reject(error);
+  }
 );
+
 
 const ApiService = {
   login: (data) => api.post('/login', data),
@@ -26,7 +28,6 @@ const ApiService = {
   // Pour register, on vérifie si c'est un FormData (upload fichier)
   register: (data) => {
     if (data instanceof FormData) {
-      // Ne pas forcer Content-Type à 'application/json', axios gère automatiquement multipart/form-data
       return api.post('/register', data, {
         headers: {
           'Content-Type': 'multipart/form-data',

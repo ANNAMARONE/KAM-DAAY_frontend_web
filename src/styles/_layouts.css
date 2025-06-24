@@ -1,0 +1,235 @@
+/* CONTAINER */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: sans-serif;
+  color: black;
+}
+
+/* ========== HEADER ========== */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 6px 16px; 
+  
+ 
+}
+
+
+.header-left .logo {
+  height: 32px;
+  width: auto; /* ou 140px pour proportionner */
+}
+
+
+.header-center .welcome-message {
+  font-size: 20px;
+  margin: 0;
+  text-align: center;
+  color: black;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Barre de recherche */
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.search-input {
+  padding: 10px 16px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+  color: black;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-button {
+  background: none;
+  color: black;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.search-button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0 100px 100px 0;
+}
+
+.notification-icon .bell {
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+}
+
+.profile-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ========== BODY / SIDEBAR + MAIN ========== */
+.admin-body {
+  display: flex;
+  flex: 1;
+}
+
+.admin-sidebar {
+  width: 240px;
+  background-color: white;
+  color: black;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-radius: 0 10px 10px 0;
+  margin-top: -30px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: #151D53;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #eef2ff;
+  color: #4338ca;
+  transform: translateX(4px);
+}
+
+.nav-link svg {
+  margin-right: 10px;
+  font-size: 30px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  transform: translateX(4px);
+}
+
+.submenu {
+  padding-left: 20px;
+}
+
+.nav-sublink {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #111827;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-sublink:hover {
+  background-color: #e5e7eb;
+  color: #151D53;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+.nav-link.active,
+.nav-sublink.active {
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.nav-link.active svg,
+.nav-sublink.active svg {
+  color: white;
+}
+
+.submenu-toggle {
+  cursor: pointer;
+}
+.nav-link.active {
+  background-color: #4f46e5; /* violet indigo */
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.nav-sublink.active {
+  background-color: #6366f1;
+  color: #fff;
+}
+/* Style spécial pour le lien "Ajouter un client" */
+.special-link {
+  background-color: #FDEEB7;
+  color: #151D53 !important;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(91, 37, 245, 0.2);
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.special-link:hover {
+  background-color: #151D53;
+  color: #FDEEB7 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(91, 37, 245, 0.3);
+}
+
+.special-link .icon-special {
+  font-size: 1.3em;
+  margin-right: 10px;
+}

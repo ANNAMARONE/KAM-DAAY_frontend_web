@@ -57,7 +57,6 @@ export default function Register() {
     } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
       errors.username = "Le nom d'utilisateur ne doit contenir que des lettres, chiffres ou underscores.";
     }
-
     if (!password) {
       errors.password = "Le mot de passe est requis.";
     } else if (password.length < 8) {

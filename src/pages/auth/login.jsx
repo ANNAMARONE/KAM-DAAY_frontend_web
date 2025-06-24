@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import ApiService from '../../services/ApiService';
 
 // Images et styles
 import Logo from '../../assets/images/logo_dark.png';
@@ -9,28 +10,68 @@ import '../../styles/theme.css';
 import '../../index.css';
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const validateForm = () => {
+    let isValid = true;
+    setUsernameError('');
+    setPasswordError('');
+
+    if (username.trim() === '') {
+      setUsernameError("Le nom d'utilisateur est requis.");
+      isValid = false;
+    } else if (username.length < 5 || username.length > 20) {
+      setUsernameError("Le nom d'utilisateur doit contenir entre 5 et 20 caractères.");
+      isValid = false;
+    } 
+
+    if (password.trim() === '') {
+      setPasswordError("Le mot de passe est requis.");
+      isValid = false;
+    } else if (password.length < 4) {
+      setPasswordError("Le mot de passe doit contenir au moins 8 caractères.");
+      isValid = false;
+    }
+
+    return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logique pour la connexion (ex: appel API Laravel)
-    console.log(formData);
+
+    if (!validateForm()) return;
+
+    try {
+      const response = await ApiService.login({ username, password });
+
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+        // verifier le rôle de l'utilisateur
+        if (response.data.user.role === 'admin') {
+          window.location.href = '/Admin dasboard';
+        }else if (response.data.user.role === 'vendeuse') {
+          window.location.href = '/dasboard';
+        }
+
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("Nom d'utilisateur ou mot de passe incorrect.");
+      } else {
+        console.error("Erreur lors de la connexion:", error);
+        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+      }
+    }
   };
 
   return (
     <div className="LoginContaine">
-      {/* Partie gauche avec fond + logo + avantages */}
+      {/* Partie gauche */}
       <div className="LcontaineGauche">
         <img src={Logo} alt="Logo" className="logo" />
         <h1>Plateforme de <br /> gestion relation client</h1>
@@ -43,7 +84,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Partie droite avec le formulaire */}
+      {/* Partie droite */}
       <div className="LcontainerDroite">
         <h1>Se connecter à mon compte</h1>
         <form onSubmit={handleSubmit}>
@@ -51,19 +92,21 @@ export default function Login() {
           <input
             type="text"
             name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            
           />
+          {usernameError && <small className="error">{usernameError}</small>}
 
           <label>Mot de passe :</label>
           <input
             type="password"
             name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          
           />
+          {passwordError && <small className="error">{passwordError}</small>}
 
           <button type="submit">Se connecter</button>
         </form>
@@ -73,4 +116,3 @@ export default function Login() {
     </div>
   );
 }
-

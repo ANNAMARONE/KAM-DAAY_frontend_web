@@ -104,6 +104,12 @@
     font-size: 16px;
     color: var(--text-dark);
   }
+  .error {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+  }
   
   .LcontainerDroite button {
  background-color: var(--secondary);
