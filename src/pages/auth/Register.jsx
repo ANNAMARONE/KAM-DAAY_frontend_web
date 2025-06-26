@@ -210,7 +210,7 @@ export default function Register() {
           <input type="text" name="GIE" value={GIE} onChange={handleChange} />
           {validationErrors.GIE && <small className="error">{validationErrors.GIE}</small>}
 
-          <button type="submit" disabled={isSubmitting}>S'inscrire</button>
+          <button type="submit" className='actionbutton' disabled={isSubmitting}>S'inscrire</button>
           {validationErrors.general && <small className="error">{validationErrors.general}</small>}
         </form>
 

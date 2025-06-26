@@ -111,7 +111,7 @@
     display: block;
   }
   
-  .LcontainerDroite button {
+  .LcontainerDroite .actionbutton {
  background-color: var(--secondary);
   color: var(--text-dark);
   padding: 12px 20px;
@@ -121,7 +121,7 @@
   transition: background-color 0.3s ease;
   margin-top: 20px;
   }
-  .LcontainerDroite button:hover {
+  .LcontainerDroite .actionbutton:hover {
     background-color: var(--accent);
     color: var(--text-light);
   }
@@ -138,6 +138,130 @@
   .LcontainerDroite a:hover {
     text-decoration: underline;
   }
+  .remember-forgot-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+  }
+  
+  .remember-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .remember-checkbox {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .forgot-password-link {
+    color: #7c3aed; 
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: none;
+    background: none;
+    
+  }
+  
+  .forgot-password-link:hover {
+    text-decoration: underline;
+    border: none;
+    background: none;
+    color: #5b21b6;
+  }
+/* mot de passe oublier  */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.3s ease-out;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.modal-content button[type="submit"] {
+  background-color: #7c3aed; /* violet doux */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button[type="submit"]:hover {
+  background-color: #5b21b6;
+}
+
+.modal-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  } to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  } to {
+    opacity: 1;
+  }
+}
+
   
   /* Responsive */
   @media (max-width: 900px) {

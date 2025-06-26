@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import ApiService from '../../services/ApiService';
+import ForgotPasswordRequestModal from './ForgotPasswordRequestModal';
 
 // Images et styles
 import Logo from '../../assets/images/logo_dark.png';
@@ -14,7 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const validateForm = () => {
     let isValid = true;
     setUsernameError('');
@@ -107,12 +108,37 @@ export default function Login() {
           
           />
           {passwordError && <small className="error">{passwordError}</small>}
+                  <div className="remember-forgot-container">
+          <div className="remember-section">
+            <input
+              type="checkbox"
+              name="remember"
+              id="remember"
+              className="remember-checkbox"
+            />
+            <label htmlFor="remember">Se souvenir de moi</label>
+          </div>
 
-          <button type="submit">Se connecter</button>
+                    <button
+            type="button"
+            className="forgot-password-link"
+            onClick={() => setShowForgotModal(true)}
+          >
+            Mot de passe oublié ?
+          </button>
+        </div>
+
+          <button className='actionbutton' type="submit">Se connecter</button>
         </form>
-
+        {showForgotModal && (
+  <ForgotPasswordRequestModal onClose={() => setShowForgotModal(false)} />
+)}
         <p>Vous n’avez pas encore de compte ? <Link to="/register">Créer un compte</Link></p>
       </div>
     </div>
   );
+  
 }
+
+
+
