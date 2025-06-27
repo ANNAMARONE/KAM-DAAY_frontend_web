@@ -1,87 +1,131 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { PRODUCT_BASE_URL } from '../../services/ApiService'
+import ApiService from '../../services/ApiService'
+import '../../styles/ventes.css'
 
 function Ventes() {
   const [produits, setProduits] = useState([])
   const [vente, setVente] = useState([])
-
+  const [client, setClient] = useState({
+    nom: '',
+    prenom: '',
+    telephone: '',
+    adresse: ''
+  })
   useEffect(() => {
-    const token = localStorage.getItem('token')
-  
-    axios.get('http://127.0.0.1:8000/api/produits', {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const fetchProduits = async () => {
+      try {
+        const res = await ApiService.getProduits()
+        if (Array.isArray(res.data.produits)) {
+          setProduits(res.data.produits)
+          console.log("Produits chargés :", res.data.produits)
+        } else {
+          console.error("Les produits ne sont pas un tableau :", res.data)
+        }
+      } catch (err) {
+        console.error("Erreur lors du chargement des produits :", err)
       }
-    })
-    .then(res => {
-      if (Array.isArray(res.data.produits)) {
-        setProduits(res.data.produits) 
-        console.log("Produits chargés :", res.data.produits)
-      } else {
-        console.error("Les produits ne sont pas un tableau :", res.data)
-      }
-    })
-    .catch(err => {
-      console.error("Erreur lors du chargement des produits :", err)
-    })
+    }
+
+    fetchProduits()
   }, [])
-  
 
   const handleSelection = (produit) => {
     const exists = vente.find(p => p.produit_id === produit.id)
     if (!exists) {
       setVente([...vente, {
         produit_id: produit.id,
-        quantite: 1,
+        quantite: produit.quantite || 1,
         prix_unitaire: produit.prix_unitaire,
-        montant_total: produit.prix_unitaire
+        montant_total: produit.prix_unitaire * (produit.quantite || 1)
       }])
     }
   }
 
-  const handleSubmit = () => {
-    const payload = {
-      client_id: 1, // à adapter
-      produits: vente
-    }
-
-    axios.post('http://127.0.0.1:8000/api/ventes', payload)
-      .then(res => {
-        alert('Vente enregistrée avec succès !')
-        setVente([])
-      })
-      .catch(err => {
-        console.error(err)
-        alert('Erreur lors de l\'enregistrement')
-      })
+  const handleQuantiteChange = (produitId, newQuantite) => {
+    setVente(prev =>
+      prev.map(p =>
+        p.produit_id === produitId
+          ? { ...p, quantite: newQuantite, montant_total: newQuantite * p.prix_unitaire }
+          : p
+      )
+    )
   }
+
+  const handleSubmit = async () => {
+    const payload = {
+      produits: vente.map(p => ({
+        produit_id: p.produit_id,
+        quantite: p.quantite
+      }))
+    }
+  
+    // Cas 1 : nouveau client
+    if (client.nom && client.prenom) {
+      payload.nom = client.nom
+      payload.prenom = client.prenom
+      payload.telephone = client.telephone
+      payload.adresse = client.adresse
+      payload.type = 'particulier'
+    }
+    // Cas 2 : client existant (dans un futur select dropdown)
+    else if (client.client_id) {
+      payload.client_id = client.client_id
+    }
+    // Cas 3 : rien du tout — erreur utilisateur
+    else {
+      alert("Veuillez renseigner au moins un client.")
+      return
+    }
+  
+    try {
+      const res = await ApiService.addVente(payload)
+      if (res.status === 201) {
+        console.log("✅ Vente enregistrée avec succès")
+        setVente([])
+        setClient({ nom: '', prenom: '', telephone: '', adresse: '' })
+      } else {
+        console.error("❌ Erreur lors de l'enregistrement :", res.data)
+      }
+    } catch (err) {
+      console.error("❌ Erreur lors de l'enregistrement :", err)
+    }
+  }
+  
 
   return (
     <div className="vente-container">
-      <h2>Liste des Produits</h2>
-      <ul>
+   <div className="produit-entete">
+  <div>
+    <h2>Liste des Produits</h2>
+    <p>Veuillez sélectionner les produits à vendre.</p>
+  </div>
+  <button>Ajouter un produit</button>
+</div>
+
+   <div className='list-produit'>
+   <ul className='produitListe'>
         {produits.map(produit => (
           <li key={produit.id}>
-            {produit.nom} - {produit.prix_unitaire} FCFA / {produit.unite}
-            <input
-              type="number"
-              min="1"
-              defaultValue="1"
-              onChange={(e) => {
-                const qte = parseInt(e.target.value)
-                if (qte > 0) {
-                  handleSelection({ ...produit, quantite: qte })
-                }
-              }}
+            <img
+              src={`${PRODUCT_BASE_URL}/${produit.image}`}
+              alt={produit.nom}
+              width="100"
+              height="100"
             />
-            <span>Quantité</span>
-            <img src={produit.image} alt="" />
-            <button onClick={() => handleSelection(produit)}>Ajouter</button>
+            <div>
+              <p>{produit.nom}</p>  
+              <p>{produit.prix_unitaire} FCFA / {produit.unite}</p>
+           
+              <button onClick={() => handleSelection(produit)}>Ajouter</button>
+            </div>
           </li>
         ))}
       </ul>
+   </div>
 
-      {vente.length > 0 && (
+     <div className='infoVente'>
+     {vente.length > 0 && (
         <>
           <h3>Produits sélectionnés</h3>
           <table>
@@ -106,8 +150,7 @@ function Ventes() {
                         min={1}
                         onChange={(e) => {
                           const qte = parseInt(e.target.value)
-                          handleQuantiteChange(item.produit_id, qte)
-                          item.montant_total = qte * item.prix_unitaire
+                          if (qte > 0) handleQuantiteChange(item.produit_id, qte)
                         }}
                       />
                     </td>
@@ -117,10 +160,48 @@ function Ventes() {
                 )
               })}
             </tbody>
+            <tfoot>
+  <tr style={{ fontWeight: 'bold', background: '#f3fef5' }}>
+    <td colSpan="3">Total</td>
+    <td>
+      {vente.reduce((sum, item) => sum + item.quantite * item.prix_unitaire, 0).toFixed(2)} FCFA
+    </td>
+  </tr>
+</tfoot>
+
           </table>
+          <h3>Informations du Client</h3>
+<div className="form-client">
+  <input
+    type="text"
+    placeholder="Nom"
+    value={client.nom}
+    onChange={(e) => setClient({ ...client, nom: e.target.value })}
+  />
+  <input
+    type="text"
+    placeholder="Prénom"
+    value={client.prenom}
+    onChange={(e) => setClient({ ...client, prenom: e.target.value })}
+  />
+  <input
+    type="tel"
+    placeholder="Téléphone"
+    value={client.telephone}
+    onChange={(e) => setClient({ ...client, telephone: e.target.value })}
+  />
+  <input
+    type="text"
+    placeholder="Adresse"
+    value={client.adresse}
+    onChange={(e) => setClient({ ...client, adresse: e.target.value })}
+  />
+</div>
+
           <button onClick={handleSubmit}>Enregistrer la vente</button>
         </>
       )}
+     </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
 export const PROFILE_BASE_URL = 'http://localhost:8000/images/profiles';
+export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage/';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -104,6 +105,24 @@ const ApiService = {
   //supprimer un client
   deleteClient: (id) => api.delete(`/supprimer_client/${id}`),
 
+//afficher les produits de l'utilisateur connecté
+
+  getProduits: () => api.get('/produits'),
+  //ajouter un produit  
+  addProduit: (data) => {
+    if (data instanceof FormData) {
+      return api.post('/ajouter_produit', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return api.post('/ajouter_produit', data);
+  },
+  //enregitrer un vente
+  addVente: (data) => {
+    return api.post('/ajouter_vente', data, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  },
 
   uploadImage: (file) => {
     const formData = new FormData();

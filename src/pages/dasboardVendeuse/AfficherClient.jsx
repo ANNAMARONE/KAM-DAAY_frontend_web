@@ -19,7 +19,14 @@ function AfficherClient() {
   const [showFilter, setShowFilter] = useState(false);
   const [showExportOptions, setShowExportOptions] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const clientsPerPage = 7;
+// Pagination logic
+const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+const indexOfLastClient = currentPage * clientsPerPage;
+const indexOfFirstClient = indexOfLastClient - clientsPerPage;
+const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -249,7 +256,7 @@ function AfficherClient() {
         </thead>
         <tbody>
           {filteredClients.length > 0 ? (
-            filteredClients.map(client => (
+            currentClients.map(client => (
               <tr key={client.id}>
                 <td>{client.id}</td>
                 <td>{client.prenom}</td>
@@ -280,6 +287,18 @@ function AfficherClient() {
           )}
         </tbody>
       </table>
+      <div className="pagination">
+  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+    <button
+      key={page}
+      onClick={() => setCurrentPage(page)}
+      className={page === currentPage ? 'active' : ''}
+    >
+      {page}
+    </button>
+  ))}
+</div>
+
       </div>
     </div>
   );
