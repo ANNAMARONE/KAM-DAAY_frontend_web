@@ -1,10 +1,26 @@
-import React from 'react'
+
+import React, { useEffect, useState } from 'react';
 import { FaUsers, FaShoppingCart, FaMoneyBillWave, FaSmile, FaChartLine, FaUserPlus, FaEye, FaFrown } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import '../../styles/theme.css'
 import '../../index.css'
 import '../../styles/vendeuseDasboard.css'
+import ApiService from '../../services/ApiService'
 function DasboardVendeuse() {
+  const [clients, setClients] = useState([]);
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await ApiService.getClients();
+        setClients(response.data);
+        setFilteredClients(response.data);
+      } catch (err) {
+        console.error('Erreur lors du chargement des clients', err);
+      }
+    };
+    fetchClients();
+  }, []);
+
   const navigate = useNavigate()
   return (
     <div className='AContainerDashboard'>
@@ -96,17 +112,15 @@ function DasboardVendeuse() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Fatou Ndiaye</td>
-                <td>77 123 45 67</td>
-                <td>Particulier</td>
-              </tr>
-              <tr>
-                <td>Aliou Sow</td>
-                <td>76 987 65 43</td>
-                <td>Revendeur</td>
-              </tr>
-            </tbody>
+  {clients.slice(0, 3).map(client => (
+    <tr key={client.id}>
+      <td>{client.nom} {client.prenom}</td>
+      <td>{client.telephone}</td>
+      <td>{client.type}</td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </section>
       </div>

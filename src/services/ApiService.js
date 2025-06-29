@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
 export const PROFILE_BASE_URL = 'http://localhost:8000/images/profiles';
-export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage/';
+export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -111,18 +111,51 @@ const ApiService = {
   //ajouter un produit  
   addProduit: (data) => {
     if (data instanceof FormData) {
-      return api.post('/ajouter_produit', data, {
+      return api.post('/ajouter/produits', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
     return api.post('/ajouter_produit', data);
   },
+  
+  updateProduit: (id, data) =>
+    api.post(`/produits/${id}?_method=PUT`, data),
+  
+  supprimerProduit: (id) =>
+    api.delete(`/produits/${id}`),
+  
+  updateStock: (id, data) =>
+    api.post(`/produits/${id}/stock`, data),
   //enregitrer un vente
   addVente: (data) => {
     return api.post('/ajouter_vente', data, {
       headers: { 'Content-Type': 'application/json' },
     });
   },
+//lancer une conversation 
+startWhatsAppConversation: (venteId) =>
+  api.get(`/vente/${venteId}/whatsapp`, {
+    headers: { 'Content-Type': 'application/json' },
+  }),
+  startWhatsAppConversationClient: (clientId) =>
+    api.get(`/clients/${clientId}/whatsapp`),
+//afficher l'historique de mes ventes
+  getMesVentes: () => api.get('/mes_ventes'),
+//afficher les ventes par date
+  filterVentesByDate: (startDate, endDate) =>
+    api.get('/ventes/filter-by-date', {
+      params: {
+        start_date: startDate,
+        end_date: endDate,
+      },
+    }),
+//noter une vente satisfait ou non satisfaite
+noterVente: (venteId, satisfait) => {
+  return api.post(`/ventes/${venteId}/noter/${satisfait}`);
+},
+//supprimer une vente
+supprimerVente: (id) => api.delete(`/ventes/${id}`),
+
 
   uploadImage: (file) => {
     const formData = new FormData();
@@ -131,7 +164,7 @@ const ApiService = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
-
+ 
   getImages: () => api.get('/images'),
 };
 

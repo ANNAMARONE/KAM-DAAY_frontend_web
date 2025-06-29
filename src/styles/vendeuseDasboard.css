@@ -1,10 +1,17 @@
 
 .AContainerDashboard {
-    background-color: #F5F5FD;
-    padding: 4rem;
-    min-height: 80vh;
-    width: 100%;
-  }
+  background-color: #F5F5FD;
+  padding: 30px;
+ 
+  margin: 20px auto;
+  width: 100%;
+  max-width: 100%; 
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: auto; 
+}
+
   
   .dashboard-title {
     font-size: 28px;
@@ -16,7 +23,8 @@
   .dashboard-cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 40px;
+    
   }
   
   .dashboard-card {
@@ -30,6 +38,7 @@
     gap: 15px;
     transition: all 0.3s ease;
     cursor: pointer;
+    
   }
   
   .dashboard-card:hover {
@@ -103,7 +112,37 @@
     width: 100%;
     border-collapse: collapse;
   }
+.admin-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   
+}
+  .admin-sidebar {
+    overflow-y: auto;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    top: 15%;
+    
+
+  }
+
+.admin-main {
+  margin-left: 250px; /* espace pour la sidebar */
+  padding: 2rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+}
+  .admin-body {
+    display: flex;
+    flex: 1;
+    margin-top: 70px; /* hauteur du header */
+    height: calc(100vh - 70px);
+  }
   .client-table th,
   .client-table td {
     border: 1px solid #ddd;

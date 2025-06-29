@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { MdInventory } from 'react-icons/md';
+
 import {
   AiOutlineHome, AiOutlineUser, AiOutlineLogout, AiOutlineShopping,
   AiOutlineBarChart, AiOutlineSetting, AiOutlineSearch, AiOutlineBell,
   AiOutlineUserAdd, AiOutlineTeam, AiOutlineQuestionCircle
 } from 'react-icons/ai'
 import { HiHandRaised } from 'react-icons/hi2'; 
-import { FaSearch, FaUser, FaBell } from 'react-icons/fa'
+import { FaSearch, FaBell } from 'react-icons/fa'
 import Logo from '../../assets/images/logo_light.png'
 import '../../styles/_layouts.css'
 import '../../styles/theme.css'
@@ -110,63 +112,53 @@ useEffect(() => {
                   <AiOutlineHome /> <span>Tableau de bord</span>
                 </NavLink>
               </li>
+
               <li>
               <NavLink 
                 to="/Afficher_client"
                 className={({ isActive }) => `nav-link special-link ${isActive ? 'active' : ''}`}
               >
                 <AiOutlineUserAdd className="icon-special" />
-                <span>Ajouter un client</span>
+                <span>Mes clients</span>
               </NavLink>
             </li>
               {/* gestion des ventes */}
               <li>
-                <NavLink to="ventes" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  <AiOutlineShopping /> <span>Ajouter un ventes</span>
+                <NavLink to="/ventes" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  <AiOutlineShopping /> <span>Ajouter une vente</span>
                 </NavLink>
               </li>
+             {/* Gestion de mes ventes */}
+           
               <li>
-                <NavLink to="/admin/feedback" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  <AiOutlineBell /> <span>Feedback</span>
+                <NavLink
+                 to="/afficher/ventes" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                 >
+                  <AiOutlineBell /> <span>Afficher mes ventes</span>
                 </NavLink>
               </li>
+
+            
+
 
               {/* Gestion Client */}
               <li>
-                <div className="nav-link submenu-toggle" onClick={() => setOpenClientMenu(!openClientMenu)}>
-                  <AiOutlineSetting /> <span>Gestion Client</span>
-                </div>
-                {openClientMenu && (
-                  <ul className="submenu">
-                    <li>
-                      <NavLink to="/admin/clients/ajouter" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineUserAdd /> <span>Ajouter client</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/admin/clients/liste" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineTeam /> <span>Voir les clients</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/admin/clients/rechercher" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineSearch /> <span>Rechercher</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
+                <NavLink to="/gestion/client" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  <AiOutlineSetting /> <span>Gestion des Clients</span>
+                </NavLink>
+             
               </li>
 
-              <li>
-                <NavLink to="/admin/Vente" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  <AiOutlineShopping /> <span>Gestion des ventes</span>
-                </NavLink>
-              </li>
-              <li>
+                <li>
+                  <NavLink to="/gestion/produit" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                    <MdInventory /> <span>Gestion des produits</span>
+                  </NavLink>
+                </li>
+              {/* <li>
                 <NavLink to="/admin/statistiques" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                   <AiOutlineBarChart /> <span>Statistiques</span>
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink to="/admin/parametres" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                   <AiOutlineSetting /> <span>Paramètres</span>

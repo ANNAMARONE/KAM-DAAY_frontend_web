@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: flex-start;
   background-color: #f5f5fd;
-  padding: 2rem 20rem;
+  padding: 2rem 5rem;
   box-sizing: border-box;
   margin: 0 auto;
  
@@ -20,7 +20,7 @@
     background-color: #ffffff;
     padding: 1.5rem 2rem;
     border-radius: 16px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    
     margin-bottom: 2rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -70,13 +70,14 @@
   
   .produitListe {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* ⬅️ augmente à 250px */
+    grid-template-columns: repeat(4, 1fr); /* ✅ 4 colonnes fixes */
     gap: 1.5rem;
     width: 100%;
     list-style: none;
     padding: 0;
     margin: 0;
   }
+  
   
   
   .produitListe li {
@@ -124,7 +125,7 @@
   }
   
   .produitListe button:hover {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    background: linear-gradient(135deg, #FDEEB7, #FAC710);
     transform: scale(1.05);
   }
   
@@ -143,7 +144,7 @@
     margin-bottom: 1rem;
     font-size: 1.4rem;
     color: #2c3e50;
-    border-left: 4px solid #2ecc71;
+    border-left: 4px solid #FAC710;
     padding-left: 0.6rem;
   }
   
@@ -182,7 +183,7 @@
   }
   
   .infoVente input[type="number"]:focus {
-    border-color: #2ecc71;
+    border-color: #FAC710;
     outline: none;
   }
   
@@ -204,13 +205,13 @@
   
   .form-client input:focus {
     outline: none;
-    border-color: #2ecc71;
+    border-color: #FAC710;
     background-color: #fff;
   }
   
   /* Bouton en bas */
   .infoVente button {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    background: linear-gradient(135deg, #FAC710, #FDEEB7);
     color: white;
     border: none;
     padding: 0.8rem 2rem;
@@ -223,16 +224,70 @@
   }
   
   .infoVente button:hover {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    background: linear-gradient(135deg, #FDEEB7, #FAC710);
     transform: translateY(-2px);
   }
   
   .infoVente tfoot td {
     padding: 1rem;
     font-weight: bold;
-    background-color: #e8fbe9;
-    color: #1e8449;
-    border-top: 2px solid #2ecc71;
+    background-color: #fdeeb76c;
+    color: #151D53;
+    border-top: 2px solid #FAC710;
+  }
+  .open-modal-btn {
+    padding: 0.5rem 1rem;
+    background-color: #FDEEB7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+  }
+  
+  .close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+  }
+  .infoVente .btn-retirer {
+    background:none;
+    color: #ff4d4f;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .infoVente .btn-retirer:hover {
+    background: #d9363e;
+    color: #ffff;
   }
   
   /* === Animation d’apparition === */

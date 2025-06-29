@@ -1,0 +1,138 @@
+/* === Conteneur global === */
+.produits-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9fafb;
+    min-height: 100vh;
+  }
+  
+  /* === Titre === */
+  .produits-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  /* === Formulaire ajout/modification === */
+  .form-produit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+  }
+  
+  .form-produit input,
+  .form-produit select {
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    flex: 1 1 200px;
+    background-color: #f0f4f8;
+  }
+  
+  .form-produit button {
+    padding: 0.6rem 1.2rem;
+    background-color: #4353FF;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .form-produit button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* === Tableau de produits === */
+  .table-produits {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  
+  .table-produits th,
+  .table-produits td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .table-produits thead {
+    background-color: #f1f5f9;
+  }
+  
+  .table-produits tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .table-produits img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  /* === Boutons d'action === */
+  .table-produits button {
+    padding: 0.4rem 0.8rem;
+    margin: 0 2px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .table-produits button:hover {
+    opacity: 0.9;
+  }
+  
+  .table-produits .btn-delete {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .table-produits .btn-delete:hover {
+    background-color: #b02a37;
+  }
+  
+  .table-produits .btn-edit {
+    background-color: #FAC710;
+    color: #333;
+  }
+  
+  .table-produits .btn-edit:hover {
+    background-color: #FAC710;
+  }
+  
+  .table-produits .btn-stock {
+    background-color: #4353FF;
+    color: white;
+  }
+  
+  .table-produits .btn-stock:hover {
+    background-color: #4353FF;
+    color: #ffff;
+  }
+  
+  /* === Input inline pour stock === */
+  .table-produits input[name="stock"] {
+    width: 80px;
+    padding: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    
+  }
+  

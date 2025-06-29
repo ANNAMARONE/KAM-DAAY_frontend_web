@@ -8,7 +8,7 @@ import ApiService from '../../services/ApiService';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 
 export default function Register() {
-  const [profile, setProfile] = useState(null);
+  // const [profile, setProfile] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -22,7 +22,7 @@ export default function Register() {
   const [validationErrors, setValidationErrors] = useState({});
 
   const resetForm = () => {
-    setProfile(null);
+    // setProfile(null);
     setUsername('');
     setPassword('');
     setPasswordConfirmation('');
@@ -40,13 +40,13 @@ export default function Register() {
 
     const errors = {};
 
-    if (!profile) {
-      errors.profile = "La photo de profil est requise.";
-    } else if (!['image/jpeg', 'image/png', 'image/jpg'].includes(profile.type)) {
-      errors.profile = "La photo de profil doit être au format JPG ou PNG.";
-    } else if (profile.size > 2 * 1024 * 1024) {
-      errors.profile = "La taille de l'image ne doit pas dépasser 2 Mo.";
-    }
+    // if (!profile) {
+    //   errors.profile = "La photo de profil est requise.";
+    // } else if (!['image/jpeg', 'image/png', 'image/jpg'].includes(profile.type)) {
+    //   errors.profile = "La photo de profil doit être au format JPG ou PNG.";
+    // } else if (profile.size > 2 * 1024 * 1024) {
+    //   errors.profile = "La taille de l'image ne doit pas dépasser 2 Mo.";
+    // }
 
     if (!username) {
       errors.username = "Le nom d'utilisateur est requis.";
@@ -107,7 +107,7 @@ export default function Register() {
 
     // Construction de FormData pour envoyer fichier + données
     const formData = new FormData();
-    formData.append('profile', profile);
+    // formData.append('profile', profile);
     formData.append('username', username);
     formData.append('password', password);
     formData.append('password_confirmation', passwordConfirmation);
@@ -171,9 +171,9 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} encType="multipart/form-data">
 
-          <label>Photo de profil :</label>
+          {/* <label>Photo de profil :</label>
           <input type="file" name="profile" accept="image/*" onChange={handleChange} />
-          {validationErrors.profile && <small className="error">{validationErrors.profile}</small>}
+          {validationErrors.profile && <small className="error">{validationErrors.profile}</small>} */}
 
           <label>Nom d'utilisateur :</label>
           <input type="text" name="username" value={username} onChange={handleChange} />
