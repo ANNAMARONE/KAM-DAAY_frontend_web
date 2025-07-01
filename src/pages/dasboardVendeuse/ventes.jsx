@@ -3,6 +3,8 @@ import { PRODUCT_BASE_URL } from '../../services/ApiService'
 import ApiService from '../../services/ApiService'
 import '../../styles/ventes.css'
 import AjouterProduits from './ajouterProduit'
+import '../../styles/theme.css';
+import Swal from 'sweetalert2';
 function Ventes() {
   const [produits, setProduits] = useState([])
   const [vente, setVente] = useState([])
@@ -11,7 +13,8 @@ function Ventes() {
   const retirerProduit = (produitId) => {
     setVente(prev => prev.filter(p => p.produit_id !== produitId));
   };
-  
+  const [choixClient, setChoixClient] = useState('nouveau');
+  const [clients, setClients] = useState([]);
   const [client, setClient] = useState({
     nom: '',
     prenom: '',
@@ -93,17 +96,33 @@ function Ventes() {
     try {
       const res = await ApiService.addVente(payload);
       if (res.status === 201) {
-        console.log("✅ Vente enregistrée avec succès");
+        console.log("Vente enregistrée avec succès");
         setVente([]);
         setClient({ nom: '', prenom: '', telephone: '', adresse: '' });
+        Swal.fire('Succès', 'Vente enregistrée avec succès', 'success');
+     
+       
       } else {
-        console.error("❌ Erreur lors de l'enregistrement :", res.data);
+        console.error("Erreur lors de l'enregistrement :", res.data);
       }
     } catch (err) {
-      console.error("❌ Erreur lors de l'enregistrement :", err);
+      console.error("Erreur lors de l'enregistrement :", err);
+      Swal.fire('Erreur', 'Erreur lors de l\'enregistrement :', 'error');
     }
   }
   
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await ApiService.getClients();
+        setClients(response.data); // ou response directement selon ton ApiService
+      } catch (error) {
+        console.error('Erreur lors du chargement des clients :', error);
+      }
+    };
+  
+    fetchClients();
+  }, []);
   
 
   return (
@@ -220,6 +239,42 @@ function Ventes() {
 
           </table>
           <h3>Informations du Client</h3>
+          <div className="choix-client">
+  <label>
+    <input
+      type="radio"
+      name="choixClient"
+      value="existant"
+      checked={choixClient === 'existant'}
+      onChange={() => setChoixClient('existant')}
+    />
+    Client existant
+  </label>
+  <label>
+    <input
+      type="radio"
+      name="choixClient"
+      value="nouveau"
+      checked={choixClient === 'nouveau'}
+      onChange={() => setChoixClient('nouveau')}
+    />
+    Nouveau client
+  </label>
+</div>
+
+{choixClient === 'existant' ? (
+  <select
+    value={client.client_id}
+    onChange={(e) => setClient({ ...client, client_id: e.target.value })}
+  >
+    <option value="">-- Sélectionner un client --</option>
+    {clients.map((c) => (
+      <option key={c.id} value={c.id}>
+        {c.prenom} {c.nom} - {c.telephone}
+      </option>
+    ))}
+  </select>
+) : (
 <div className="form-client">
   <input
     type="text"
@@ -246,7 +301,7 @@ function Ventes() {
     onChange={(e) => setClient({ ...client, adresse: e.target.value })}
   />
 </div>
-
+)}
           <button onClick={handleSubmit}>Enregistrer la vente</button>
         </>
       )}

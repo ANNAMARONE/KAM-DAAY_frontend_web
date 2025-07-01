@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/client-details.css';
 import ApiService from '../../services/ApiService';
-
+import '../../styles/theme.css';
 export default function ClientDetailModal({ clientId, onClose }) {
   const [client, setClient] = useState(null);
 

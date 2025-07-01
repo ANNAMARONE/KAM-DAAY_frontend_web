@@ -15,10 +15,11 @@ import '../../styles/theme.css'
 import '../../index.css'
 import ApiService from '../../services/ApiService'
 import { PROFILE_BASE_URL } from '../../services/ApiService';
-function LayoutVendeuse() {
+function LayoutVendeuse({ onSearch }) {
   const navigate = useNavigate()
   const [openClientMenu, setOpenClientMenu] = useState(false)
   const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const handleLogout = () => {
     ApiService.logout()
       .then(() => {
@@ -36,6 +37,11 @@ useEffect(() => {
     navigate('/login')
   }
 }, [])
+useEffect(() => {
+  if (onSearch) {
+    onSearch(searchTerm);
+  }
+}, [searchTerm]);
   //afficher l'utilisateur connecté
   useEffect(() => {
     ApiService.getCurrentUser()
@@ -72,10 +78,14 @@ useEffect(() => {
         </div>
         <div className="header-right">
           <div className="search-container">
-            <input type="text" placeholder="Rechercher..." className="search-input" />
-            <button className="search-button">
-              <FaSearch />
-            </button>
+            <input type="text"
+             placeholder="Rechercher..."
+              className="search-input" 
+              value={searchTerm}
+               onChange={(e) => setSearchTerm(e.target.value)} />
+            <button className="search-button" onClick={() => onSearch && onSearch(searchTerm)}>
+        <FaSearch />
+      </button>
           </div>
           <div className="user-profile">
   {user ? (

@@ -11,6 +11,10 @@ import { TfiExport } from "react-icons/tfi";
 import ClientDetailModal from './ClientDetailModal';
 import '../../styles/gestionClient.css'
 import { GrView } from "react-icons/gr";
+import '../../styles/theme.css';
+import ClientEditModal from './ClientEditModal';
+import Swal from 'sweetalert2';
+
 function GestionClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
@@ -22,6 +26,8 @@ function GestionClient() {
   const [showExportOptions, setShowExportOptions] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editClientId, setEditClientId] = useState(null);
+
   const clientsPerPage = 7;
 // Pagination logic
 const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
@@ -125,13 +131,39 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
   };
 
 //fonctionnalite pour supprimer un client
-const handleDelete = async id => {
-  if (!window.confirm("Supprimer ce client ?")) return;
-  await ApiService.deleteClient(id);
-  fetchClients();
+const handleDelete = async (id) => {
+  const result = await Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: 'Ce client sera définitivement supprimé.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await ApiService.deleteClient(id);
+      fetchClients();
+      Swal.fire({
+        icon: 'success',
+        title: 'Supprimé !',
+        text: 'Le client a été supprimé avec succès.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } catch (error) {
+      console.error('Erreur suppression client', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'La suppression du client a échoué.',
+      });
+    }
+  }
 };
-
-
 
   return (
     <div className="client-table-container">
@@ -268,7 +300,10 @@ const handleDelete = async id => {
                 {selectedClientId && (
       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
     )}
-           <button className="btn-update">modifier</button>      
+           <button className="btn-update" onClick={() => setEditClientId(client.id)}>
+            modifier
+          </button>
+     
            <button  onClick={() => handleDelete(client.id)} className="btn-delate">supprimer</button>
            
                 </td>
@@ -279,6 +314,14 @@ const handleDelete = async id => {
           )}
         </tbody>
       </table>
+      {editClientId && (
+  <ClientEditModal
+    clientId={editClientId}
+    onClose={() => setEditClientId(null)}
+    onRefresh={fetchClients}
+  />
+)}
+
       <div className="pagination">
   {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
     <button

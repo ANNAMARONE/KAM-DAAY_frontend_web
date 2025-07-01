@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../../services/ApiService';
 import '../../styles/form.css';
-
+import '../../styles/theme.css';
 export default function AjouterClient() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
