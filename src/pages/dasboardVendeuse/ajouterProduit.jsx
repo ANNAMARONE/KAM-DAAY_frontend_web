@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import '../../styles/ajouterProduit.css'
 import ApiService from '../../services/ApiService'
+import '../../styles/theme.css';
+import Swal from 'sweetalert2';
+
 function AjouterProduits({ onClose }) {
   const [formData, setFormData] = useState({
     nom: '',
@@ -40,11 +43,24 @@ function AjouterProduits({ onClose }) {
         stock: '',
         unite: 'kg',
       })
-      onClose() // ✅ ferme la modale depuis le parent
+      onClose() 
       console.log('Produit ajouté avec succès:', response.data)
+      Swal.fire({
+  icon: 'success',
+  title: 'Succès',
+  text: 'Produit ajouté avec succès !',
+  timer: 2000,
+  showConfirmButton: false
+});
+
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors)
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Échec de l’ajout du produit.',
+        });
       }
     }
   }

@@ -10,6 +10,7 @@ import { IoLogoWhatsapp, IoMdPersonAdd } from "react-icons/io";
 import { TfiExport } from "react-icons/tfi";
 import ClientDetailModal from './ClientDetailModal';
 import { GrView } from "react-icons/gr";
+import '../../styles/theme.css';
 function AfficherClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
@@ -231,7 +232,7 @@ const handleWhatsappClick = (clientId) => {
         </div>
 
         <div className='button_Action'>
-          <button className="btn-add-client" onClick={() => navigate('/Ajouter client')}>
+          <button className="btn-add-client" onClick={() => navigate('/ventes')}>
             <IoMdPersonAdd /> Ajouter un Client
           </button>
           <div className="export-dropdown">

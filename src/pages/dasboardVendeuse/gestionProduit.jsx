@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ApiService, { PRODUCT_BASE_URL } from '../../services/ApiService';
 import '../../styles/gestionProduit.css';
+import '../../styles/theme.css';
+import Swal from 'sweetalert2';
 
 function GestionProduits() {
   const [produits, setProduits] = useState([]);
@@ -64,10 +66,38 @@ function GestionProduits() {
     });
   };
 
-  const handleDelete = async id => {
-    if (!window.confirm("Supprimer ce produit ?")) return;
-    await ApiService.supprimerProduit(id);
-    fetchProduits();
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: 'Ce produit sera définitivement supprimé.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await ApiService.supprimerProduit(id);
+        fetchProduits();
+        Swal.fire({
+          icon: 'success',
+          title: 'Supprimé !',
+          text: 'Le produit a été supprimé avec succès.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      } catch (error) {
+        console.error('Erreur suppression produit', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'La suppression du produit a échoué.',
+        });
+      }
+    }
   };
 
   const handleStockUpdate = async (e, id) => {

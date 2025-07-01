@@ -6,6 +6,9 @@ import { FaSmile, FaFrown } from 'react-icons/fa';
 import {NavLink, useNavigate } from 'react-router-dom';
 import {MdOutlineFilterList } from "react-icons/md";
 import { MdOutlineArrowBackIos} from "react-icons/md";
+import '../../styles/theme.css';
+import Swal from 'sweetalert2';
+
 function AfficherVente() {
   const [ventes, setVentes] = useState([]);
   const [openDropdownId, setOpenDropdownId] = useState(null); 
@@ -36,14 +39,40 @@ function AfficherVente() {
   };
 
   const supprimerVente = async (id) => {
-    if (!window.confirm('Voulez-vous vraiment supprimer cette vente ?')) return;
+    const confirmation = await Swal.fire({
+      title: 'Supprimer cette vente ?',
+      text: "Cette action est irréversible.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    });
+  
+    if (!confirmation.isConfirmed) return;
+  
     try {
       await ApiService.supprimerVente(id);
       setVentes(prev => prev.filter(v => v.id !== id));
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Vente supprimée',
+        text: 'La vente a été supprimée avec succès.',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (error) {
       console.error('Erreur suppression vente', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: "Impossible de supprimer la vente.",
+      });
     }
   };
+  
 
   const toggleDropdown = (id) => {
     setOpenDropdownId(prev => (prev === id ? null : id));

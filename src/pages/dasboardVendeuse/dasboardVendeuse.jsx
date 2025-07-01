@@ -27,6 +27,7 @@ function DasboardVendeuse() {
   const [tauxSatisfaction, setTauxSatisfaction] = useState(0);
   const [ventesParMois, setVentesParMois] = useState({});
   const [feedbacks, setFeedbacks] = useState([]);
+  const [clientsRecent,setClientsRecent]=useState([]);
 
   const navigate = useNavigate();
 
@@ -37,6 +38,9 @@ function DasboardVendeuse() {
         const clientsResponse = await ApiService.getClients();
         setClients(clientsResponse.data);
 
+        //charger les client plus recente
+        const clientRecent=await ApiService.GetClientResente();
+        setClientsRecent(clientRecent.data)
         // Charger les statistiques globales
         const statsRes = await ApiService.getStatistiques();
         setNombreClients(statsRes.data.nombre_clients);
@@ -184,7 +188,7 @@ function DasboardVendeuse() {
               </tr>
             </thead>
             <tbody>
-              {clients.slice(0, 3).map(client => (
+              {clientsRecent.slice(0, 3).map(client => (
                 <tr key={client.id}>
                   <td>{client.nom} {client.prenom}</td>
                   <td>{client.telephone}</td>

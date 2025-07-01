@@ -73,6 +73,8 @@ const ApiService = {
       end_date: endDate,
     },
   }),
+  //client plus resentes
+  GetClientResente:()=>api.get('/clients/recents'),
 //rechercher les clients par nom, prénom ou téléphone
   searchClients: (searchTerm) =>
     api.get('/clients/search', { params: { q: searchTerm } }),
@@ -91,6 +93,9 @@ const ApiService = {
     return api.post('/ajouter_clients', data, {
       headers: { 'Content-Type': 'application/json' }
     });
+  },
+  getClientById(id) {
+    return api.get(`/detail_client/${id}`);
   },
   
   //modifier un client
