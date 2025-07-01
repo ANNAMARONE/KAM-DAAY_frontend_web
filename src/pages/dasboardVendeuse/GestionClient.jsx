@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,NavLink } from 'react-router-dom'
 import ApiService from '../../services/ApiService' 
 import '../../styles/afficherClient.css'
 import { MdOutlineArrowBackIos, MdOutlineFilterList } from "react-icons/md";
@@ -9,8 +9,9 @@ import { FcPhone } from "react-icons/fc";
 import { IoLogoWhatsapp, IoMdPersonAdd } from "react-icons/io";
 import { TfiExport } from "react-icons/tfi";
 import ClientDetailModal from './ClientDetailModal';
+import '../../styles/gestionClient.css'
 import { GrView } from "react-icons/gr";
-function AfficherClient() {
+function GestionClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,17 +31,19 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
   
   const navigate = useNavigate();
 
+ 
+  const fetchClients = async () => {
+    try {
+      const response = await ApiService.getClients();
+      setClients(response.data);
+      setFilteredClients(response.data);
+    } catch (err) {
+      console.error('Erreur lors du chargement des clients', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await ApiService.getClients();
-        setClients(response.data);
-        setFilteredClients(response.data);
-      } catch (err) {
-        console.error('Erreur lors du chargement des clients', err);
-      }
-    };
-    fetchClients();
+    fetchClients(); 
   }, []);
 
   // Fonction de filtrage combiné (statut + dates + recherche)
@@ -120,58 +123,32 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
       document.title = previousTitle;
     }, 1000);
   };
-// Fonction pour démarrer une conversation WhatsApp
-const handleWhatsappClick = (clientId) => {
-  ApiService.startWhatsAppConversationClient(clientId)
-    .then(res => {
-      if (res.data.whatsapp_link) {
-        window.open(res.data.whatsapp_link, '_blank')
-      }
-    })
-    .catch(err => {
-      console.error("Erreur WhatsApp:", err)
-    })
-}
+
+//fonctionnalite pour supprimer un client
+const handleDelete = async id => {
+  if (!window.confirm("Supprimer ce client ?")) return;
+  await ApiService.deleteClient(id);
+  fetchClients();
+};
 
 
 
   return (
     <div className="client-table-container">
-      <div className='headerclientListe'>
+       
+          <div className='headerclientListe'>
         <div className='headerTopLeft'>
           <button className="btn-back" onClick={() => navigate(-1)}>
             <MdOutlineArrowBackIos />
           </button>
           <h1>Liste des Clients</h1>
         </div>
-
         <div className="search-table">
-        <input className='search-input-client'
-  type="text"
-  placeholder="Rechercher..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter') handleSearch(); // ⏎ déclenche recherche
-  }}
-/>
-  <button
-    className="search-button_client"
-    onClick={handleSearch}
-  >
-    <FaSearch />
-  </button>
-  <button
-    className="close-button_client"
-    onClick={() => {
-      setSearchTerm('');
-      setFilteredClients(clients); // reset liste
-    }}
-  >
-    <AiOutlineClose />
-  </button>
-</div>
-
+          <NavLink to='/client/supprimer'> <button>
+            clients supprimer
+          </button>
+          </NavLink>
+        </div>
       </div>
 
       <div className="header-tools">
@@ -247,8 +224,9 @@ const handleWhatsappClick = (clientId) => {
         )}
       </div>
       <button className="btn-print" onClick= {handlePrint}>
-  <FaPrint /> Imprimer
-</button>
+        <FaPrint /> Imprimer
+      </button>
+        
         </div>
       </div>
       <div className="print-area">
@@ -290,10 +268,9 @@ const handleWhatsappClick = (clientId) => {
                 {selectedClientId && (
       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
     )}
-                 
-                  <button onClick={() => handleWhatsappClick(client.id)} style={{ backgroundColor: '#25D366', color: 'white', border: 'none', borderRadius: '8px', padding: '0.4rem 0.8rem', cursor: 'pointer' }}>
-      <IoLogoWhatsapp size={20} />
-    </button>
+           <button className="btn-update">modifier</button>      
+           <button  onClick={() => handleDelete(client.id)} className="btn-delate">supprimer</button>
+           
                 </td>
               </tr>
             ))
@@ -319,4 +296,5 @@ const handleWhatsappClick = (clientId) => {
   );
 }
 
-export default AfficherClient;
+
+export default GestionClient

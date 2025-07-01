@@ -13,7 +13,11 @@ import ResetPassword from './pages/auth/ResetPassword'
 import AfficherClient from './pages/dasboardVendeuse/AfficherClient'
 import ClientDetailModal from './pages/dasboardVendeuse/ClientDetailModal'
 import Ventes from './pages/dasboardVendeuse/ventes'
-
+import AjouterProduit from './pages/dasboardVendeuse/ajouterProduit'
+import AfficherVente from './pages/dasboardVendeuse/AfficherVente'
+import GestionProduits from './pages/dasboardVendeuse/gestionProduit'
+import GestionClient from './pages/dasboardVendeuse/GestionClient'
+import ClientSupprimer from './pages/dasboardVendeuse/ClientSupprimer'
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
@@ -44,7 +48,16 @@ function App() {
       <Route path="/Ajouter client" element={<AjouterClient />} />
       <Route path="/Afficher_client" element={<AfficherClient />} />
       <Route path="/clients/:id" element={<ClientDetailModal/>} />
+      <Route path="/ajouter_produit" element={<AjouterProduit />} />
       <Route path="/ventes" element={<Ventes/>} />
+      <Route path="/afficher/ventes" element={<AfficherVente/>} />
+      <Route path="/gestion/produit" element={<GestionProduits/>}/>
+      <Route path="/gestion/client" element={<GestionClient/>}/>
+      <Route path="/client/supprimer/:id" element={<ClientSupprimer />} />
+      <Route path="/client/modifier/:id" element={<AjouterClient />} />
+      <Route path="/client/supprimer" element={<ClientSupprimer />} />
+     
+
       </Route>
       </Route>
 

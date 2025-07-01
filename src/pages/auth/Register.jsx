@@ -6,28 +6,32 @@ import '../../index.css';
 import '../../styles/theme.css';
 import ApiService from '../../services/ApiService';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import ForgotPasswordRequestModal from './ForgotPasswordRequestModal';
 
 export default function Register() {
-  const [profile, setProfile] = useState(null);
+  // const [profile, setProfile] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [telephone, setTelephone] = useState('');
-  const [localite, setLocalite] = useState('');
+  // const [localite, setLocalite] = useState('');
   const [domaineActivite, setDomaineActivite] = useState('');
   const [GIE, setGIE] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  
   const [validationErrors, setValidationErrors] = useState({});
 
   const resetForm = () => {
-    setProfile(null);
+    // setProfile(null);
     setUsername('');
     setPassword('');
     setPasswordConfirmation('');
     setTelephone('');
-    setLocalite('');
+    // setLocalite('');
     setDomaineActivite('');
     setGIE('');
     setValidationErrors({});
@@ -40,13 +44,13 @@ export default function Register() {
 
     const errors = {};
 
-    if (!profile) {
-      errors.profile = "La photo de profil est requise.";
-    } else if (!['image/jpeg', 'image/png', 'image/jpg'].includes(profile.type)) {
-      errors.profile = "La photo de profil doit être au format JPG ou PNG.";
-    } else if (profile.size > 2 * 1024 * 1024) {
-      errors.profile = "La taille de l'image ne doit pas dépasser 2 Mo.";
-    }
+    // if (!profile) {
+    //   errors.profile = "La photo de profil est requise.";
+    // } else if (!['image/jpeg', 'image/png', 'image/jpg'].includes(profile.type)) {
+    //   errors.profile = "La photo de profil doit être au format JPG ou PNG.";
+    // } else if (profile.size > 2 * 1024 * 1024) {
+    //   errors.profile = "La taille de l'image ne doit pas dépasser 2 Mo.";
+    // }
 
     if (!username) {
       errors.username = "Le nom d'utilisateur est requis.";
@@ -61,10 +65,10 @@ export default function Register() {
       errors.password = "Le mot de passe est requis.";
     } else if (password.length < 8) {
       errors.password = "Le mot de passe doit contenir au moins 8 caractères.";
-    } else if (!/[A-Z]/.test(password)) {
-      errors.password = "Le mot de passe doit contenir au moins une majuscule.";
-    } else if (!/[a-z]/.test(password)) {
-      errors.password = "Le mot de passe doit contenir au moins une minuscule.";
+    // } else if (!/[A-Z]/.test(password)) {
+    //   errors.password = "Le mot de passe doit contenir au moins une majuscule.";
+    // } else if (!/[a-z]/.test(password)) {
+    //   errors.password = "Le mot de passe doit contenir au moins une minuscule.";
     } else if (!/[0-9]/.test(password)) {
       errors.password = "Le mot de passe doit contenir au moins un chiffre.";
     }
@@ -81,13 +85,13 @@ export default function Register() {
       errors.telephone = "Le téléphone doit contenir exactement 8 chiffres.";
     }
 
-    if (!localite) {
-      errors.localite = "La localité est requise.";
-    } else if (localite.length < 3) {
-      errors.localite = "La localité doit contenir au moins 3 caractères.";
-    } else if (!/^[a-zA-Z\s\-']+$/.test(localite)) {
-      errors.localite = "La localité ne doit contenir que des lettres.";
-    }
+    // if (!localite) {
+    //   errors.localite = "La localité est requise.";
+    // } else if (localite.length < 3) {
+    //   errors.localite = "La localité doit contenir au moins 3 caractères.";
+    // } else if (!/^[a-zA-Z\s\-']+$/.test(localite)) {
+    //   errors.localite = "La localité ne doit contenir que des lettres.";
+    // }
 
     if (!domaineActivite) {
       errors.domaine_activite = "Le domaine d'activité est requis.";
@@ -107,19 +111,19 @@ export default function Register() {
 
     // Construction de FormData pour envoyer fichier + données
     const formData = new FormData();
-    formData.append('profile', profile);
+    // formData.append('profile', profile);
     formData.append('username', username);
     formData.append('password', password);
     formData.append('password_confirmation', passwordConfirmation);
     formData.append('telephone', telephone);
-    formData.append('localite', localite);
+    // formData.append('localite', localite);
     formData.append('domaine_activite', domaineActivite);
     if (GIE) {
       formData.append('GIE', GIE);
     }
 
     try {
-      await ApiService.register(formData); // Assure-toi que ApiService accepte FormData
+      await ApiService.register(formData); // Envoi des données à l'API
       resetForm();
       navigate('/login');
     } catch (error) {
@@ -171,29 +175,49 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} encType="multipart/form-data">
 
-          <label>Photo de profil :</label>
+          {/* <label>Photo de profil :</label>
           <input type="file" name="profile" accept="image/*" onChange={handleChange} />
-          {validationErrors.profile && <small className="error">{validationErrors.profile}</small>}
+          {validationErrors.profile && <small className="error">{validationErrors.profile}</small>} */}
 
           <label>Nom d'utilisateur :</label>
           <input type="text" name="username" value={username} onChange={handleChange} />
           {validationErrors.username && <small className="error">{validationErrors.username}</small>}
 
           <label>Mot de passe :</label>
-          <input type="password" name="password" value={password} onChange={handleChange} />
-          {validationErrors.password && <small className="error">{validationErrors.password}</small>}
+<div className="password-wrapper">
+  <input
+    type={showPassword ? 'text' : 'password'}
+    name="password"
+    value={password}
+    onChange={handleChange}
+  />
+  <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
+  {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+  </button>
+</div>
+{validationErrors.password && <small className="error">{validationErrors.password}</small>}
 
-          <label>Confirmation du mot de passe :</label>
-          <input type="password" name="password_confirmation" value={passwordConfirmation} onChange={handleChange} />
+        <label>Confirmation du mot de passe :</label>
+        <div className="password-wrapper">
+          <input
+            type={showPasswordConfirmation ? 'text' : 'password'}
+            name="password_confirmation"
+            value={passwordConfirmation}
+            onChange={handleChange}
+          />
+          <button type="button" onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)} className="toggle-password">
+          {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+          </button>
+        </div>
           {validationErrors.password_confirmation && <small className="error">{validationErrors.password_confirmation}</small>}
 
           <label>Téléphone :</label>
           <input type="text" name="telephone" value={telephone} onChange={handleChange} />
           {validationErrors.telephone && <small className="error">{validationErrors.telephone}</small>}
 
-          <label>Localité :</label>
+          {/* <label>Localité :</label>
           <input type="text" name="localite" value={localite} onChange={handleChange} />
-          {validationErrors.localite && <small className="error">{validationErrors.localite}</small>}
+          {validationErrors.localite && <small className="error">{validationErrors.localite}</small>} */}
 
           <label>Domaine d'activité :</label>
           <select name="domaine_activite" value={domaineActivite} onChange={handleChange}>

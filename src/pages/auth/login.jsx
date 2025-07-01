@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import ApiService from '../../services/ApiService';
 import ForgotPasswordRequestModal from './ForgotPasswordRequestModal';
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 // Images et styles
 import Logo from '../../assets/images/logo_dark.png';
 import '../../styles/login.css';
@@ -16,6 +16,7 @@ export default function Login() {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showForgotModal, setShowForgotModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const validateForm = () => {
     let isValid = true;
     setUsernameError('');
@@ -100,13 +101,18 @@ export default function Login() {
           {usernameError && <small className="error">{usernameError}</small>}
 
           <label>Mot de passe :</label>
+          <div className="password-wrapper">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           
           />
+           <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
+            {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+            </button>
+            </div>
           {passwordError && <small className="error">{passwordError}</small>}
                   <div className="remember-forgot-container">
           <div className="remember-section">

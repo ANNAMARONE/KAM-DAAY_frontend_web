@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import ApiService from '../../services/ApiService';
+import { useNavigate } from 'react-router-dom';
 
 export default function ForgotPasswordRequestModal({ onClose }) {
   const [telephone, setTelephone] = useState('');
   const [loading, setLoading] = useState(false);
-  const [whatsappLink, setWhatsappLink] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,35 +21,29 @@ export default function ForgotPasswordRequestModal({ onClose }) {
     }
 
     setLoading(true);
-    setWhatsappLink(''); // reset link avant appel
 
     try {
-        const formData = new FormData();
-        formData.append('telephone', telephone);
-        const response = await ApiService.forgotPassword(formData);
+      const formData = new FormData();
+      formData.append('telephone', telephone);
 
-        if (response.data.status === 'success') {
-            setWhatsappLink(response.data.whatsapp_link); // pour l'afficher
-            Swal.fire({
-              icon: 'success',
-              title: 'Lien envoyé',
-              text: 'Un lien vous a été envoyé sur votre WhatsApp.',
-              confirmButtonText: 'Ouvrir WhatsApp',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.open(response.data.whatsapp_link, '_blank'); // ouverture manuelle
-              }
-            });
-          }
+      const response = await ApiService.forgotPassword(formData);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Un lien de réinitialisation a été généré.',
+      });
+
+      // Redirection vers la page de réinitialisation avec token et téléphone
+      const { token, telephone: tel } = response.data;
+      navigate(`/reset-password?token=${token}&telephone=${tel}`);
     } catch (err) {
       console.error('Erreur API forgotPassword:', err);
-      console.log('Erreur JSON Axios:', err.toJSON?.());
-      console.log('Message:', err.message);
 
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
-        text: err.response?.data?.message || "Échec de l'envoi du lien.",
+        text: err.response?.data?.message || "Une erreur est survenue. Veuillez réessayer plus tard.",
       });
     }
 
@@ -69,15 +64,9 @@ export default function ForgotPasswordRequestModal({ onClose }) {
             disabled={loading}
           />
           <button type="submit" disabled={loading}>
-            {loading ? 'Envoi en cours...' : 'Envoyer lien WhatsApp'}
+            {loading ? "Envoi en cours..." : "Envoyer"}
           </button>
         </form>
-        {whatsappLink && (
-  <p style={{ marginTop: '15px' }}>
-    Voir le lien ici : <a href={whatsappLink} target="_blank" rel="noopener noreferrer">{whatsappLink}</a>
-  </p>
-)}
-
       </div>
     </div>
   );
