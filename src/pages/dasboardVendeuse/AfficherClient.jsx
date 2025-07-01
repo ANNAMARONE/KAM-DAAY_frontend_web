@@ -139,7 +139,7 @@ const handleWhatsappClick = (clientId) => {
     <div className="client-table-container">
       <div className='headerclientListe'>
         <div className='headerTopLeft'>
-          <button className="btn-back" onClick={() => navigate('/dasboard')}>
+          <button className="btn-back" onClick={() => navigate(-1)}>
             <MdOutlineArrowBackIos />
           </button>
           <h1>Liste des Clients</h1>

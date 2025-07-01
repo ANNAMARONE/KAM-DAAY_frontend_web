@@ -111,6 +111,7 @@
     background-color: #fff;
     font-size: 16px;
     color: var(--text-dark);
+    
   }
   
   .RcontainerDroite .actionbutton {
@@ -140,7 +141,41 @@
   .RcontainerDroite a:hover {
     text-decoration: underline;
   }
+ 
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px; /* espace entre les champs */
+  }
   
+  .password-wrapper input {
+    width: 100%;
+    padding: 10px ; /* espace à droite pour le bouton */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 16px;
+    color: var(--text-dark);
+    box-sizing: border-box;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #007BFF;
+    cursor: pointer;
+    font-weight: 500;
+   
+  }
+  .toggle-password:hover {
+    background: none;
+    color: var(--primary);
+  }
   /* Responsive */
   @media (max-width: 900px) {
     .RegisterContaine {

@@ -21,10 +21,12 @@ export default function ResetPassword() {
         icon: 'error',
         title: 'Lien invalide',
         text: 'Token ou numéro manquant.',
+      }).then(() => {
+        navigate('/login');
       });
-      navigate('/login'); // redirection
     }
   }, [token, telephone, navigate]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +40,16 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
+
+    if (password.length < 8) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Mot de passe trop court',
+        text: 'Le mot de passe doit contenir au moins 8 caractères.',
+      });
+      return;
+    }
+    
 
     try {
       const response = await ApiService.resetPassword({

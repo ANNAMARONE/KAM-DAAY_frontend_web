@@ -103,7 +103,7 @@ const ApiService = {
     return api.put(`/modifier_client/${id}`, data);
   },
   //supprimer un client
-  deleteClient: (id) => api.delete(`/supprimer_client/${id}`),
+  deleteClient: (id) => api.delete(`/soft_delete_client/${id}`),
 
 //afficher les produits de l'utilisateur connecté
 
@@ -166,6 +166,21 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   },
  
   getImages: () => api.get('/images'),
+
+  //route pour tableau de bord
+
+  //Afficher le nombre de mes client
+  getNombreClients: () => api.get('/nombre-clients'),
+
+  getNombreVentesAujourdhui: () => api.get('/nombre-ventes-aujourdhui'),
+
+  getRevenusDuMois: () => api.get('/revenus-du-mois'),
+
+  getTauxSatisfaction: () => api.get('/taux-satisfaction-positif'),
+
+  getStatistiques: () => api.get('/statistiques'),
+  
+  getFeedbacks:()=> api.get('/feedbacks-recents'),
 };
 
 export default ApiService;

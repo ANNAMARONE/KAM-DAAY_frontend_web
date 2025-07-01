@@ -5,7 +5,7 @@ import { PRODUCT_BASE_URL } from '../../services/ApiService';
 import { FaSmile, FaFrown } from 'react-icons/fa';
 import {NavLink, useNavigate } from 'react-router-dom';
 import {MdOutlineFilterList } from "react-icons/md";
-
+import { MdOutlineArrowBackIos} from "react-icons/md";
 function AfficherVente() {
   const [ventes, setVentes] = useState([]);
   const [openDropdownId, setOpenDropdownId] = useState(null); 
@@ -52,6 +52,9 @@ function AfficherVente() {
   return (
     <div className="vente-container">
     <div className="ventes-header">
+    <button className="btn-back" onClick={() => navigate(-1)}>
+            <MdOutlineArrowBackIos />
+          </button>
         <h2>Mes Ventes</h2>
         <div className="ventes-actions">
         <button className="btn-filtrer">

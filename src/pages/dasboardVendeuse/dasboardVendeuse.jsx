@@ -1,27 +1,95 @@
-
 import React, { useEffect, useState } from 'react';
-import { FaUsers, FaShoppingCart, FaMoneyBillWave, FaSmile, FaChartLine, FaUserPlus, FaEye, FaFrown } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
-import '../../styles/theme.css'
-import '../../index.css'
-import '../../styles/vendeuseDasboard.css'
-import ApiService from '../../services/ApiService'
+import { 
+  FaUsers, FaShoppingCart, FaMoneyBillWave, FaSmile, FaChartLine, 
+  FaUserPlus, FaEye, FaFrown 
+} from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import '../../styles/theme.css';
+import '../../index.css';
+import '../../styles/vendeuseDasboard.css';
+import ApiService from '../../services/ApiService';
+
+import { Line } from 'react-chartjs-2';
+import { 
+  Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, 
+  Title, Tooltip, Legend, Filler 
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler
+);
+
 function DasboardVendeuse() {
   const [clients, setClients] = useState([]);
+  const [nombreClients, setNombreClients] = useState(0);
+  const [ventesAujourdhui, setVentesAujourdhui] = useState(0);
+  const [revenusDuMois, setRevenusDuMois] = useState(0);
+  const [tauxSatisfaction, setTauxSatisfaction] = useState(0);
+  const [ventesParMois, setVentesParMois] = useState({});
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchClients = async () => {
+    const fetchData = async () => {
       try {
-        const response = await ApiService.getClients();
-        setClients(response.data);
-        setFilteredClients(response.data);
+        // Charger les clients
+        const clientsResponse = await ApiService.getClients();
+        setClients(clientsResponse.data);
+
+        // Charger les statistiques globales
+        const statsRes = await ApiService.getStatistiques();
+        setNombreClients(statsRes.data.nombre_clients);
+        setVentesAujourdhui(statsRes.data.ventes_aujourdhui);
+        setRevenusDuMois(statsRes.data.revenus_du_mois);
+        setTauxSatisfaction(statsRes.data.taux_satisfaction);
+        setVentesParMois(statsRes.data.ventes_par_mois);
+
+        // Charger feedbacks récents
+        const feedbacksRes = await ApiService.getFeedbacks();
+        setFeedbacks(feedbacksRes.data);
+
       } catch (err) {
-        console.error('Erreur lors du chargement des clients', err);
+        console.error('Erreur lors du chargement des données du tableau de bord', err);
       }
     };
-    fetchClients();
+
+    fetchData();
   }, []);
 
-  const navigate = useNavigate()
+  // Préparer labels et données pour les 6 derniers mois
+  const moisLabels = [];
+  const moisNombres = [];
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    moisLabels.push(date.toLocaleString('fr-FR', { month: 'short' }));
+    const key = (date.getMonth() + 1).toString();
+    moisNombres.push(Number(ventesParMois[key]) || 0);
+  }
+
+  const data = {
+    labels: moisLabels,
+    datasets: [
+      {
+        label: 'Ventes (FCFA)',
+        data: moisNombres,
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        fill: true,
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: 'Tendances des ventes sur 6 mois' },
+    },
+  };
+
   return (
     <div className='AContainerDashboard'>
       <h2 className="dashboard-title">Tableau de bord</h2>
@@ -32,7 +100,7 @@ function DasboardVendeuse() {
           <FaUsers className="card-icon" />
           <div>
             <h3>Clients</h3>
-            <p>120 enregistrés</p>
+            <p>{nombreClients} enregistrés</p>
           </div>
         </div>
 
@@ -40,7 +108,7 @@ function DasboardVendeuse() {
           <FaShoppingCart className="card-icon" />
           <div>
             <h3>Ventes</h3>
-            <p>35 aujourd'hui</p>
+            <p>{ventesAujourdhui} aujourd'hui</p>
           </div>
         </div>
 
@@ -48,7 +116,7 @@ function DasboardVendeuse() {
           <FaMoneyBillWave className="card-icon" />
           <div>
             <h3>Revenus</h3>
-            <p>125.000 FCFA ce mois</p>
+            <p>{Number(revenusDuMois).toLocaleString()} FCFA ce mois</p>
           </div>
         </div>
 
@@ -56,15 +124,13 @@ function DasboardVendeuse() {
           <FaSmile className="card-icon" />
           <div>
             <h3>Satisfaction</h3>
-            <p>92% positifs</p>
+            <p>{tauxSatisfaction}% positifs</p>
           </div>
         </div>
 
-        <div className="dashboard-card">
-          <FaChartLine className="card-icon" />
-          <div>
-            <h3>Statistiques</h3>
-            <p>Voir les tendances</p>
+        <div className="dashboard-card chart-card">
+          <div style={{ maxWidth:'80%', width: '100%' }}>
+            <Line data={data} options={options} />
           </div>
         </div>
       </div>
@@ -80,19 +146,25 @@ function DasboardVendeuse() {
             </button>
           </div>
           <ul className="feedback-list">
-            <li>
-              <FaSmile className="feedback-icon positive" />
-              <span>Client A : Très satisfait</span>
-            </li>
-            <li>
-              <FaFrown className="feedback-icon negative" />
-              <span>Client B : Produit endommagé</span>
-            </li>
-            <li>
-              <FaSmile className="feedback-icon positive" />
-              <span>Client C : Livraison rapide</span>
-            </li>
-          </ul>
+  {feedbacks.length === 0 && <li>Aucun feedback récent</li>}
+  {feedbacks.slice(0, 3).map(fb => {
+    const client = fb?.vente?.client;
+    return (
+      <li key={fb.id}>
+        {fb.satisfait ? (
+          <FaSmile className="feedback-icon positive" />
+        ) : (
+          <FaFrown className="feedback-icon negative" />
+        )}
+        <span>
+          {client ? `${client.nom} ${client.prenom}` : 'Client inconnu'} :{' '}
+          {fb.commentaire || (fb.satisfait ? 'Très satisfait' : 'Insatisfait')}
+        </span>
+      </li>
+    );
+  })}
+</ul>
+
         </section>
 
         {/* Table Clients Récents */}
@@ -112,15 +184,14 @@ function DasboardVendeuse() {
               </tr>
             </thead>
             <tbody>
-  {clients.slice(0, 3).map(client => (
-    <tr key={client.id}>
-      <td>{client.nom} {client.prenom}</td>
-      <td>{client.telephone}</td>
-      <td>{client.type}</td>
-    </tr>
-  ))}
-</tbody>
-
+              {clients.slice(0, 3).map(client => (
+                <tr key={client.id}>
+                  <td>{client.nom} {client.prenom}</td>
+                  <td>{client.telephone}</td>
+                  <td>{client.type}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </section>
       </div>
@@ -135,4 +206,4 @@ function DasboardVendeuse() {
   )
 }
 
-export default DasboardVendeuse
+export default DasboardVendeuse;

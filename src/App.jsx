@@ -17,7 +17,7 @@ import AjouterProduit from './pages/dasboardVendeuse/ajouterProduit'
 import AfficherVente from './pages/dasboardVendeuse/AfficherVente'
 import GestionProduits from './pages/dasboardVendeuse/gestionProduit'
 import GestionClient from './pages/dasboardVendeuse/GestionClient'
-
+import ClientSupprimer from './pages/dasboardVendeuse/ClientSupprimer'
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
@@ -53,6 +53,11 @@ function App() {
       <Route path="/afficher/ventes" element={<AfficherVente/>} />
       <Route path="/gestion/produit" element={<GestionProduits/>}/>
       <Route path="/gestion/client" element={<GestionClient/>}/>
+      <Route path="/client/supprimer/:id" element={<ClientSupprimer />} />
+      <Route path="/client/modifier/:id" element={<AjouterClient />} />
+      <Route path="/client/supprimer" element={<ClientSupprimer />} />
+     
+
       </Route>
       </Route>
 

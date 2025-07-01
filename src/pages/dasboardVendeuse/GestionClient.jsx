@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,NavLink } from 'react-router-dom'
 import ApiService from '../../services/ApiService' 
 import '../../styles/afficherClient.css'
 import { MdOutlineArrowBackIos, MdOutlineFilterList } from "react-icons/md";
@@ -31,17 +31,19 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
   
   const navigate = useNavigate();
 
+ 
+  const fetchClients = async () => {
+    try {
+      const response = await ApiService.getClients();
+      setClients(response.data);
+      setFilteredClients(response.data);
+    } catch (err) {
+      console.error('Erreur lors du chargement des clients', err);
+    }
+  };
+
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const response = await ApiService.getClients();
-        setClients(response.data);
-        setFilteredClients(response.data);
-      } catch (err) {
-        console.error('Erreur lors du chargement des clients', err);
-      }
-    };
-    fetchClients();
+    fetchClients(); 
   }, []);
 
   // Fonction de filtrage combiné (statut + dates + recherche)
@@ -121,24 +123,33 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
       document.title = previousTitle;
     }, 1000);
   };
-// Fonction pour démarrer une conversation WhatsApp
-const handleWhatsappClick = (clientId) => {
-  ApiService.startWhatsAppConversationClient(clientId)
-    .then(res => {
-      if (res.data.whatsapp_link) {
-        window.open(res.data.whatsapp_link, '_blank')
-      }
-    })
-    .catch(err => {
-      console.error("Erreur WhatsApp:", err)
-    })
-}
+
+//fonctionnalite pour supprimer un client
+const handleDelete = async id => {
+  if (!window.confirm("Supprimer ce client ?")) return;
+  await ApiService.deleteClient(id);
+  fetchClients();
+};
 
 
 
   return (
     <div className="client-table-container">
-
+       
+          <div className='headerclientListe'>
+        <div className='headerTopLeft'>
+          <button className="btn-back" onClick={() => navigate(-1)}>
+            <MdOutlineArrowBackIos />
+          </button>
+          <h1>Liste des Clients</h1>
+        </div>
+        <div className="search-table">
+          <NavLink to='/client/supprimer'> <button>
+            clients supprimer
+          </button>
+          </NavLink>
+        </div>
+      </div>
 
       <div className="header-tools">
         <div className="filter-container">
@@ -213,8 +224,9 @@ const handleWhatsappClick = (clientId) => {
         )}
       </div>
       <button className="btn-print" onClick= {handlePrint}>
-  <FaPrint /> Imprimer
-</button>
+        <FaPrint /> Imprimer
+      </button>
+        
         </div>
       </div>
       <div className="print-area">
@@ -257,7 +269,7 @@ const handleWhatsappClick = (clientId) => {
       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
     )}
            <button className="btn-update">modifier</button>      
-           <button className="btn-delate">supprimer</button>
+           <button  onClick={() => handleDelete(client.id)} className="btn-delate">supprimer</button>
            
                 </td>
               </tr>
