@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/login'
-import DasboardAdmin from './pages/dashboardAdmin/dasboardAdmin'
+
 import DasboardVendeuse from './pages/dasboardVendeuse/dasboardVendeuse'
 import PrivateRoute from './routes/PrivateRoute' 
 import LayoutVendeuse from './compenents/layouts/_layoutVendeuse'
@@ -18,6 +18,7 @@ import AfficherVente from './pages/dasboardVendeuse/AfficherVente'
 import GestionProduits from './pages/dasboardVendeuse/gestionProduit'
 import GestionClient from './pages/dasboardVendeuse/GestionClient'
 import ClientSupprimer from './pages/dasboardVendeuse/ClientSupprimer'
+import DashboardAdmin from './pages/dashboardAdmin/dasboardAdmin'
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
@@ -64,7 +65,7 @@ function App() {
       {/* Admin Routes */}
       <Route element={<PrivateRoute allowedRoles={['admin']} />}>
       <Route element={<WithSidebarAdmin />}>
-      <Route path="/admin dasboard" element={<DasboardAdmin />} />
+      <Route path="/admin dasboard" element={<DashboardAdmin />} />
       <Route path="/Ajouter_client" element={<AjouterClient />} />
       </Route>
       </Route>
