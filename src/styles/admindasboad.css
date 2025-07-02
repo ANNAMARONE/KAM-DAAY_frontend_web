@@ -1,6 +1,7 @@
 
   .AContainerDashboard {
-    background-color: #F5F5FD;
+    background: #F5F5FD;
+    
     padding: 4rem;
     min-height: 80vh;
     width: 100%;
@@ -149,5 +150,112 @@
   .dashboard-row .dashboard-section {
     flex: 1 1 45%;
     min-width: 300px;
+  }
+  .dashboard-admin {
+    padding: 2rem;
+    background-color: #f9fafb;
+    min-height: 100vh;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  
+  .stat-icon {
+    opacity: 0.85;
+  }
+  .vendeuses-section {
+    margin-top: 2rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .vendeuses-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+  }
+  
+  .vendeuses-table th {
+    background-color: #f0f4f8;
+    color: #333;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  
+  .vendeuses-table td {
+    background-color: #ffffff;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  }
+  
+  .vendeuses-table tr:hover td {
+    background-color: #f9fafb;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .vendeuse-statut {
+    padding: 0.2rem 0.7rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  
+  .statut-actif {
+    background-color: #e6ffed;
+    color: #15803d;
+  }
+  
+  .statut-inactif {
+    background-color: #ffe6e6;
+    color: #b91c1c;
   }
   

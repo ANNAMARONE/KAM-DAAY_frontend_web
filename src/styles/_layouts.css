@@ -262,6 +262,57 @@
   margin-left: 5px;
   animation: wave 1.5s infinite ease-in-out;
 }
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 2.2rem;
+  right: 0;
+  width: 250px;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 0.5rem;
+  z-index: 999;
+  padding: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notif-item.unread {
+  background-color: #f9f9ff;
+  font-weight: 500;
+}
+
+.btn-lire {
+  background: none;
+  color: #007bff;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
 
 @keyframes wave {
   0% { transform: rotate(0deg); }

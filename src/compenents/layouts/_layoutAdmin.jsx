@@ -1,24 +1,92 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { MdInventory } from 'react-icons/md';
+import { FaUser} from 'react-icons/fa';
+
 import {
   AiOutlineHome, AiOutlineUser, AiOutlineLogout, AiOutlineShopping,
   AiOutlineBarChart, AiOutlineSetting, AiOutlineSearch, AiOutlineBell,
   AiOutlineUserAdd, AiOutlineTeam, AiOutlineQuestionCircle
 } from 'react-icons/ai'
-import { FaSearch, FaUser, FaBell } from 'react-icons/fa'
+import { HiHandRaised } from 'react-icons/hi2'; 
+import { FaSearch, FaBell } from 'react-icons/fa'
 import Logo from '../../assets/images/logo_light.png'
 import '../../styles/_layouts.css'
 import '../../styles/theme.css'
 import '../../index.css'
-
-export default function LayoutAdmin() {
+import ApiService from '../../services/ApiService'
+import { PROFILE_BASE_URL } from '../../services/ApiService';
+export default function LayoutAdmin({ onSearch }) {
   const navigate = useNavigate()
   const [openClientMenu, setOpenClientMenu] = useState(false)
+  const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
 
   const handleLogout = () => {
-    console.log('Déconnexion')
+    ApiService.logout()
+      .then(() => {
+        localStorage.removeItem('token');
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la déconnexion:', error);
+      });
+  };
+ // Vérification de l'authentification
+useEffect(() => {
+  const token = localStorage.getItem('token')
+  if (!token) {
     navigate('/login')
   }
+}, [])
+useEffect(() => {
+  if (onSearch) {
+    onSearch(searchTerm);
+  }
+}, [searchTerm]);
+  //afficher l'utilisateur connecté
+  useEffect(() => {
+    ApiService.getCurrentUser()
+      .then((response) => {
+        setUser(response.data.user); 
+      })
+      .catch((error) => {
+        console.error('Erreur récupération utilisateur :', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+  
+  const fetchNotifications = async () => {
+    try {
+      const response = await ApiService.getNotifications();
+      const notifs = response.data; 
+      const unread = notifs.filter(n => n.read_at === null).length;
+  
+      setNotifications(notifs);
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error('Erreur notifications:', error);
+    }
+  };
+  const markAsRead = async (id) => {
+    try {
+      await ApiService.markNotificationAsRead(id);
+      fetchNotifications();
+    } catch (error) {
+      console.error('Erreur lors du marquage comme lu:', error);
+    }
+  };
+    
+  
+  
+    
 
   return (
     <div className="admin-container">
@@ -28,7 +96,17 @@ export default function LayoutAdmin() {
           <img src={Logo} alt="Logo" className='logo' />
         </div>
         <div className="header-center">
-          <h1 className="welcome-message">Bienvenue, Admin</h1>
+          
+          {user ? (
+              <>
+                <h1 className="welcome-message">  Bonjour, {user.username} <HiHandRaised className="salut-icon" />
+                  <br />
+                Bienvenu</h1>
+              </>
+            ) : (
+              <p className="no-user">Aucun utilisateur</p>
+            )}
+          
         </div>
         <div className="header-right">
           <div className="search-container">
@@ -37,14 +115,48 @@ export default function LayoutAdmin() {
               <FaSearch />
             </button>
           </div>
-          <div className="profile-icon">
-            <NavLink to="/admin/profil" className="nav-link">
-              <FaUser className="user-icon" /> <p>Anna Marone</p>
-            </NavLink>
+          <div className="user-profile">
+  {user ? (
+    <>
+      
+      <img
+        src={`${PROFILE_BASE_URL}/${user.profile}`}
+        alt="Profil"
+        className="profile"
+      />
+     
+    </>
+  ) : (
+    <p className="no-user">Aucun utilisateur</p>
+  )}
+      </div>
+      <div className="notification-icon" onClick={() => setDropdownOpen(!dropdownOpen)}>
+  <FaBell className="bell" />
+  {unreadCount > 0 && (
+    <span className="notification-badge">{unreadCount}</span>
+  )}
+
+  {dropdownOpen && (
+    <div className="notification-dropdown">
+      {notifications.length === 0 ? (
+        <p className="empty-message">Aucune notification</p>
+      ) : (
+        notifications.map((notif) => (
+          <div key={notif.id} className={`notif-item ${notif.read_at ? '' : 'unread'}`}>
+            <p>{notif.data.message || 'Nouvelle notification'}</p>
+            {!notif.read_at && (
+              <button onClick={() => markAsRead(notif.id)} className="btn-lire">
+                Marquer comme lu
+              </button>
+            )}
           </div>
-          <div className="notification-icon">
-            <FaBell className="bell" />
-          </div>
+        ))
+      )}
+    </div>
+  )}
+</div>
+
+
         </div>
       </header>
 
@@ -53,15 +165,7 @@ export default function LayoutAdmin() {
         <aside className="admin-sidebar">
           <nav className="sidebar-nav">
             <ul>
-                        <li>
-              <NavLink 
-                to="/Ajouter_client"
-                className={({ isActive }) => `nav-link special-link ${isActive ? 'active' : ''}`}
-              >
-                <AiOutlineUserAdd className="icon-special" />
-                <span>Ajouter un client</span>
-              </NavLink>
-            </li>
+          
 
               <li>
                 <NavLink to="/admin dasboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
@@ -69,40 +173,37 @@ export default function LayoutAdmin() {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/admin/feedback" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  <AiOutlineBell /> <span>Feedback</span>
-                </NavLink>
-              </li>
-
+              <NavLink 
+                to="/Ajouter_client"
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`
+                }
+              >
+                <AiOutlineUserAdd className="icon-special" />
+                <span>Ajouter un client</span>
+              </NavLink>
+            </li>
+             
               {/* Gestion Client */}
               <li>
-                <div className="nav-link submenu-toggle" onClick={() => setOpenClientMenu(!openClientMenu)}>
+                <NavLink to='/prote' className="nav-link submenu-toggle" onClick={() => setOpenClientMenu(!openClientMenu)}>
                   <AiOutlineSetting /> <span>Gestion Client</span>
-                </div>
-                {openClientMenu && (
-                  <ul className="submenu">
-                    <li>
-                      <NavLink to="/admin/clients/ajouter" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineUserAdd /> <span>Ajouter client</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/admin/clients/liste" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineTeam /> <span>Voir les clients</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/admin/clients/rechercher" className={({ isActive }) => `nav-sublink ${isActive ? 'active' : ''}`}>
-                        <AiOutlineSearch /> <span>Rechercher</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
+                </NavLink>
+             
               </li>
 
               <li>
                 <NavLink to="/admin/Vente" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                   <AiOutlineShopping /> <span>Gestion des ventes</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/admin/produits" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  <AiOutlineShopping /> <span>Gestion des produits</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/admin/vendeuses" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  <AiOutlineUser /> <span>Suivi des vendeuses</span>
                 </NavLink>
               </li>
               <li>

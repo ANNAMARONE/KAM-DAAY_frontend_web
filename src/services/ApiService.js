@@ -186,6 +186,55 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getStatistiques: () => api.get('/statistiques'),
   
   getFeedbacks:()=> api.get('/feedbacks-recents'),
+
+//fonctionnalite pour l'administrateur
+ //afficher notifications
+  getNotifications: () => api.get('/notifications'),
+
+  markNotificationAsRead: (id) => api.post(`/notifications/${id}/read`),
+
+
+  //afficher les vendeuses
+  getVendeuses: () => api.get('/vendeuses'),
+  
+  //ajouter une vendeuse
+  addVendeuse: (data) => {
+    if (data instanceof FormData) {
+      return api.post('/ajouter_vendeuse', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return api.post('/ajouter_vendeuse', data);
+  },
+  
+  //modifier une vendeuse
+  updateVendeuse: (id, data) => {
+    if (data instanceof FormData) {
+      return api.put(`/modifier_vendeuse/${id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return api.put(`/modifier_vendeuse/${id}`, data);
+  },
+
+  //supprimer une vendeuse
+  deleteVendeuse: (id) => api.delete(`/vendeuses/${id}`),
+
+  //afficher les statistiques des ventes par jour
+  getStatistiquesVentesParJour: () => api.get('/statistiques-ventes-par-jour'),
+
+  //afficher les statistiques des ventes par mois
+  getStatistiquesVentesParMois: () => api.get('/statistiques-ventes-par-mois'),
+
+  getNombreUtilisateurs: () => api.get('/admin/nombre-utilisateurs'),
+  getNombreVentes: () => api.get('/admin/nombre-ventes'),
+  getNombreVendeuses: () => api.get('/admin/nombre-vendeuses'),
+  getNombreProduits: () => api.get('/admin/nombre-produits'),
+  getNombreClients: () => api.get('/admin/nombre-clients'),
+  getVendeuses: () => api.get('/admin/vendeuses'),
+  activeVendeuse: (id) => api.post(`/activer_utilisateur/${id}`),
+  desactiveVendeuse: (id) => api.post(`/desactiver_utilisateur/${id}`),
+
 };
 
 export default ApiService;

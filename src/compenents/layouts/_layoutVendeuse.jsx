@@ -15,6 +15,7 @@ import '../../styles/theme.css'
 import '../../index.css'
 import ApiService from '../../services/ApiService'
 import { PROFILE_BASE_URL } from '../../services/ApiService';
+
 function LayoutVendeuse({ onSearch }) {
   const navigate = useNavigate()
   const [openClientMenu, setOpenClientMenu] = useState(false)
@@ -53,9 +54,6 @@ useEffect(() => {
       });
   }, []);
   
-
-
-
   return (
     <div className="admin-container">
       {/* HEADER */}
@@ -101,7 +99,7 @@ useEffect(() => {
   ) : (
     <p className="no-user">Aucun utilisateur</p>
   )}
-</div>
+      </div>
 
 
           <div className="notification-icon">
