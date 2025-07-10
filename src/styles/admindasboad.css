@@ -258,4 +258,34 @@
     background-color: #ffe6e6;
     color: #b91c1c;
   }
-  
+  /* Couleurs personnalisées pour chaque stat-card */
+.clients-card {
+  background-color: #e0f0ff; 
+}
+
+.ventes-card {
+  background-color: #e6ffe9;
+}
+
+.produits-card {
+  background-color: #fff9db; 
+}
+
+.vendeuses-card {
+  background-color: #f5e6ff; 
+}
+.clients-card .stat-icon {
+  color: #1d4ed8;
+}
+
+.ventes-card .stat-icon {
+  color: #16a34a;
+}
+
+.produits-card .stat-icon {
+  color: #d97706;
+}
+
+.vendeuses-card .stat-icon {
+  color: #9333ea;
+}

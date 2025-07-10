@@ -78,6 +78,12 @@ const ApiService = {
 //rechercher les clients par nom, prénom ou téléphone
   searchClients: (searchTerm) =>
     api.get('/clients/search', { params: { q: searchTerm } }),
+
+
+  searchVendeuses: (searchTerm) =>
+    api.get('/recherche_utilisateur', { params: { q: searchTerm } }),
+
+   
   //exporter les clients format pdf
   exportClients: (format = 'csv') =>
     api.get('/exportmes_clients', {
@@ -195,7 +201,7 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
 
 
   //afficher les vendeuses
-  getVendeuses: () => api.get('/vendeuses'),
+  getVendeuses: () => api.get('/utilisateurs'),
   
   //ajouter une vendeuse
   addVendeuse: (data) => {
@@ -234,7 +240,9 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getVendeuses: () => api.get('/admin/vendeuses'),
   activeVendeuse: (id) => api.post(`/activer_utilisateur/${id}`),
   desactiveVendeuse: (id) => api.post(`/desactiver_utilisateur/${id}`),
-
+  getDetailVendeuse: (id) => api.get(`/utilisateur_detail/${id}`),
+  
+  
 };
 
 export default ApiService;

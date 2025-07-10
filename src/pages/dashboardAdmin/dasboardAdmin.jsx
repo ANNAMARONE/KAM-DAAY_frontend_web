@@ -100,46 +100,47 @@ export default function DashboardAdmin() {
       <h1 className="dashboard-title">Tableau de bord - Administrateur</h1>
 
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Clients</p>
-              <p className="stat-value">{stats.totalClients}</p>
-            </div>
-            <Users className="stat-icon text-blue-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Ventes</p>
-              <p className="stat-value">{stats.totalVentes}</p>
-            </div>
-            <ShoppingCart className="stat-icon text-green-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Produits</p>
-              <p className="stat-value">{stats.totalProduits}</p>
-            </div>
-            <Package className="stat-icon text-yellow-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Vendeuses</p>
-              <p className="stat-value">{stats.totalVendeuses}</p>
-            </div>
-            <BarChart2 className="stat-icon text-purple-500" size={32} />
-          </div>
-        </div>
+  <div className="stat-card clients-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Clients</p>
+        <p className="stat-value">{stats.totalClients}</p>
       </div>
+      <Users className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card ventes-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Ventes</p>
+        <p className="stat-value">{stats.totalVentes}</p>
+      </div>
+      <ShoppingCart className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card produits-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Produits</p>
+        <p className="stat-value">{stats.totalProduits}</p>
+      </div>
+      <Package className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card vendeuses-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Vendeuses</p>
+        <p className="stat-value">{stats.totalVendeuses}</p>
+      </div>
+      <BarChart2 className="stat-icon" size={32} />
+    </div>
+  </div>
+</div>
+
 
       <div className="chart-container">
         <h2 className="section-title">Évolution des ventes</h2>

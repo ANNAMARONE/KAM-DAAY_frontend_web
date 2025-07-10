@@ -19,6 +19,12 @@ import GestionProduits from './pages/dasboardVendeuse/gestionProduit'
 import GestionClient from './pages/dasboardVendeuse/GestionClient'
 import ClientSupprimer from './pages/dasboardVendeuse/ClientSupprimer'
 import DashboardAdmin from './pages/dashboardAdmin/dasboardAdmin'
+import GestionClient_admin from './pages/dashboardAdmin/GestionClient_admin'
+import GestionVendeuse_admin from './pages/dashboardAdmin/GestionVendeuse_admin'
+import Gestionproduit_admin from './pages/dashboardAdmin/Gestionproduit_admin'
+import GestionVentes_admin from './pages/dashboardAdmin/GestionVentes_admin'
+import ParamettreAdmin from './pages/dashboardAdmin/ParamettreAdmin'
+import DetailVendeuse from './pages/dashboardAdmin/detailVendeuse'
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
@@ -67,6 +73,12 @@ function App() {
       <Route element={<WithSidebarAdmin />}>
       <Route path="/admin dasboard" element={<DashboardAdmin />} />
       <Route path="/Ajouter_client" element={<AjouterClient />} />
+      <Route path="/gestion_client" element={<GestionClient_admin />} />
+      <Route path="/gestion_vendeuse" element={<GestionVendeuse_admin/>} />
+      <Route path="/gestion_produit" element={<Gestionproduit_admin />} />
+      <Route path="/gestion_ventes" element={<GestionVentes_admin/>} />
+      <Route path="/parametre" element={<ParamettreAdmin/>} />
+      <Route path="/vendeuses/:id" element={<DetailVendeuse />} />
       </Route>
       </Route>
       {/* Add other routes here as needed */}
