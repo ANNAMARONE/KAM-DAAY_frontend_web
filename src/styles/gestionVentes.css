@@ -1,0 +1,115 @@
+.gestion-ventes-container {
+    padding: 30px;
+    background-color: #f7f8fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .gestion-ventes-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .vente-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .vente-table thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+  }
+  
+  .vente-table th,
+  .vente-table td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .vente-table ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .vente-table ul li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vente-table img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .vente-table td:last-child {
+    font-weight: bold;
+    color: #27ae60;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+  
+  .pagination button {
+    padding: 8px 14px;
+    background-color: #f0f0f0;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .pagination button:hover {
+    background-color: #dcdcdc;
+  }
+  
+  .pagination button.active {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: bold;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .vente-table, .vente-table thead, .vente-table tbody, .vente-table th, .vente-table td, .vente-table tr {
+      display: block;
+    }
+  
+    .vente-table thead {
+      display: none;
+    }
+  
+    .vente-table tr {
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 10px;
+    }
+  
+    .vente-table td {
+      padding-left: 50%;
+      position: relative;
+    }
+  
+    .vente-table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 15px;
+      top: 10px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+  }
+  

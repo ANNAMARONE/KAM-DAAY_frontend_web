@@ -1,0 +1,27 @@
+.gestion-produit-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .produit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .produit-table th,
+  .produit-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .produit-table th {
+    background-color: #f5f5f5;
+  }
+  
+  .produit-table img {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  

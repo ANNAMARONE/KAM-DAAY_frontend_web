@@ -11,6 +11,7 @@ import { IoMdPersonAdd } from 'react-icons/io';
 import { TfiExport } from 'react-icons/tfi';
 import { FiEye, FiEdit, FiTrash2 } from 'react-icons/fi';
 
+import EditVendeuseModal from './EditVendeuseModal'; 
 function GestionVendeuse_admin() {
   const [vendeuses, setVendeuses] = useState([]);
   const [filteredVendeuses, setFilteredVendeuses] = useState([]);
@@ -28,7 +29,8 @@ function GestionVendeuse_admin() {
   const indexOfLast = currentPage * clientsPerPage;
   const indexOfFirst = indexOfLast - clientsPerPage;
   const currentVendeuses = filteredVendeuses.slice(indexOfFirst, indexOfLast);
-
+  const [showModal, setShowModal] = useState(false);
+  const [vendeuseSelected, setVendeuseSelected] = useState(null);
   useEffect(() => {
     fetchVendeuses();
   }, []);
@@ -132,6 +134,25 @@ function GestionVendeuse_admin() {
     }
   };
 
+  const handleEditClick = (vendeuse) => {
+    setVendeuseSelected(vendeuse);
+    setShowModal(true);
+  };
+  
+
+  const handleUpdate = async (updatedData) => {
+    try {
+      const response = await ApiService.updateVendeuse(vendeuseSelected.id, updatedData);
+      
+      setVendeuseSelected(response.data.data); 
+      fetchVendeuses(); 
+      setShowModal(false);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour', error);
+    }
+  };
+  
+ 
   return (
     <div>
       <h1>Gestion des vendeuses</h1>
@@ -257,7 +278,7 @@ function GestionVendeuse_admin() {
                   <FiEye />
                 </button>
 
-                  <button title="Modifier" className="action-btn edit-btn">
+                  <button onClick={() => handleEditClick(vendeuse)} title="Modifier" className="action-btn edit-btn">
                     <FiEdit />
                   </button>
                   <button title="Supprimer" className="action-btn delete-btn">
@@ -280,8 +301,16 @@ function GestionVendeuse_admin() {
           </button>
         ))}
       </div>
+      <EditVendeuseModal
+  isOpen={showModal}
+  onClose={() => setShowModal(false)}
+  vendeuse={vendeuseSelected}
+  onUpdate={handleUpdate}
+/>
     </div>
+    
   );
+  
 }
 
 export default GestionVendeuse_admin;

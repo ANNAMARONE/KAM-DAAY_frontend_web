@@ -216,11 +216,10 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   //modifier une vendeuse
   updateVendeuse: (id, data) => {
     if (data instanceof FormData) {
-      return api.put(`/modifier_vendeuse/${id}`, data, {
+      return api.post(`/admin/modifier_vendeuse/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
-    return api.put(`/modifier_vendeuse/${id}`, data);
   },
 
   //supprimer une vendeuse
@@ -241,7 +240,11 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   activeVendeuse: (id) => api.post(`/activer_utilisateur/${id}`),
   desactiveVendeuse: (id) => api.post(`/desactiver_utilisateur/${id}`),
   getDetailVendeuse: (id) => api.get(`/utilisateur_detail/${id}`),
+  getClients: () => api.get('/clients'),
+  getVentes: () =>api.get('/ventes'),
+  getProduitsAdmin:()=>api.get('/admin/produits')
   
+
   
 };
 

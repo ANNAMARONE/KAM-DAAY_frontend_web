@@ -8,7 +8,8 @@ function DetailVendeuse() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [vendeuse, setVendeuse] = useState(null);
-
+  const [showModal, setShowModal] = useState(false);
+  const [vendeuseSelected, setVendeuseSelected] = useState(null);
   useEffect(() => {
     fetchVendeuse();
   }, []);
@@ -21,7 +22,6 @@ function DetailVendeuse() {
       console.error('Erreur lors de la récupération de la vendeuse :', error);
     }
   };
-
   if (!vendeuse) return <p className="loading">Chargement...</p>;
 
   return (

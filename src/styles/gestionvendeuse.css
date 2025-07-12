@@ -195,7 +195,7 @@
 /* Bouton Appliquer */
 .date-filter-container button {
   padding: 0.5rem 1.2rem;
-  background-color: #28a745;
+  background-color: #0056b3;
   color: white;
   border: none;
   border-radius: 8px;
@@ -205,14 +205,14 @@
 }
 
 .date-filter-container button:hover {
-  background-color: #1e7e34;
+  background-color: #0056b3;
 }
 
 /* --- Action buttons --- */
 .button_Action_vendeuse button {
   margin-left: 1rem;
   padding: 0.5rem 0.8rem;
-  background-color: #28a745;
+  background-color: #0056b3;
   color: white;
   border: none;
   border-radius: 8px;
@@ -227,7 +227,7 @@
 }
 
 .button_Action_vendeuse button:hover {
-  background-color: #1e7e34;
+  background-color: #0056b3;
 }
 
 .export-dropdown {
