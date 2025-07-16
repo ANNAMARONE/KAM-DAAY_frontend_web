@@ -14,7 +14,7 @@ function GestionClient_admin() {
 
   const fetchClients = async () => {
     try {
-      const response = await ApiService.getClients();
+      const response = await ApiService. getClientsAdmin();
       setClients(response.data.data); 
     } catch (error) {
       console.error('Erreur lors de la récupération des clients :', error);
