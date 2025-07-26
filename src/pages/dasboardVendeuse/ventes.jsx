@@ -44,8 +44,8 @@ function Ventes() {
     if (!exists) {
       setVente([...vente, {
         produit_id: produit.id,
-        nom: produit.nom, // pour l'alerte
-        stock: produit.stock, // pour vérifier le stock
+        nom: produit.nom, 
+        stock: produit.stock, 
         quantite: 1,
         prix_unitaire: produit.prix_unitaire,
         montant_total: produit.prix_unitaire * 1
@@ -65,10 +65,17 @@ function Ventes() {
   }
 
   const handleSubmit = async () => {
-    // Vérification du stock avant soumission
+    
     const erreurStock = vente.find(p => p.quantite > p.stock);
     if (erreurStock) {
-      alert(`La quantité demandée (${erreurStock.quantite}) pour le produit "${erreurStock.nom}" dépasse le stock disponible (${erreurStock.stock}).`);
+    
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: (`La quantité demandée (${erreurStock.quantite})
+         pour le produit "${erreurStock.nom}" dépasse le stock disponible
+          (${erreurStock.stock}).`),
+      });
       return;
     }
   
@@ -129,6 +136,7 @@ function Ventes() {
     <div className="vente-container">
    <div className="produit-entete">
   <div>
+    
     <h2>Liste des Produits</h2>
     <p>Veuillez sélectionner les produits à vendre.</p>
   </div>
@@ -239,17 +247,23 @@ function Ventes() {
 
           </table>
           <h3>Informations du Client</h3>
-          <div className="choix-client">
-  <label>
-    <input
-      type="radio"
-      name="choixClient"
-      value="existant"
-      checked={choixClient === 'existant'}
-      onChange={() => setChoixClient('existant')}
-    />
-    Client existant
-  </label>
+
+<div className="choix-client">
+  {/* Affiche "Client existant" uniquement s'il y a des clients */}
+  {clients.length > 0 && (
+    <label>
+      <input
+        type="radio"
+        name="choixClient"
+        value="existant"
+        checked={choixClient === 'existant'}
+        onChange={() => setChoixClient('existant')}
+      />
+      Client existant
+    </label>
+  )}
+
+  {/* Ce bouton est toujours visible */}
   <label>
     <input
       type="radio"
@@ -262,7 +276,8 @@ function Ventes() {
   </label>
 </div>
 
-{choixClient === 'existant' ? (
+{/* Affichage du formulaire selon le choix */}
+{choixClient === 'existant' && clients.length > 0 ? (
   <select
     value={client.client_id}
     onChange={(e) => setClient({ ...client, client_id: e.target.value })}
@@ -275,33 +290,36 @@ function Ventes() {
     ))}
   </select>
 ) : (
-<div className="form-client">
-  <input
-    type="text"
-    placeholder="Nom"
-    value={client.nom}
-    onChange={(e) => setClient({ ...client, nom: e.target.value })}
-  />
-  <input
-    type="text"
-    placeholder="Prénom"
-    value={client.prenom}
-    onChange={(e) => setClient({ ...client, prenom: e.target.value })}
-  />
-  <input
-    type="tel"
-    placeholder="Téléphone"
-    value={client.telephone}
-    onChange={(e) => setClient({ ...client, telephone: e.target.value })}
-  />
-  <input
-    type="text"
-    placeholder="Adresse"
-    value={client.adresse}
-    onChange={(e) => setClient({ ...client, adresse: e.target.value })}
-  />
-</div>
+  <div className="form-client">
+    <input
+      type="text"
+      placeholder="Nom"
+      value={client.nom}
+      onChange={(e) => setClient({ ...client, nom: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Prénom"
+      value={client.prenom}
+      onChange={(e) => setClient({ ...client, prenom: e.target.value })}
+    />
+    <input
+      type="tel"
+      placeholder="Téléphone"
+      value={client.telephone}
+      onChange={(e) => setClient({ ...client, telephone: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Adresse"
+      value={client.adresse}
+      onChange={(e) => setClient({ ...client, adresse: e.target.value })}
+    />
+  </div>
 )}
+
+
+
           <button onClick={handleSubmit}>Enregistrer la vente</button>
         </>
       )}

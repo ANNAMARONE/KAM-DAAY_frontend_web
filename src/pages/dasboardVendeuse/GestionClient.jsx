@@ -14,7 +14,9 @@ import { GrView } from "react-icons/gr";
 import '../../styles/theme.css';
 import ClientEditModal from './ClientEditModal';
 import Swal from 'sweetalert2';
-
+import { CiImport } from "react-icons/ci";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 function GestionClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
@@ -79,7 +81,7 @@ const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClie
   //recherche des clients par nom, prénom 
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
-      setFilteredClients(clients); // réinitialise si vide
+      setFilteredClients(clients); 
       return;
     }
   
@@ -256,7 +258,7 @@ const handleDelete = async (id) => {
         )}
       </div>
       <button className="btn-print" onClick= {handlePrint}>
-        <FaPrint /> Imprimer
+      <CiImport  /> Importer
       </button>
         
         </div>
@@ -296,15 +298,15 @@ const handleDelete = async (id) => {
 
                 <td>{new Date(client.created_at).toLocaleDateString('fr-FR')}</td>
                 <td className='action-client'>
-                <button className="btn-view" onClick={() => setSelectedClientId(client.id)}><GrView />Voir</button>
+                <button className="btn-view" onClick={() => setSelectedClientId(client.id)}><GrView /></button>
                 {selectedClientId && (
       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
     )}
-           <button className="btn-update" onClick={() => setEditClientId(client.id)}>
-            modifier
+           <button className="btn-update" onClick={() => setEditClientId(client.id) }>
+           <FaEdit />
           </button>
      
-           <button  onClick={() => handleDelete(client.id)} className="btn-delate">supprimer</button>
+           <button  onClick={() => handleDelete(client.id)} className="btn-delate"><MdDelete /></button>
            
                 </td>
               </tr>

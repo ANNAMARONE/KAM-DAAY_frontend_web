@@ -8,7 +8,50 @@
     border-radius: 12px;
     overflow: hidden;
   }
-  
+  /* Conteneur global */
+.custom-phone-container {
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* Input avec assez de padding à gauche */
+.custom-phone-input {
+  padding-left: 70px !important;
+  height: 42px !important;
+  border-radius: 6px !important;
+  border: 1px solid #ccc !important;
+  width: 100% !important;
+  font-size: 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* Bouton de drapeau */
+.custom-flag-button {
+  border: 1px solid #ccc !important;
+  border-right: none !important;
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  background-color: white !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Responsive (mobile) */
+@media (max-width: 500px) {
+  .custom-phone-input {
+    font-size: 14px !important;
+    padding-left: 64px !important;
+  }
+
+  .custom-flag-button {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
+
   .RcontaineGauche {
     width: 50%;
     height: 88.5vh;

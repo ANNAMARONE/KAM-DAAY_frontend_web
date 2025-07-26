@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal-overlayVen {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
@@ -9,7 +9,7 @@
   backdrop-filter: blur(2px);
 }
 
-.modal-content {
+.modal-contentVen {
   background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
@@ -31,7 +31,7 @@
   }
 }
 
-.modal-content h2 {
+.modal-contentVen h2 {
   margin-top: 0;
   font-size: 1.5rem;
   color: #333;
@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-.modal-content label {
+.modal-contentVen label {
   float: left;
   font-weight: 500;
   margin-bottom: 8px;
@@ -47,7 +47,7 @@
   font-weight: 400;
 }
 
-.modal-content input {
+.modal-contentVen input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -56,7 +56,7 @@
   font-size: 1rem;
 }
 
-.modal-content input:focus {
+.modal-contentVen input:focus {
   outline: none;
   border-color: #2d72d9;
   box-shadow: 0 0 0 2px rgba(45, 114, 217, 0.2);

@@ -95,20 +95,20 @@ function GestionVendeuse_admin() {
 
   const handleExport = async (format) => {
     try {
-      const response = await ApiService.exportClients(format);
+      const response = await ApiService.exportVendeuse(format);
       const blob = new Blob([response.data], {
         type: format === 'pdf' ? 'application/pdf' : 'text/csv',
       });
+
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `vendeuses.${format}`;
+      link.download = format === 'pdf' ? 'export_utilisateurs.pdf' : 'export_utilisateurs.csv';
       link.click();
     } catch (error) {
-      console.error('Erreur export', error);
+      console.error('Erreur export:', error);
     }
   };
-
   const handlePrint = () => {
     const previousTitle = document.title;
     document.title = 'Liste_des_vendeuses';

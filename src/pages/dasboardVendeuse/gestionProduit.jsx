@@ -102,10 +102,26 @@ function GestionProduits() {
 
   const handleStockUpdate = async (e, id) => {
     e.preventDefault();
-    const stock = e.target.elements.stock.value;
-    await ApiService.updateStock(id, { stock: stock });
-    fetchProduits();
+  
+    const value = e.target.elements.stock.value.trim();
+    const stock = parseInt(value);
+  
+    if (value === '' || isNaN(stock)) {
+      alert("Veuillez entrer un nombre entier valide.");
+      return;
+    }
+  
+    try {
+      await ApiService.updateStock(id, { stock });
+      fetchProduits(); // Rafraîchit la liste
+      e.target.reset(); // Vide le champ
+    } catch (error) {
+      console.error('Erreur API:', error.response?.data);
+      alert(error.response?.data?.message || "Erreur de mise à jour.");
+    }
   };
+  
+  
 
   return (
     <div className="produits-container">
@@ -153,10 +169,17 @@ function GestionProduits() {
                 <button  onClick={() => handleDelete(produit.id)} className="btn-delete">Supprimer</button>
               </td>
               <td>
-                <form onSubmit={e => handleStockUpdate(e, produit.id)}>
-                  <input  className="btn-stock" type="number" name="stock" placeholder="Nouveau stock" min="0" />
-                  <button type="submit">OK</button>
-                </form>
+              <form onSubmit={e => handleStockUpdate(e, produit.id)}>
+  <input
+    className="btn-stock"
+    type="number"
+    name="stock"
+    placeholder="Ajouter ou retirer du stock"
+    step="1" // pour des valeurs entières
+  />
+  <button type="submit">OK</button>
+</form>
+
               </td>
             </tr>
           ))}

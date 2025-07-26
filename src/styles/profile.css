@@ -1,0 +1,135 @@
+.profile-box {
+    background: #f0f0f0;
+    background-image: url('../assets/images/xv 2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-header {
+    width: 100%;
+    background-color: rgba(91, 37, 245, 0.85);
+    background-image: url('../assets/images/xv 2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+  }
+  
+  .photo-upload-wrapper {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .profile-clickable {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+  
+  .profile-clickable:hover {
+    opacity: 0.7;
+  }
+  
+  .edit-overlay {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #ffffffcc;
+    color: #333;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 14px;
+  }
+  
+  /* FORMULAIRE PROFIL */
+  .profile-form {
+ 
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .profile-form div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+   
+  }
+  .profile-form,
+.profile-form div {
+  width: 100%;
+}
+  .profile-form label {
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .profile-form input,
+  .profile-form select {
+    width: 100%; /* même largeur pour tous */
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    box-sizing: border-box;
+  }
+  
+  /* Pour le select uniquement (si tu veux garder l'icône flèche) */
+  .profile-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'7'%20viewBox%3D'0%200%2010%207'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%207%205-7H0z'%20fill%3D'%23333'%20/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    padding-right: 34px; /* pour éviter que le texte chevauche la flèche */
+  }
+  
+  
+  .profile-form button {
+    background-color: #5B25F5;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+   
+  }
+  
+  .profile-form button:hover {
+    background-color: #4520c0;
+  }
+  

@@ -22,20 +22,47 @@ export default function DashboardAdmin() {
     totalVendeuses: 0,
     totalClients: 0,
   });
+  const [salesData, setSalesData] = useState([]);
+
 
   const [vendeuses, setVendeuses] = useState([]);
-  const [salesData] = useState([
-    { mois: "Janvier", total: 120 },
-    { mois: "Février", total: 200 },
-    { mois: "Mars", total: 180 },
-    { mois: "Avril", total: 250 },
-    { mois: "Mai", total: 300 },
-  ]);
 
+  const fetchSalesData = async () => {
+    try {
+      const response = await ApiService.getVentesParMois();
+  
+      // Détermine la bonne structure de données
+      const rawData = Array.isArray(response.data)
+        ? response.data
+        : response.data.ventes || [];
+  
+      // Si ce n’est pas un tableau, ne pas continuer
+      if (!Array.isArray(rawData)) {
+        console.error("Format de données inattendu:", response.data);
+        return;
+      }
+  
+      const moisOrdre = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      ];
+  
+      const sortedData = rawData.sort(
+        (a, b) => moisOrdre.indexOf(a.mois) - moisOrdre.indexOf(b.mois)
+      );
+  
+      setSalesData(sortedData);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des ventes par mois:", error);
+    }
+  };
+  
   useEffect(() => {
     fetchAllStats();
     fetchVendeuses();
+    fetchSalesData(); // <-- C’est ce qu’il manquait
   }, []);
+  
 
   const fetchAllStats = async () => {
     try {

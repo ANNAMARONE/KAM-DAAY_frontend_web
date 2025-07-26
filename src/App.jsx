@@ -25,6 +25,8 @@ import Gestionproduit_admin from './pages/dashboardAdmin/Gestionproduit_admin'
 import GestionVentes_admin from './pages/dashboardAdmin/GestionVentes_admin'
 import ParamettreAdmin from './pages/dashboardAdmin/ParamettreAdmin'
 import DetailVendeuse from './pages/dashboardAdmin/detailVendeuse'
+import ProfileVendeuse from './pages/dasboardVendeuse/ProfileVendeuse'
+import 'react-phone-input-2/lib/style.css';
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
@@ -63,7 +65,7 @@ function App() {
       <Route path="/client/supprimer/:id" element={<ClientSupprimer />} />
       <Route path="/client/modifier/:id" element={<AjouterClient />} />
       <Route path="/client/supprimer" element={<ClientSupprimer />} />
-     
+     <Route path="/profile" element={<ProfileVendeuse />} />
 
       </Route>
       </Route>
@@ -79,6 +81,7 @@ function App() {
       <Route path="/gestion_ventes" element={<GestionVentes_admin/>} />
       <Route path="/parametre" element={<ParamettreAdmin/>} />
       <Route path="/vendeuses/:id" element={<DetailVendeuse />} />
+      <Route path="/admin/profile" element={<ProfileVendeuse />} />
       </Route>
       </Route>
       {/* Add other routes here as needed */}

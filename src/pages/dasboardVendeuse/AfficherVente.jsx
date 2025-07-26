@@ -80,100 +80,132 @@ function AfficherVente() {
 
   return (
     <div className="vente-container">
-    <div className="ventes-header">
-    <button className="btn-back" onClick={() => navigate(-1)}>
-            <MdOutlineArrowBackIos />
-          </button>
+      <div className="ventes-header">
+        <button className="btn-back" onClick={() => navigate(-1)}>
+          <MdOutlineArrowBackIos />
+        </button>
         <h2>Mes Ventes</h2>
         <div className="ventes-actions">
-        <button className="btn-filtrer">
-          <MdOutlineFilterList size={20} /> Filtrer
-        </button>
-
-         <NavLink to='/ventes'>
-         <button className="btn-ajouter">Ajouter une vente</button>
-         </NavLink>
-         
-          
+          <button className="btn-filtrer">
+            <MdOutlineFilterList size={20} /> Filtrer
+          </button>
+          <NavLink to="/ventes">
+            <button className="btn-ajouter">Ajouter une vente</button>
+          </NavLink>
         </div>
       </div>
-
-     
-      <div className='listeVente'>
-        {ventes.map((vente) => {
-          const client = vente.client || {};
-          const totalMontant = vente.produits.reduce((acc, p) => acc + parseFloat(p.pivot.montant_total), 0);
-
-          return (
-            <div key={vente.id} className="carte-vente">
-              <h3>Client : {client.nom} {client.prenom}</h3>
-              <p>Date : {new Date(vente.created_at).toLocaleDateString()}</p>
-
-              <table className="vente-table">
-                <thead>
-                  <tr>
-                    <th>Produit</th>
-                    <th>Quantité</th>
-                    <th>Prix Unitaire</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {vente.produits.map(produit => (
-                    <tr key={produit.id}>
-                      <td><img
-                        src={`${PRODUCT_BASE_URL}/${produit.image}`}
-                        alt={produit.nom}
-                        width="50"
-                        height="50"
-                      /></td>
-                      <td>{produit.pivot.quantite} {produit.unite}</td>
-                      <td>{parseFloat(produit.pivot.prix_unitaire).toLocaleString()} FCFA</td>
-                      <td>{parseFloat(produit.pivot.montant_total).toLocaleString()} FCFA</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan="3"><strong>Total Vente</strong></td>
-                    <td style={{ fontWeight: 'bold', background: '#FDEEB7' }}><strong>{totalMontant.toLocaleString()} FCFA</strong></td>
-                  </tr>
-                </tfoot>
-              </table>
-
-              <div className='footer-cart'>
-                <div className="satisfaction-section">
-                  {vente.feedback ? (
-                    vente.feedback.satisfait ? (
-                      <FaSmile color="green" title="Satisfait"  />
+  
+      <table className="vente-table" style={{ width: "100%" }}>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix Unitaire</th>
+            <th>Total Produit</th>
+            <th>Total Vente</th>
+            <th>Satisfaction</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ventes.map((vente) => {
+            const client = vente.client || {};
+            const totalMontant = vente.produits.reduce(
+              (acc, p) => acc + parseFloat(p.pivot.montant_total),
+              0
+            );
+  
+            return vente.produits.map((produit, index) => (
+              <tr key={`${vente.id}-${produit.id}`}>
+                {/* Sur la première ligne du produit, afficher client, date, total vente, feedback, actions */}
+                {index === 0 ? (
+                  <>
+                    <td rowSpan={vente.produits.length}>
+                      {client.nom} {client.prenom}
+                    </td>
+                    <td rowSpan={vente.produits.length}>
+                      {new Date(vente.created_at).toLocaleDateString()}
+                    </td>
+                  </>
+                ) : null}
+  
+                <td>
+                  <img
+                    src={`${PRODUCT_BASE_URL}/${produit.image}`}
+                    alt={produit.nom}
+                    width={50}
+                    height={50}
+                    style={{ marginRight: 8, verticalAlign: "middle" }}
+                  />
+                  {produit.nom}
+                </td>
+                <td>{produit.pivot.quantite} {produit.unite}</td>
+                <td>{parseFloat(produit.pivot.prix_unitaire).toLocaleString()} FCFA</td>
+                <td>{parseFloat(produit.pivot.montant_total).toLocaleString()} FCFA</td>
+  
+                {/* Total vente sur la première ligne */}
+                {index === 0 ? (
+                  <td
+                    rowSpan={vente.produits.length}
+                    style={{ fontWeight: "bold", background: "#FDEEB7" }}
+                  >
+                    {totalMontant.toLocaleString()} FCFA
+                  </td>
+                ) : null}
+  
+                {/* Satisfaction sur la première ligne */}
+                {index === 0 ? (
+                  <td rowSpan={vente.produits.length} style={{ textAlign: "center" }}>
+                    {vente.feedback ? (
+                      vente.feedback.satisfait ? (
+                        <FaSmile color="green" title="Satisfait" />
+                      ) : (
+                        <FaFrown color="red" title="Non satisfait" />
+                      )
                     ) : (
-                      <FaFrown color="red" title="Non satisfait" />
-                    )
-                  ) : (
-                    <div className="dropdown">
-                      <button className="dropdown-toggle" onClick={() => toggleDropdown(vente.id)}>
-                        Noter ici
-                      </button>
-                      {openDropdownId === vente.id && (
-                        <div className="dropdown-menu">
-                          <button onClick={() => noterFeedback(vente.id, 1)}>Satisfait</button>
-                          <button onClick={() => noterFeedback(vente.id, 0)}>Non satisfait</button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <button onClick={() => supprimerVente(vente.id)} className="btn-supprimer">
-                  Supprimer
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                      <div className="dropdown">
+                        <button
+                          className="dropdown-toggle"
+                          onClick={() => toggleDropdown(vente.id)}
+                        >
+                          Noter ici
+                        </button>
+                        {openDropdownId === vente.id && (
+                          <div className="dropdown-menu">
+                            <button onClick={() => noterFeedback(vente.id, 1)}>
+                              Satisfait
+                            </button>
+                            <button onClick={() => noterFeedback(vente.id, 0)}>
+                              Non satisfait
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                ) : null}
+  
+                {/* Actions sur la première ligne */}
+                {index === 0 ? (
+                  <td rowSpan={vente.produits.length} style={{ textAlign: "center" }}>
+                    <button
+                      onClick={() => supprimerVente(vente.id)}
+                      className="btn-supprimer"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                ) : null}
+              </tr>
+            ));
+          })}
+        </tbody>
+      </table>
     </div>
   );
+  
 }
 
 export default AfficherVente;

@@ -214,7 +214,7 @@
 /* Style spécial pour le lien "Ajouter un client" */
 
 
-.user-profile {
+.user-profile img {
   display: flex;
   align-items: center;
   gap: 12px;

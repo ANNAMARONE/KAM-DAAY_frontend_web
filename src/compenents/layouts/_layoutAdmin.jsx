@@ -109,15 +109,18 @@ export default function LayoutAdmin({ onSearch }) {
           </div>
           <div className="user-profile">
             {user ? (
-              <img
-                src={`${PROFILE_BASE_URL}/${user.profile}`}
-                alt="Profil"
-                className="profile"
-              />
+              <NavLink to="/admin/profile">
+                <img
+                  src={`${PROFILE_BASE_URL}/${user.profile}`}
+                  alt="Profil"
+                  className="profile"
+                />
+              </NavLink>
             ) : (
               <p className="no-user">Aucun utilisateur</p>
             )}
           </div>
+
           <div className="notification-icon" onClick={() => setDropdownOpen(!dropdownOpen)}>
             <FaBell className="bell" />
             {unreadCount > 0 && (

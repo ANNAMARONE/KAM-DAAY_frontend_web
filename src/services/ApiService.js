@@ -90,6 +90,11 @@ const ApiService = {
       params: { format },
       responseType: 'blob',
     }),
+    exportVendeuse: (format = 'csv') =>
+      api.get('/export_utilisateurs', {
+        params: { format },
+        responseType: 'blob',
+      }),
     //detail client
   getClientDetail: (id) => api.get(`/detail_client/${id}`),
   //ajouter un client
@@ -242,9 +247,27 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getDetailVendeuse: (id) => api.get(`/utilisateur_detail/${id}`),
   getClientsAdmin: () => api.get('/clients'),
   getVentes: () =>api.get('/ventes'),
-  getProduitsAdmin:()=>api.get('/admin/produits')
+  getProduitsAdmin:()=>api.get('/admin/produits'),
   
-
+  getprofile:() =>api.get('/user', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }),
+  
+  
+  updateProfile(data) {
+    return api.post('/user/update-profile', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  },
+  getVentesParMois() {
+    return api.get("/ventes-par-mois");
+  }
+  
   
 };
 

@@ -55,8 +55,8 @@ function EditVendeuseModal({ isOpen, onClose, vendeuse, onUpdate }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="modal-overlayVen">
+      <div className="modal-contentVen">
         <h2>Modifier Vendeuse</h2>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           

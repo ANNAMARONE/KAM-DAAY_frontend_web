@@ -168,8 +168,8 @@ function AfficherClient() {
       <div className="header-tools">
         <div className="filter-container">
           <div className='buttonFilter'>
-            <div>
-              <label htmlFor="filterStatut">Filtrer par statut :</label><br />
+            <div className='filterStatut'>
+              <label htmlFor="filterStatut">Filtrer par statut :</label>
               <select id="filterStatut" value={filterStatut} onChange={e => setFilterStatut(e.target.value)}>
                 <option value="">Tous</option>
                 <option value="actif">Actif</option>
@@ -178,7 +178,7 @@ function AfficherClient() {
             </div>
 
             <div className='filterDate'>
-              <label htmlFor="filterDate">Filtrer par date</label>
+              <label htmlFor="filter">Filtrer par date</label>
               <button onClick={handleToggleFilter}>
                 <MdOutlineFilterList size={20} />
                 Filtrer par date
@@ -188,7 +188,7 @@ function AfficherClient() {
 
           {showFilter && (
             <div style={{ marginTop: 10 }}>
-              <label htmlFor="startDate">Date de début :</label>
+              <label htmlFor="startDate">Date de début :</label> 
               <input
                 type="date"
                 id="startDate"
@@ -266,7 +266,7 @@ function AfficherClient() {
                   <td>{new Date(client.created_at).toLocaleDateString('fr-FR')}</td>
                   <td className='action-client'>
                     <button className="btn-view" onClick={() => setSelectedClientId(client.id)}>
-                      <GrView /> Voir
+                      <GrView />
                     </button>
                     {selectedClientId && (
                       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />

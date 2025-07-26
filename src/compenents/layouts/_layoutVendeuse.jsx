@@ -87,19 +87,18 @@ useEffect(() => {
           </div>
           <div className="user-profile">
   {user ? (
-    <>
-      
+    <NavLink to="/profile">
       <img
         src={`${PROFILE_BASE_URL}/${user.profile}`}
         alt="Profil"
         className="profile"
       />
-     
-    </>
+    </NavLink>
   ) : (
     <p className="no-user">Aucun utilisateur</p>
   )}
-      </div>
+</div>
+
 
 
           <div className="notification-icon">

@@ -28,10 +28,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    background-color: #ffffff;
+   
     padding: 1.5rem 2rem;
     border-radius: 16px;
-    
+    background-color: #f0f4ff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(67, 99, 255, 0.15);
     margin-bottom: 2rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -136,7 +139,7 @@ body {
   }
   
   .produitListe button:hover {
-    background: linear-gradient(135deg, #FDEEB7, #FAC710);
+    background:#FAC710;
     transform: scale(1.05);
   }
   
@@ -222,7 +225,7 @@ body {
   
   /* Bouton en bas */
   .infoVente button {
-    background: linear-gradient(135deg, #FAC710, #FDEEB7);
+    background: #FAC710;
     color: white;
     border: none;
     padding: 0.8rem 2rem;
