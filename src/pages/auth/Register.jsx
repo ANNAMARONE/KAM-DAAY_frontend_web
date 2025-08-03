@@ -8,7 +8,9 @@ import ApiService from '../../services/ApiService';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import ForgotPasswordRequestModal from './ForgotPasswordRequestModal';
-
+import PhoneInput from 'react-phone-input-2';
+import { FaWhatsapp } from 'react-icons/fa';
+import 'react-phone-input-2/lib/style.css';
 export default function Register() {
   // const [profile, setProfile] = useState(null);
   const [username, setUsername] = useState('');
@@ -24,7 +26,7 @@ export default function Register() {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   
   const [validationErrors, setValidationErrors] = useState({});
-
+  const localNumber = telephone.replace(/^221/, ''); 
   const resetForm = () => {
     // setProfile(null);
     setUsername('');
@@ -79,10 +81,12 @@ export default function Register() {
       errors.password_confirmation = "Les mots de passe ne correspondent pas.";
     }
 
-    if (!telephone) {
+    if (!localNumber) {
       errors.telephone = "Le numéro de téléphone est requis.";
-    } else if (!/^\d{9}$/.test(telephone)) {  // correction: exactement 8 chiffres (pas 9)
-      errors.telephone = "Le téléphone doit contenir exactement 8 chiffres.";
+    } else if (!/^\d{9}$/.test(localNumber)) {
+      errors.telephone = "Le téléphone doit contenir exactement 9 chiffres.";
+    }else if (!/^(7[05678]\d{7})$/.test(localNumber)) {
+      errors.telephone = "Numéro sénégalais invalide.";
     }
 
     // if (!localite) {
@@ -210,11 +214,32 @@ export default function Register() {
           </button>
         </div>
           {validationErrors.password_confirmation && <small className="error">{validationErrors.password_confirmation}</small>}
+          <div className="form-group">
+      <label htmlFor="telephone" className="flex items-center gap-2 font-medium text-gray-700">
+        <FaWhatsapp color="green" size={18} /> Numéro WhatsApp
+      </label>
 
-          <label>Téléphone :</label>
-          <input type="text" name="telephone" value={telephone} onChange={handleChange} />
-          {validationErrors.telephone && <small className="error">{validationErrors.telephone}</small>}
+      <PhoneInput
+        country={'sn'} // 🇸🇳 Sénégal par défaut
+        value={telephone}
+        onChange={setTelephone}
+        inputProps={{
+          name: 'telephone',
+          required: true,
+          autoFocus: true,
+        }}
+        enableSearch={true}
+        placeholder="Entrez votre numéro"
+        containerClass="custom-phone-container"
+        inputClass="custom-phone-input"
+        buttonClass="custom-flag-button"
+      />
 
+      {validationErrors.telephone && (
+        <small className="text-red-600">{validationErrors.telephone}</small>
+      )}
+    </div>
+ 
           {/* <label>Localité :</label>
           <input type="text" name="localite" value={localite} onChange={handleChange} />
           {validationErrors.localite && <small className="error">{validationErrors.localite}</small>} */}

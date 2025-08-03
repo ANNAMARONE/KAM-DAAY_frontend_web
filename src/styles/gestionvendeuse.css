@@ -1,0 +1,472 @@
+/* --- Page container --- */
+.gestion-vendeuse-container {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+/* --- Header section --- */
+.headervendeuseListe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.headerTopLeft_vendeuse {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.search-table_vendeuse {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-input-vendeuse {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-width: 200px;
+  font-size: 1rem;
+}
+
+.search-button_vendeuse,
+.close-button_vendeuse {
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button_vendeuse {
+  background-color: #dc3545;
+}
+
+/* --- Filters & actions --- */
+.header-tools_vendeuse {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 1.2rem;
+  margin: 0 0.3rem;
+  padding: 0.2rem;
+  transition: color 0.3s ease;
+}
+
+.action-btn:hover {
+  color: #0056b3;
+  background: white;
+}
+
+.delete-btn {
+  color: #dc3545;
+  
+}
+
+.delete-btn:hover {
+  color: #a71d2a;
+}
+
+
+
+/* Ligne horizontale des filtres */
+.buttonFilter_vendeuse {
+ display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+ 
+}
+
+/* Les blocs individuels dans la ligne */
+.buttonFilter_vendeuse > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+.buttonFilter_vendeuse input{
+  
+}
+/* Labels filtres */
+.buttonFilter_vendeuse label,
+.date-filter-container label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* Select filtre statut */
+#filterStatut_vendeuse {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+#filterStatut_vendeuse:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Bouton avec icône - filtre date */
+.btn-toggle-date-filter {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-toggle-date-filter:hover {
+  background-color: #0056b3;
+}
+
+/* Conteneur du filtre de dates */
+.date-filter-container {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #f0f4ff;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Input date */
+.date-filter-container input[type="date"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.date-filter-container input[type="date"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Bouton Appliquer */
+.date-filter-container button {
+  padding: 0.5rem 1.2rem;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.date-filter-container button:hover {
+  background-color: #0056b3;
+}
+
+/* --- Action buttons --- */
+.button_Action_vendeuse button {
+  margin-left: 1rem;
+  padding: 0.5rem 0.8rem;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+}
+
+.button_Action_vendeuse button:hover {
+  background-color: #0056b3;
+}
+
+.export-dropdown {
+  position: relative;
+}
+
+.export-options {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.export-options button {
+  display: block;
+  width: 100%;
+  padding: 0.4rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.export-options button:hover {
+  background-color: #f0f0f0;
+}
+
+/* --- Table --- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+}
+
+/* --- Statut badge --- */
+.Vendeuse-statut {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.statut-actif {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.statut-inactif {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* --- Pagination --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #007bff;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #e2e6ff;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+}
+/* --- Responsive -- Mobile first approach --- */
+
+/* Petits écrans (mobiles) */
+@media (max-width: 480px) {
+  .headervendeuseListe {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .headerTopLeft_vendeuse {
+    gap: 0.5rem;
+    margin-top: 20px;
+
+  }
+  .headerTopLeft_vendeuse h1{
+    font-size: 20px;
+
+  }
+  .headerTopLeft_vendeuse .btn-back{
+    display: none;
+  }
+  .search-table_vendeuse {
+    width: 70%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .search-input-vendeuse {
+    min-width: 70%;
+    font-size: 0.9rem;
+    align-items: center;
+  }
+  .search-button_vendeuse,
+  .close-button_vendeuse {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .header-tools_vendeuse {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .buttonFilter_vendeuse {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .buttonFilter_vendeuse > div {
+    min-width: 70%;
+  }
+
+  .date-filter-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .button_Action_vendeuse {
+    display: flex;                /* OBLIGATOIRE pour que le flex fonctionne */
+    flex-direction: column;       /* Affiche les boutons en colonne */
+    justify-content: center;      /* Centre verticalement dans la colonne */
+    align-items: center;          /* Centre les boutons horizontalement */
+    gap: 1rem;
+  }
+  
+  .button_Action_vendeuse button {
+    width: 40%;                   /* Plus grand si en colonne */
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+
+  /* Table : on passe en affichage "block" avec scroll horizontal */
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
+
+/* Tablettes et petits écrans larges */
+@media (min-width: 481px) and (max-width: 768px) {
+  .headervendeuseListe {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .search-table_vendeuse {
+    flex-grow: 1;
+  }
+  .search-input-vendeuse {
+    min-width: 150px;
+    font-size: 0.95rem;
+  }
+  .buttonFilter_vendeuse {
+    gap: 1rem;
+  }
+  .button_Action_vendeuse {
+    display: flex;                /* OBLIGATOIRE pour que le flex fonctionne */
+    flex-direction: column;       /* Affiche les boutons en colonne */
+    justify-content: center;      /* Centre verticalement dans la colonne */
+    align-items: center;          /* Centre les boutons horizontalement */
+    gap: 1rem;
+  }
+  
+  .button_Action_vendeuse button {
+    width: 80%;                   /* Plus grand si en colonne */
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+}
+
+/* Desktop large - on peut éventuellement augmenter les espacements */
+@media (min-width: 1200px) {
+  .gestion-vendeuse-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .table th,
+  .table td {
+    font-size: 1rem;
+  }
+}

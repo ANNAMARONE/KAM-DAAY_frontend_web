@@ -78,12 +78,23 @@ const ApiService = {
 //rechercher les clients par nom, prénom ou téléphone
   searchClients: (searchTerm) =>
     api.get('/clients/search', { params: { q: searchTerm } }),
+
+
+  searchVendeuses: (searchTerm) =>
+    api.get('/recherche_utilisateur', { params: { q: searchTerm } }),
+
+   
   //exporter les clients format pdf
   exportClients: (format = 'csv') =>
     api.get('/exportmes_clients', {
       params: { format },
       responseType: 'blob',
     }),
+    exportVendeuse: (format = 'csv') =>
+      api.get('/export_utilisateurs', {
+        params: { format },
+        responseType: 'blob',
+      }),
     //detail client
   getClientDetail: (id) => api.get(`/detail_client/${id}`),
   //ajouter un client
@@ -195,7 +206,11 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
 
 
   //afficher les vendeuses
+<<<<<<< HEAD
   getVendeuses: () => api.get('/vendeuses'),
+=======
+  getVendeuses: () => api.get('/utilisateurs'),
+>>>>>>> develop
   
   //ajouter une vendeuse
   addVendeuse: (data) => {
@@ -210,6 +225,7 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   //modifier une vendeuse
   updateVendeuse: (id, data) => {
     if (data instanceof FormData) {
+<<<<<<< HEAD
       return api.put(`/modifier_vendeuse/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -219,6 +235,16 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
 
   //supprimer une vendeuse
   deleteVendeuse: (id) => api.delete(`/vendeuses/${id}`),
+=======
+      return api.post(`/admin/modifier_vendeuse/${id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+  },
+
+  //supprimer une vendeuse
+  deleteVendeuse: (id) => api.delete(`/supprimer_utilisateur/${id}`),
+>>>>>>> develop
 
   //afficher les statistiques des ventes par jour
   getStatistiquesVentesParJour: () => api.get('/statistiques-ventes-par-jour'),
@@ -234,7 +260,35 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getVendeuses: () => api.get('/admin/vendeuses'),
   activeVendeuse: (id) => api.post(`/activer_utilisateur/${id}`),
   desactiveVendeuse: (id) => api.post(`/desactiver_utilisateur/${id}`),
+<<<<<<< HEAD
 
+=======
+  getDetailVendeuse: (id) => api.get(`/utilisateur_detail/${id}`),
+  getClientsAdmin: () => api.get('/clients'),
+  getVentes: () =>api.get('/ventes'),
+  getProduitsAdmin:()=>api.get('/admin/produits'),
+  
+  getprofile:() =>api.get('/user', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    }),
+  
+  
+  updateProfile(data) {
+    return api.post('/user/update-profile', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  },
+  getVentesParMois() {
+    return api.get("/ventes-par-mois");
+  }
+  
+  
+>>>>>>> develop
 };
 
 export default ApiService;

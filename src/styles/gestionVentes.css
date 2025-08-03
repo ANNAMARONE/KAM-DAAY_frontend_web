@@ -1,0 +1,165 @@
+.gestion-ventes-container {
+    padding: 30px;
+    background-color: #f7f8fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .gestion-ventes-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .vente-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .vente-table thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+  }
+  
+  .vente-table th,
+  .vente-table td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .vente-table ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .vente-table ul li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vente-table img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .vente-table td:last-child {
+    font-weight: bold;
+    color: #27ae60;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+  
+  .pagination button {
+    padding: 8px 14px;
+    background-color: #f0f0f0;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .pagination button:hover {
+    background-color: #dcdcdc;
+  }
+  
+  .pagination button.active {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: bold;
+  }
+  /* --- Responsive design --- */
+
+/* Mobiles (écrans ≤ 480px) */
+@media (max-width: 480px) {
+  .gestion-ventes-container {
+    padding: 15px;
+  }
+
+  .gestion-ventes-container h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+
+  .vente-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .vente-table th,
+  .vente-table td {
+    padding: 10px;
+  }
+
+  .vente-table img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .pagination button {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablettes (481px à 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .gestion-ventes-container {
+    padding: 20px;
+  }
+
+  .gestion-ventes-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .vente-table {
+    font-size: 0.95rem;
+  }
+
+  .vente-table th,
+  .vente-table td {
+    padding: 11px 12px;
+  }
+
+  .vente-table img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .pagination button {
+    padding: 7px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Grands écrans (≥ 1200px) */
+@media (min-width: 1200px) {
+  .gestion-ventes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+  
+
+  

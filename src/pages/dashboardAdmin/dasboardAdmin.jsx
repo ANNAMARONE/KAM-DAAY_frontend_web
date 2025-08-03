@@ -22,20 +22,47 @@ export default function DashboardAdmin() {
     totalVendeuses: 0,
     totalClients: 0,
   });
+  const [salesData, setSalesData] = useState([]);
+
 
   const [vendeuses, setVendeuses] = useState([]);
-  const [salesData] = useState([
-    { mois: "Janvier", total: 120 },
-    { mois: "Février", total: 200 },
-    { mois: "Mars", total: 180 },
-    { mois: "Avril", total: 250 },
-    { mois: "Mai", total: 300 },
-  ]);
 
+  const fetchSalesData = async () => {
+    try {
+      const response = await ApiService.getVentesParMois();
+  
+      // Détermine la bonne structure de données
+      const rawData = Array.isArray(response.data)
+        ? response.data
+        : response.data.ventes || [];
+  
+      // Si ce n’est pas un tableau, ne pas continuer
+      if (!Array.isArray(rawData)) {
+        console.error("Format de données inattendu:", response.data);
+        return;
+      }
+  
+      const moisOrdre = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      ];
+  
+      const sortedData = rawData.sort(
+        (a, b) => moisOrdre.indexOf(a.mois) - moisOrdre.indexOf(b.mois)
+      );
+  
+      setSalesData(sortedData);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des ventes par mois:", error);
+    }
+  };
+  
   useEffect(() => {
     fetchAllStats();
     fetchVendeuses();
+    fetchSalesData(); // <-- C’est ce qu’il manquait
   }, []);
+  
 
   const fetchAllStats = async () => {
     try {
@@ -97,49 +124,50 @@ export default function DashboardAdmin() {
 
   return (
     <div className="dashboard-admin">
-      <h1 className="dashboard-title">Tableau de bord - Administrateur</h1>
+     
 
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Clients</p>
-              <p className="stat-value">{stats.totalClients}</p>
-            </div>
-            <Users className="stat-icon text-blue-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Ventes</p>
-              <p className="stat-value">{stats.totalVentes}</p>
-            </div>
-            <ShoppingCart className="stat-icon text-green-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Produits</p>
-              <p className="stat-value">{stats.totalProduits}</p>
-            </div>
-            <Package className="stat-icon text-yellow-500" size={32} />
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-content">
-            <div>
-              <p className="stat-label">Vendeuses</p>
-              <p className="stat-value">{stats.totalVendeuses}</p>
-            </div>
-            <BarChart2 className="stat-icon text-purple-500" size={32} />
-          </div>
-        </div>
+  <div className="stat-card clients-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Clients</p>
+        <p className="stat-value">{stats.totalClients}</p>
       </div>
+      <Users className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card ventes-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Ventes</p>
+        <p className="stat-value">{stats.totalVentes}</p>
+      </div>
+      <ShoppingCart className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card produits-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Produits</p>
+        <p className="stat-value">{stats.totalProduits}</p>
+      </div>
+      <Package className="stat-icon" size={32} />
+    </div>
+  </div>
+
+  <div className="stat-card vendeuses-card">
+    <div className="stat-content">
+      <div>
+        <p className="stat-label">Vendeuses</p>
+        <p className="stat-value">{stats.totalVendeuses}</p>
+      </div>
+      <BarChart2 className="stat-icon" size={32} />
+    </div>
+  </div>
+</div>
+
 
       <div className="chart-container">
         <h2 className="section-title">Évolution des ventes</h2>
@@ -164,6 +192,7 @@ export default function DashboardAdmin() {
 
       <div className="vendeuses-section">
         <h2 className="section-title">Quelques vendeuses</h2>
+        <div className="table-responsive">
         <table className="vendeuses-table">
           <thead>
             <tr>
@@ -206,6 +235,7 @@ export default function DashboardAdmin() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

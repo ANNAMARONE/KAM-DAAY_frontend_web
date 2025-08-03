@@ -1,0 +1,81 @@
+.gestion-produit-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .produit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .produit-table th,
+  .produit-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .produit-table th {
+    background-color: #f5f5f5;
+  }
+  
+  .produit-table img {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  /* ----------- Responsive design ----------- */
+
+/* Mobile (≤ 480px) */
+@media (max-width: 480px) {
+  .gestion-produit-container {
+    padding: 10px;
+  }
+
+  .produit-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .produit-table th,
+  .produit-table td {
+    padding: 8px;
+  }
+
+  .produit-table img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Tablette (481px à 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .gestion-produit-container {
+    padding: 15px;
+  }
+
+  .produit-table {
+    font-size: 0.95rem;
+  }
+
+  .produit-table th,
+  .produit-table td {
+    padding: 9px;
+  }
+
+  .produit-table img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Grand écran (≥ 1200px) */
+@media (min-width: 1200px) {
+  .gestion-produit-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
