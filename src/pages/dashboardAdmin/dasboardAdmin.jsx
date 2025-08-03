@@ -124,7 +124,7 @@ export default function DashboardAdmin() {
 
   return (
     <div className="dashboard-admin">
-      <h1 className="dashboard-title">Tableau de bord - Administrateur</h1>
+     
 
       <div className="stats-grid">
   <div className="stat-card clients-card">
@@ -192,6 +192,7 @@ export default function DashboardAdmin() {
 
       <div className="vendeuses-section">
         <h2 className="section-title">Quelques vendeuses</h2>
+        <div className="table-responsive">
         <table className="vendeuses-table">
           <thead>
             <tr>
@@ -234,6 +235,7 @@ export default function DashboardAdmin() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

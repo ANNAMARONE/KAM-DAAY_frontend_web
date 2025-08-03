@@ -151,11 +151,19 @@ function GestionVendeuse_admin() {
       console.error('Erreur lors de la mise à jour', error);
     }
   };
-  
+   const handleDelete = async (id) => {
+    try {
+      await ApiService.deleteVendeuse(id);
+      setVendeuses(vendeuses.filter(v => v.id !== id));
+      applyFilters(); // Reapply filters after deletion
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la vendeuse:', error);
+    }
+   }
  
   return (
     <div>
-      <h1>Gestion des vendeuses</h1>
+     
       <div className='headervendeuseListe'>
         <div className='headerTopLeft_vendeuse'>
           <button className="btn-back" onClick={() => navigate(-1)}>
@@ -281,7 +289,7 @@ function GestionVendeuse_admin() {
                   <button onClick={() => handleEditClick(vendeuse)} title="Modifier" className="action-btn edit-btn">
                     <FiEdit />
                   </button>
-                  <button title="Supprimer" className="action-btn delete-btn">
+                  <button onClick={()=>handleDelete(vendeuse.id)} title="Supprimer" className="action-btn delete-btn">
                     <FiTrash2 />
                   </button>
                 </td>

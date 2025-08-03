@@ -51,7 +51,7 @@ export default function ClientEditModal({ clientId, onClose, onRefresh }) {
           <option value="particulier">Particulier</option>
           <option value="entreprise">Entreprise</option>
         </select>
-        <select name="statut" value={client.statut} onChange={handleChange}>
+        <select type="hiden" name="statut" value={client.statut} onChange={handleChange}>
           <option value="actif">Actif</option>
           <option value="inactif">Inactif</option>
         </select>

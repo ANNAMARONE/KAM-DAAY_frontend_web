@@ -328,3 +328,145 @@
   background-color: #007bff;
   color: white;
 }
+/* --- Responsive -- Mobile first approach --- */
+
+/* Petits écrans (mobiles) */
+@media (max-width: 480px) {
+  .headervendeuseListe {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .headerTopLeft_vendeuse {
+    gap: 0.5rem;
+    margin-top: 20px;
+
+  }
+  .headerTopLeft_vendeuse h1{
+    font-size: 20px;
+
+  }
+  .headerTopLeft_vendeuse .btn-back{
+    display: none;
+  }
+  .search-table_vendeuse {
+    width: 70%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .search-input-vendeuse {
+    min-width: 70%;
+    font-size: 0.9rem;
+    align-items: center;
+  }
+  .search-button_vendeuse,
+  .close-button_vendeuse {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .header-tools_vendeuse {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .buttonFilter_vendeuse {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .buttonFilter_vendeuse > div {
+    min-width: 70%;
+  }
+
+  .date-filter-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .button_Action_vendeuse {
+    display: flex;                /* OBLIGATOIRE pour que le flex fonctionne */
+    flex-direction: column;       /* Affiche les boutons en colonne */
+    justify-content: center;      /* Centre verticalement dans la colonne */
+    align-items: center;          /* Centre les boutons horizontalement */
+    gap: 1rem;
+  }
+  
+  .button_Action_vendeuse button {
+    width: 40%;                   /* Plus grand si en colonne */
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+
+  /* Table : on passe en affichage "block" avec scroll horizontal */
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
+
+/* Tablettes et petits écrans larges */
+@media (min-width: 481px) and (max-width: 768px) {
+  .headervendeuseListe {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .search-table_vendeuse {
+    flex-grow: 1;
+  }
+  .search-input-vendeuse {
+    min-width: 150px;
+    font-size: 0.95rem;
+  }
+  .buttonFilter_vendeuse {
+    gap: 1rem;
+  }
+  .button_Action_vendeuse {
+    display: flex;                /* OBLIGATOIRE pour que le flex fonctionne */
+    flex-direction: column;       /* Affiche les boutons en colonne */
+    justify-content: center;      /* Centre verticalement dans la colonne */
+    align-items: center;          /* Centre les boutons horizontalement */
+    gap: 1rem;
+  }
+  
+  .button_Action_vendeuse button {
+    width: 80%;                   /* Plus grand si en colonne */
+    max-width: 300px;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+  .table th,
+  .table td {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+}
+
+/* Desktop large - on peut éventuellement augmenter les espacements */
+@media (min-width: 1200px) {
+  .gestion-vendeuse-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .table th,
+  .table td {
+    font-size: 1rem;
+  }
+}

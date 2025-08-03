@@ -14,6 +14,7 @@
   justify-content: space-between;
   background-color: white;
   padding: 6px 16px; 
+ 
   
  
 }
@@ -327,4 +328,154 @@
 .no-user {
   color: red;
   font-weight: bold;
+}
+/* ========== RESPONSIVE ========== */
+@media screen and (max-width: 1024px) {
+  .admin-body {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 60px;
+    left: -100%;
+    width: 240px;
+    height: calc(100vh - 60px);
+    background: white;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  
+  }
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .header-left .logo {
+    height: 30px;
+  }
+
+  .header-center {
+    display: none;
+  }
+
+  .search-container {
+    width: 100%;
+  }
+
+  .user-profile .profile {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search-container {
+    display: none;
+  }
+
+  .header-right {
+    gap: 10px;
+  }
+
+  .admin-header {
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  
+  }
+
+  /* ✅ Affiche bien les spans, alignés avec les icônes */
+  .admin-sidebar ul li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #111827;
+  }
+
+  .admin-sidebar ul li .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-start; /* <-- important */
+  }
+
+  .admin-sidebar ul li span {
+    display: inline;
+    font-size: 14px;
+    color: white; /* adapte à ton thème */
+  }
+  .admin-sidebar ul li span {
+    
+    color: rgb(10, 9, 9); /* adapte à ton thème */
+  }
+
+}
+
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.mobile-menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background-color: black;
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+}
+body.menu-open {
+  overflow: hidden;
+}
+@media screen and (max-width: 768px) {
+  .search-container {
+    display: none;
+  }
+
+  .header-right {
+    gap: 10px;
+  }
+
+  .admin-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+ 
+
+  .admin-sidebar ul li .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .admin-sidebar ul li span {
+    display: inline;
+    position: relative;
+    left: 0;
+    font-size: 14px;
+  }
+  .admin-sidebar ul li span {
+    display: inline;
+    font-size: 14px;
+    color: white; 
+  }
+  .admin-sidebar ul li span {
+    
+    color: rgb(10, 9, 9); /* adapte à ton thème */
+  }
+
 }

@@ -24,6 +24,7 @@ export default function LayoutAdmin({ onSearch }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     ApiService.logout()
@@ -75,7 +76,10 @@ export default function LayoutAdmin({ onSearch }) {
       console.error('Erreur lors du marquage comme lu:', error);
     }
   };
-
+  // Gestion du scroll si menu ouvert
+  useEffect(() => {
+    document.body.classList.toggle('menu-open', menuOpen)
+  }, [menuOpen])
   return (
     <div className="admin-container">
       {/* HEADER */}
@@ -146,52 +150,60 @@ export default function LayoutAdmin({ onSearch }) {
             )}
           </div>
         </div>
+         {/* Toggle menu mobile */}
+         <div className="mobile-menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </div>
       </header>
 
       <div className="admin-body">
         {/* SIDEBAR */}
-        <aside className="admin-sidebar">
+        <aside className={`admin-sidebar ${menuOpen ? 'open' : ''}`}>
           <nav className="sidebar-nav">
             <ul>
               <li>
-                <NavLink to="/admin dasboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/admin dasboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}>
                   <AiOutlineHome /> <span>Tableau de bord</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/gestion_vendeuse" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/gestion_vendeuse" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}>
                   <AiOutlineUser /> <span>Suivi des vendeuses</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to='/gestion_client' className="nav-link submenu-toggle" onClick={() => setOpenClientMenu(!openClientMenu)}>
+                <NavLink to='/gestion_client' className="nav-link submenu-toggle" onClick={() => setMenuOpen(false)}>
                 <AiOutlineTeam /> <span>Gestion Client</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/gestion_ventes" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/gestion_ventes" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                   <AiOutlineShopping /> <span>Gestion des ventes</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/gestion_produit" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/gestion_produit" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                   <MdInventory /> <span>Gestion des produits</span>
                 </NavLink>
               </li>
 
              
               <li>
-                <NavLink to="/admin/statistiques" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/admin/statistiques" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                   <AiOutlineBarChart /> <span>Statistiques</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/parametre" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                <NavLink to="/parametre" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
                   <AiOutlineSetting /> <span>Paramètres</span>
                 </NavLink>
               </li>
               <li>
-                <button onClick={handleLogout} className="nav-link logout-btn">
+                <button onClick={handleLogout}  className="nav-link logout-btn" >
                   <AiOutlineLogout /> <span>Déconnexion</span>
                 </button>
               </li>

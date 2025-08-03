@@ -228,7 +228,7 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   },
 
   //supprimer une vendeuse
-  deleteVendeuse: (id) => api.delete(`/vendeuses/${id}`),
+  deleteVendeuse: (id) => api.delete(`/supprimer_utilisateur/${id}`),
 
   //afficher les statistiques des ventes par jour
   getStatistiquesVentesParJour: () => api.get('/statistiques-ventes-par-jour'),

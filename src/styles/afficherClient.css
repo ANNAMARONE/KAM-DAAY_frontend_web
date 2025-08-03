@@ -374,34 +374,79 @@
     align-items: center;
   
   }
+
   
   /* Responsive */
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     .client-table-container {
-      font-size: 18px;
+      margin: 20px 20px auto;
+      padding: 20px 10px;
     }
   
     .headerclientListe,
-    .header-tools {
+    .headerTopLeft,
+    .buttonFilter,
+    .header-tools,
+    .button_Action,
+    .action-client {
       flex-direction: column;
       align-items: flex-start;
+      gap: 12px;
+      align-items: center;
+    }
+  
+    .headerTopLeft h1 {
+      font-size: 22px;
+    }
+  
+    .headerTopLeft .btn-back {
+      font-size: 22px;
+      align-self: flex-start;
+    display: none;
     }
   
     .search-input-client,
+    .filterDate button,
     .filter-container input,
-    .filter-container select {
-      width: 100%;
-    }
-  
-    .button_Action {
-      flex-direction: column;
-      width: 100%;
-    }
-  
+    .filter-container select,
     .btn-add-client,
     .btn-export,
-    .btn-print {
+    .btn-print,
+    .btn-filter {
       width: 100%;
+    }
+  
+    .client-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    .client-table th,
+    .client-table td {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+  
+    .client-table .btn-view,
+    .client-table .btn-update,
+    .client-table .btn-delate {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  
+    .export-dropdown {
+      width: 100%;
+    }
+  
+    .export-options {
+      width: 100%;
+      left: 0;
+    }
+  
+    .pagination {
+      flex-wrap: wrap;
+      gap: 6px;
     }
   }
   
