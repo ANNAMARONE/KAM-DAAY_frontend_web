@@ -206,11 +206,7 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
 
 
   //afficher les vendeuses
-<<<<<<< HEAD
-  getVendeuses: () => api.get('/vendeuses'),
-=======
   getVendeuses: () => api.get('/utilisateurs'),
->>>>>>> develop
   
   //ajouter une vendeuse
   addVendeuse: (data) => {
@@ -225,17 +221,6 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   //modifier une vendeuse
   updateVendeuse: (id, data) => {
     if (data instanceof FormData) {
-<<<<<<< HEAD
-      return api.put(`/modifier_vendeuse/${id}`, data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-    }
-    return api.put(`/modifier_vendeuse/${id}`, data);
-  },
-
-  //supprimer une vendeuse
-  deleteVendeuse: (id) => api.delete(`/vendeuses/${id}`),
-=======
       return api.post(`/admin/modifier_vendeuse/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -244,7 +229,6 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
 
   //supprimer une vendeuse
   deleteVendeuse: (id) => api.delete(`/supprimer_utilisateur/${id}`),
->>>>>>> develop
 
   //afficher les statistiques des ventes par jour
   getStatistiquesVentesParJour: () => api.get('/statistiques-ventes-par-jour'),
@@ -260,9 +244,6 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getVendeuses: () => api.get('/admin/vendeuses'),
   activeVendeuse: (id) => api.post(`/activer_utilisateur/${id}`),
   desactiveVendeuse: (id) => api.post(`/desactiver_utilisateur/${id}`),
-<<<<<<< HEAD
-
-=======
   getDetailVendeuse: (id) => api.get(`/utilisateur_detail/${id}`),
   getClientsAdmin: () => api.get('/clients'),
   getVentes: () =>api.get('/ventes'),
@@ -288,7 +269,6 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   }
   
   
->>>>>>> develop
 };
 
 export default ApiService;

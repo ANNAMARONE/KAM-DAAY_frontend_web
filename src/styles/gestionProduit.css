@@ -135,4 +135,86 @@
     border-radius: 6px;
     
   }
-  
+  /* ---------- Responsive ---------- */
+
+/* Mobile : jusqu'à 480px */
+@media (max-width: 480px) {
+  .produits-container {
+    padding: 1rem;
+  }
+
+  .produits-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-produit {
+    flex-direction: column;
+    width: 80%;
+  }
+
+  .form-produit input,
+  .form-produit select,
+  .form-produit button {
+    width: 90%;
+    flex: unset;
+  }
+
+  .table-produits {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .table-produits th,
+  .table-produits td {
+    padding: 0.6rem;
+  }
+
+  .table-produits img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .table-produits input[name="stock"] {
+    width: 60px;
+  }
+}
+
+/* Tablette : 481px à 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .form-produit {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .form-produit input,
+  .form-produit select {
+    flex: 1 1 100%;
+  }
+
+  .form-produit button {
+    width: 100%;
+  }
+
+  .table-produits {
+    font-size: 0.95rem;
+  }
+
+  .table-produits img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .table-produits input[name="stock"] {
+    width: 70px;
+  }
+}
+
+/* Desktop large : à partir de 1200px */
+@media (min-width: 1200px) {
+  .produits-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}

@@ -14,13 +14,10 @@ import { GrView } from "react-icons/gr";
 import '../../styles/theme.css';
 import ClientEditModal from './ClientEditModal';
 import Swal from 'sweetalert2';
-<<<<<<< HEAD
-
-=======
 import { CiImport } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
->>>>>>> develop
+
 function GestionClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
@@ -306,19 +303,11 @@ const handleDelete = async (id) => {
                 {selectedClientId && (
       <ClientDetailModal clientId={selectedClientId} onClose={() => setSelectedClientId(null)} />
     )}
-<<<<<<< HEAD
-           <button className="btn-update" onClick={() => setEditClientId(client.id)}>
-            modifier
-          </button>
-     
-           <button  onClick={() => handleDelete(client.id)} className="btn-delate">supprimer</button>
-=======
            <button className="btn-update" onClick={() => setEditClientId(client.id) }>
            <FaEdit />
           </button>
      
            <button  onClick={() => handleDelete(client.id)} className="btn-delate"><MdDelete /></button>
->>>>>>> develop
            
                 </td>
               </tr>

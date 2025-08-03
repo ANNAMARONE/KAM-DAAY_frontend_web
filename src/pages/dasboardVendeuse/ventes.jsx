@@ -247,19 +247,6 @@ function Ventes() {
 
           </table>
           <h3>Informations du Client</h3>
-<<<<<<< HEAD
-          <div className="choix-client">
-  <label>
-    <input
-      type="radio"
-      name="choixClient"
-      value="existant"
-      checked={choixClient === 'existant'}
-      onChange={() => setChoixClient('existant')}
-    />
-    Client existant
-  </label>
-=======
 
 <div className="choix-client">
   {/* Affiche "Client existant" uniquement s'il y a des clients */}
@@ -277,7 +264,6 @@ function Ventes() {
   )}
 
   {/* Ce bouton est toujours visible */}
->>>>>>> develop
   <label>
     <input
       type="radio"
@@ -288,50 +274,6 @@ function Ventes() {
     />
     Nouveau client
   </label>
-<<<<<<< HEAD
-</div>
-
-{choixClient === 'existant' ? (
-  <select
-    value={client.client_id}
-    onChange={(e) => setClient({ ...client, client_id: e.target.value })}
-  >
-    <option value="">-- Sélectionner un client --</option>
-    {clients.map((c) => (
-      <option key={c.id} value={c.id}>
-        {c.prenom} {c.nom} - {c.telephone}
-      </option>
-    ))}
-  </select>
-) : (
-<div className="form-client">
-  <input
-    type="text"
-    placeholder="Nom"
-    value={client.nom}
-    onChange={(e) => setClient({ ...client, nom: e.target.value })}
-  />
-  <input
-    type="text"
-    placeholder="Prénom"
-    value={client.prenom}
-    onChange={(e) => setClient({ ...client, prenom: e.target.value })}
-  />
-  <input
-    type="tel"
-    placeholder="Téléphone"
-    value={client.telephone}
-    onChange={(e) => setClient({ ...client, telephone: e.target.value })}
-  />
-  <input
-    type="text"
-    placeholder="Adresse"
-    value={client.adresse}
-    onChange={(e) => setClient({ ...client, adresse: e.target.value })}
-  />
-</div>
-)}
-=======
 </div>
 
 {/* Affichage du formulaire selon le choix */}
@@ -378,7 +320,6 @@ function Ventes() {
 
 
 
->>>>>>> develop
           <button onClick={handleSubmit}>Enregistrer la vente</button>
         </>
       )}

@@ -10,10 +10,6 @@ import { TfiExport } from "react-icons/tfi";
 import ClientDetailModal from './ClientDetailModal';
 import { GrView } from "react-icons/gr";
 import '../../styles/theme.css';
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 function AfficherClient() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);

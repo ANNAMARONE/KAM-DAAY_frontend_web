@@ -12,16 +12,6 @@ import Logo from '../../assets/images/logo_light.png'
 import '../../styles/_layouts.css'
 import '../../styles/theme.css'
 import '../../index.css'
-<<<<<<< HEAD
-import ApiService from '../../services/ApiService'
-import { PROFILE_BASE_URL } from '../../services/ApiService';
-
-function LayoutVendeuse({ onSearch }) {
-  const navigate = useNavigate()
-  const [openClientMenu, setOpenClientMenu] = useState(false)
-  const [user, setUser] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-=======
 import ApiService, { PROFILE_BASE_URL } from '../../services/ApiService'
 
 function LayoutVendeuse({ onSearch }) {
@@ -31,7 +21,6 @@ function LayoutVendeuse({ onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   // Déconnexion
->>>>>>> develop
   const handleLogout = () => {
     ApiService.logout()
       .then(() => {
@@ -40,25 +29,6 @@ function LayoutVendeuse({ onSearch }) {
       })
       .catch((error) => console.error('Erreur lors de la déconnexion:', error))
   }
-<<<<<<< HEAD
-}, [])
-useEffect(() => {
-  if (onSearch) {
-    onSearch(searchTerm);
-  }
-}, [searchTerm]);
-  //afficher l'utilisateur connecté
-  useEffect(() => {
-    ApiService.getCurrentUser()
-      .then((response) => {
-        setUser(response.data.user); 
-      })
-      .catch((error) => {
-        console.error('Erreur récupération utilisateur :', error);
-      });
-  }, []);
-  
-=======
 
   // Vérification de l'authentification
   useEffect(() => {
@@ -83,7 +53,6 @@ useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen)
   }, [menuOpen])
 
->>>>>>> develop
   return (
     <div className="admin-container">
       {/* HEADER */}
@@ -106,32 +75,6 @@ useEffect(() => {
 
         <div className="header-right">
           <div className="search-container">
-<<<<<<< HEAD
-            <input type="text"
-             placeholder="Rechercher..."
-              className="search-input" 
-              value={searchTerm}
-               onChange={(e) => setSearchTerm(e.target.value)} />
-            <button className="search-button" onClick={() => onSearch && onSearch(searchTerm)}>
-        <FaSearch />
-      </button>
-          </div>
-          <div className="user-profile">
-  {user ? (
-    <>
-      
-      <img
-        src={`${PROFILE_BASE_URL}/${user.profile}`}
-        alt="Profil"
-        className="profile"
-      />
-     
-    </>
-  ) : (
-    <p className="no-user">Aucun utilisateur</p>
-  )}
-      </div>
-=======
             <input
               type="text"
               placeholder="Rechercher..."
@@ -146,7 +89,6 @@ useEffect(() => {
               <FaSearch />
             </button>
           </div>
->>>>>>> develop
 
           <div className="user-profile">
             {user ? (

@@ -19,8 +19,7 @@ import GestionProduits from './pages/dasboardVendeuse/gestionProduit'
 import GestionClient from './pages/dasboardVendeuse/GestionClient'
 import ClientSupprimer from './pages/dasboardVendeuse/ClientSupprimer'
 import DashboardAdmin from './pages/dashboardAdmin/dasboardAdmin'
-<<<<<<< HEAD
-=======
+
 import GestionClient_admin from './pages/dashboardAdmin/GestionClient_admin'
 import GestionVendeuse_admin from './pages/dashboardAdmin/GestionVendeuse_admin'
 import Gestionproduit_admin from './pages/dashboardAdmin/Gestionproduit_admin'
@@ -29,7 +28,6 @@ import ParamettreAdmin from './pages/dashboardAdmin/ParamettreAdmin'
 import DetailVendeuse from './pages/dashboardAdmin/detailVendeuse'
 import ProfileVendeuse from './pages/dasboardVendeuse/ProfileVendeuse'
 import 'react-phone-input-2/lib/style.css';
->>>>>>> develop
 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
