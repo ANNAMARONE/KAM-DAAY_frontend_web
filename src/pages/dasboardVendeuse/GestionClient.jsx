@@ -179,10 +179,7 @@ const handleDelete = async (id) => {
           <h1>Liste des Clients</h1>
         </div>
         <div className="search-table">
-          <NavLink to='/client/supprimer'> <button>
-            clients supprimer
-          </button>
-          </NavLink>
+         
         </div>
       </div>
 
