@@ -1,13 +1,13 @@
 import axios from 'axios';
 // Avant (local)
-// const API_BASE_URL = 'http://127.0.0.1:8000/api';
-// export const PROFILE_BASE_URL = 'http://localhost:8000/images/profiles';
-// export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage';
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
+export const PROFILE_BASE_URL = 'http://localhost:8000/images/profiles';
+export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage';
 
 // Après (production)
-const API_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/api';
-export const PROFILE_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/images/profiles';
-export const PRODUCT_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/storage';
+// const API_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/api';
+// export const PROFILE_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/images/profiles';
+// export const PRODUCT_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/storage';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -253,7 +253,9 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getClientsAdmin: () => api.get('/clients'),
   getVentes: () =>api.get('/ventes'),
   getProduitsAdmin:()=>api.get('/admin/produits'),
-  
+  async getActivites() {           // ← AJOUTER CETTE MÉTHODE
+    return axios.get("/api/activites"); // adapter selon ton endpoint réel
+  },
   getprofile:() =>api.get('/user', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

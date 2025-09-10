@@ -240,7 +240,7 @@ const handleDelete = async (id) => {
         </div>
 
         <div className='button_Action'>
-          <button className="btn-add-client" onClick={() => navigate('/Ajouter client')}>
+          <button className="btn-add-client" onClick={() => navigate('/ventes')}>
             <IoMdPersonAdd /> Ajouter un Client
           </button>
           <div className="export-dropdown">

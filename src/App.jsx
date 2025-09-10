@@ -28,7 +28,7 @@ import ParamettreAdmin from './pages/dashboardAdmin/ParamettreAdmin'
 import DetailVendeuse from './pages/dashboardAdmin/detailVendeuse'
 import ProfileVendeuse from './pages/dasboardVendeuse/ProfileVendeuse'
 import 'react-phone-input-2/lib/style.css';
-
+import './index.css'; 
 // Composant WithSidebar
 const WithSidebarVendeuse = () => (
   <LayoutVendeuse/>

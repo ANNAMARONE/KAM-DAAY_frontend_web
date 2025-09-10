@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-import '../../styles/ajouterProduit.css'
+import { motion } from 'motion/react'
+import { X, Upload, Package, DollarSign, Hash, Loader2 } from 'lucide-react'
+import { Button } from '../../components/ui/button'
+import { Input } from '../../components/ui/input'
+import { Label } from '../../components/ui/label'
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import ApiService from '../../services/ApiService'
-import '../../styles/theme.css';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 function AjouterProduits({ onClose }) {
   const [formData, setFormData] = useState({
@@ -14,8 +17,9 @@ function AjouterProduits({ onClose }) {
     unite: 'kg',
   })
   const [errors, setErrors] = useState({})
-  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
+  // Gestion des champs du formulaire
   const handleChange = (e) => {
     if (e.target.name === 'image') {
       setFormData({ ...formData, image: e.target.files[0] })
@@ -24,17 +28,33 @@ function AjouterProduits({ onClose }) {
     }
   }
 
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const data = new FormData()
-    for (let key in formData) {
-      data.append(key, formData[key])
+
+    // Vérification simple côté frontend
+    if (!formData.nom || !formData.prix_unitaire || !formData.stock) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Champs requis',
+        text: 'Veuillez remplir tous les champs obligatoires.'
+      })
+      return
     }
 
+    const data = new FormData()
+    data.append('nom', formData.nom)
+    data.append('prix_unitaire', Number(formData.prix_unitaire))
+    data.append('stock', Number(formData.stock))
+    data.append('unite', formData.unite)
+    if (formData.image) {
+      data.append('image', formData.image)
+    }
+
+    setLoading(true)
     try {
       const response = await ApiService.addProduit(data)
 
-      setSuccess(true)
       setErrors({})
       setFormData({
         nom: '',
@@ -43,101 +63,211 @@ function AjouterProduits({ onClose }) {
         stock: '',
         unite: 'kg',
       })
-      onClose() 
-      console.log('Produit ajouté avec succès:', response.data)
-      Swal.fire({
-  icon: 'success',
-  title: 'Succès',
-  text: 'Produit ajouté avec succès !',
-  timer: 2000,
-  showConfirmButton: false
-});
+      onClose()
 
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Produit ajouté avec succès !',
+        timer: 2000,
+        showConfirmButton: false
+      })
+
+      console.log('Produit ajouté avec succès:', response.data)
     } catch (error) {
+      console.error('Erreur lors de l\'ajout du produit:', error)
+
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors)
+
+        const messages = Object.values(error.response.data.errors)
+          .flat()
+          .join('<br/>')
+
         Swal.fire({
           icon: 'error',
           title: 'Erreur',
-          text: 'Échec de l’ajout du produit.',
-        });
+          html: messages
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Échec de l’ajout du produit.'
+        })
       }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="ajouter-produit-container">
-      <h2>Ajouter un Produit</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom</label>
-          <input
-            type="text"
-            name="nom"
-            value={formData.nom}
-            onChange={handleChange}
-          />
-          {errors.nom && <p className="error">{errors.nom[0]}</p>}
-        </div>
-
-        <div>
-          <label>Image</label>
-          <input type="file" name="image" onChange={handleChange} />
-          {errors.image && <p className="error">{errors.image[0]}</p>}
-        </div>
-
-        <div>
-          <label>Prix unitaire</label>
-          <input
-            type="number"
-            name="prix_unitaire"
-            value={formData.prix_unitaire}
-            onChange={handleChange}
-          />
-          {errors.prix_unitaire && (
-            <p className="error">{errors.prix_unitaire[0]}</p>
-          )}
-        </div>
-
-        <div>
-          <label>Stock</label>
-          <input
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-          />
-          {errors.stock && <p className="error">{errors.stock[0]}</p>}
-        </div>
-
-        <div>
-          <label>Unité</label>
-          <select
-            name="unite"
-            value={formData.unite}
-            onChange={handleChange}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-2xl mx-auto"
+    >
+      <Card className="border-purple-500/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl">
+        <CardHeader className="relative">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onClose}
+            className="absolute top-4 right-4 h-8 w-8 rounded-full border-slate-300 dark:border-slate-600"
           >
-            <option value="kg">kg</option>
-            <option value="litre">litre</option>
-            <option value="unite">unité</option>
-          </select>
-          {errors.unite && <p className="error">{errors.unite[0]}</p>}
-        </div>
+            <X className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center space-x-3">
+            <div className="p-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600">
+              <Package className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Ajouter un Produit
+              </CardTitle>
+              <p className="text-slate-600 dark:text-slate-400">
+                Enrichissez votre catalogue avec un nouveau produit
+              </p>
+            </div>
+          </div>
+        </CardHeader>
 
-        <div className="modal-actions">
-          <button type="submit" className="submit-btn">
-            Enregistrer
-          </button>
-    
-         <button className="cancel-btn1" type="button"  onClick={onClose}>
-            Annuler
-          </button>
-         
-        </div>
-      </form>
+        <CardContent className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Upload d'image */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-2"
+            >
+              <Label className="text-slate-700 dark:text-slate-300">Image du produit</Label>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  onChange={handleChange} // <-- correction ici
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div className="border-2 border-dashed border-purple-300 dark:border-purple-600 rounded-xl p-8 text-center hover:border-purple-500 transition-colors duration-300">
+                  <Upload className="h-12 w-12 text-purple-500 mx-auto mb-4" />
+                  <p className="text-slate-600 dark:text-slate-400">
+                    {formData.image ? formData.image.name : "Cliquez pour ajouter une image"}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-      {success && <p className="success-msg">Produit ajouté avec succès !</p>}
-    </div>
+            {/* Nom du produit */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="space-y-2"
+            >
+              <Label className="text-slate-700 dark:text-slate-300">Nom du produit</Label>
+              <Input
+                name="nom"
+                placeholder="Ex: iPhone 15 Pro"
+                value={formData.nom}
+                onChange={handleChange}
+                className="border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50"
+              />
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Prix unitaire */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="space-y-2"
+              >
+                <Label className="text-slate-700 dark:text-slate-300">Prix unitaire (FCFA)</Label>
+                <Input
+                  type="number"
+                  name="prix_unitaire"
+                  placeholder="50000"
+                  value={formData.prix_unitaire}
+                  onChange={handleChange}
+                  className="border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50"
+                />
+              </motion.div>
+
+              {/* Unité */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="space-y-2"
+              >
+                <Label className="text-slate-700 dark:text-slate-300">Unité</Label>
+                <Input
+                  name="unite"
+                  placeholder="Ex: pièce, kg, litre"
+                  value={formData.unite}
+                  onChange={handleChange}
+                  className="border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50"
+                />
+              </motion.div>
+            </div>
+
+            {/* Stock */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="space-y-2"
+            >
+              <Label className="text-slate-700 dark:text-slate-300">Stock disponible</Label>
+              <Input
+                type="number"
+                name="stock"
+                placeholder="100"
+                value={formData.stock}
+                onChange={handleChange}
+                className="border-slate-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50"
+              />
+            </motion.div>
+
+            {/* Boutons d'action */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex space-x-4 pt-4"
+            >
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1 border-slate-300 dark:border-slate-600"
+                disabled={loading}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Ajout en cours...
+                  </>
+                ) : (
+                  'Ajouter le Produit'
+                )}
+              </Button>
+            </motion.div>
+          </form>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 
