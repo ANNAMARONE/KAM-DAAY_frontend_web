@@ -49,7 +49,7 @@ function VentesApp() {
   
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // Gestion du thème
   useEffect(() => {

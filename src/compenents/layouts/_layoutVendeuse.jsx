@@ -85,21 +85,17 @@ function LayoutVendeuse({ onSearch }) {
   const [user, setUser] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const [showAIAssistant, setShowAIAssistant] = useState(false)
 
   // Gestion du thème
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark')
+      setIsDarkMode(savedTheme === 'light')
     }
   }, [])
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode)
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light')
-  }, [isDarkMode])
 
   // Déconnexion
   const handleLogout = () => {

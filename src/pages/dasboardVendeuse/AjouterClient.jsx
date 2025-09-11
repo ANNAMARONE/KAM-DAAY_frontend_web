@@ -8,6 +8,7 @@ export default function AjouterClient() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [formData, setFormData] = useState({
     prenom: '',
     nom: '',
@@ -25,6 +26,12 @@ export default function AjouterClient() {
     });
   };
 
+  // Gestion du thème
+  useEffect(() => {
+    const darkMode = document.documentElement.classList.contains('dark')
+    setIsDarkMode(darkMode)
+  }, [])
+  
   const handleProduitChange = (index, field, eventOrValue) => {
     const newProduits = [...formData.produits];
     if (field === 'image') {

@@ -1,96 +1,487 @@
-import React, { useEffect, useState } from 'react';
-import '../../styles/client-details.css';
+import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { 
+  X, 
+  User, 
+  Phone, 
+  MapPin, 
+  Calendar, 
+  ShoppingBag, 
+  Package, 
+  Loader2,
+  CreditCard,
+  TrendingUp,
+  Hash,
+  DollarSign,
+  Clock,
+  Badge as BadgeIcon
+} from 'lucide-react'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
+import { Badge } from '../../components/ui/badge'
+import { Separator } from '../../components/ui/separator'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { ScrollArea } from '../../components/ui/scroll-area'
 import ApiService from '../../services/ApiService';
-import '../../styles/theme.css';
-export default function ClientDetailModal({ clientId, onClose }) {
-  const [client, setClient] = useState(null);
+import { PROFILE_BASE_URL } from '../../services/ApiService';
+import Swal from 'sweetalert2'
+
+
+function ClientDetailModal({ clientId, onClose }) {
+  const [client, setClient] = useState<ClientDetail | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(true)
+
+  // Gestion du thème
+  useEffect(() => {
+    const darkMode = document.documentElement.classList.contains('dark')
+    setIsDarkMode(darkMode)
+  }, [])
 
   useEffect(() => {
-    const fetchClient = async () => {
-      try {
-        const response = await ApiService.getClientDetail(clientId);
-        setClient(response.data);
-      } catch (error) {
-        console.error('Erreur récupération client:', error);
-      }
-    };
+    if (clientId) {
+      fetchClient()
+    }
+  }, [clientId])
 
-    if (clientId) fetchClient();
-  }, [clientId]);
+  const fetchClient = async () => {
+    setLoading(true)
+    try {
+      const response = await ApiService.getClientDetail(clientId)
+      setClient(response.data)
+    } catch (error) {
+      console.error('Erreur récupération client:', error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Impossible de charger les détails du client'
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  if (!client) return null;
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const formatAmount = (amount) => {
+    return amount.toLocaleString('fr-FR') + ' FCFA'
+  }
+
+  const getStatutColor = (statut) => {
+    switch (statut?.toLowerCase()) {
+      case 'actif': return 'bg-emerald-500'
+      case 'inactif': return 'bg-red-500'
+      case 'suspendu': return 'bg-yellow-500'
+      default: return 'bg-slate-500'
+    }
+  }
+
+  const totalVentes = client?.ventes?.reduce((sum, vente) => sum + vente.montant_total, 0) || 0
+  const nombreVentes = client?.ventes?.length || 0
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-4"
+        >
+          <Loader2 className={`h-12 w-12 animate-spin mx-auto ${
+            isDarkMode ? 'text-purple-400' : 'text-purple-600'
+          }`} />
+          <p className={`text-lg ${
+            isDarkMode ? 'text-white' : 'text-slate-800'
+          }`}>
+            Chargement des détails...
+          </p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  if (!client) return null
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="close-button" onClick={onClose}>×</button>
-        <h2 className="client-header">Détails du client</h2>
-        <h1 className='clientName'>{client.nom} {client.prenom}</h1>
-        <table className="client-info-table">
-        
-  <thead>
-          <tr>
-            <th>Téléphone</th>
-            <th>Type</th>
-            <th>Adresse</th>
-            <th>Statut</th>
-            <th>Date d'inscription</th>
-            <th>Actions</th>
-          </tr>
-  </thead>
-  <tbody>
-          <tr>
-            <td data-label="Téléphone">{client.telephone}</td>
-            <td data-label="Type">{client.type}</td>
-            <td data-label="Adresse">{client.adresse}</td>
-            <td data-label="Statut">
-              <span className={`status-badge ${client.statut.toLowerCase()}`}>
-                <span className="status-dot"></span>
-                {client.statut}
-              </span>
-            </td>
-            <td data-label="Date d'inscription">
-              {new Date(client.created_at).toLocaleDateString('fr-FR')}
-            </td>
-            <td data-label="Actions">
-              <button className="btn-close" onClick={onClose}>Fermer</button>
-            </td>
-          </tr>
-  </tbody>
-         </table>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-6xl max-h-[90vh] overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Card className={`border-purple-500/20 ${
+            isDarkMode 
+              ? 'bg-slate-900/95 border-slate-700/50' 
+              : 'bg-white/95 border-slate-200/50'
+          } backdrop-blur-md shadow-2xl`}>
+            {/* En-tête */}
+            <CardHeader className="relative pb-6">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onClose}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full border-slate-300 dark:border-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600">
+                    <User className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-3xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      {client.prenom} {client.nom}
+                    </CardTitle>
+                    <div className="flex items-center space-x-4 mt-2">
+                      <Badge className={`${getStatutColor(client.statut)} text-white`}>
+                        <BadgeIcon className="h-3 w-3 mr-1" />
+                        {client.statut}
+                      </Badge>
+                      <span className={`text-sm ${
+                        isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                      }`}>
+                        Client {client.type}
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
+                {/* Statistiques rapides */}
+                <div className="flex space-x-4">
+                  <div className={`text-center p-3 rounded-lg ${
+                    isDarkMode ? 'bg-slate-800/50' : 'bg-slate-100/50'
+                  }`}>
+                    <div className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                      {nombreVentes}
+                    </div>
+                    <div className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                    }`}>
+                      Ventes
+                    </div>
+                  </div>
+                  <div className={`text-center p-3 rounded-lg ${
+                    isDarkMode ? 'bg-slate-800/50' : 'bg-slate-100/50'
+                  }`}>
+                    <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      {formatAmount(totalVentes)}
+                    </div>
+                    <div className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                    }`}>
+                      Total
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
 
-        <h3 className="client-header">Ventes</h3>
-        {client.ventes?.length === 0 ? (
-          <p>Aucune vente.</p>
-        ) : (
-          client.ventes.map((vente) => (
-            <div key={vente.id} className="vente-block">
-              <p><strong>Date :</strong> {new Date(vente.created_at).toLocaleDateString()}</p>
-              <table className="vente-table">
-                <thead>
-                  <tr>
-                    <th>Produit</th>
-                    <th>Quantité</th>
-                    <th>Prix unitaire</th>
-                    <th>Montant total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {vente.produits.map((produit) => (
-                    <tr key={produit.id}>
-                      <td data-label="Produit">{produit.nom}</td>
-                      <td data-label="Quantité">{produit.pivot.quantite}</td>
-                      <td data-label="Prix unitaire">{produit.pivot.prix_unitaire} F</td>
-                      <td data-label="Montant total">{produit.pivot.montant_total} F</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
+            <CardContent>
+              <ScrollArea className="h-[60vh] pr-4">
+                <div className="space-y-8">
+                  {/* Informations personnelles */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <h3 className={`text-xl font-semibold mb-4 ${
+                      isDarkMode ? 'text-white' : 'text-slate-800'
+                    }`}>
+                      Informations personnelles
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <Card className={`${
+                        isDarkMode 
+                          ? 'bg-slate-800/30 border-slate-700/50' 
+                          : 'bg-slate-50/50 border-slate-200/50'
+                      }`}>
+                        <CardContent className="p-4 text-center">
+                          <Phone className={`h-8 w-8 mx-auto mb-2 ${
+                            isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                          }`} />
+                          <div className={`font-medium ${
+                            isDarkMode ? 'text-white' : 'text-slate-800'
+                          }`}>
+                            {client.telephone}
+                          </div>
+                          <div className={`text-sm ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                          }`}>
+                            Téléphone
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`${
+                        isDarkMode 
+                          ? 'bg-slate-800/30 border-slate-700/50' 
+                          : 'bg-slate-50/50 border-slate-200/50'
+                      }`}>
+                        <CardContent className="p-4 text-center">
+                          <MapPin className={`h-8 w-8 mx-auto mb-2 ${
+                            isDarkMode ? 'text-emerald-400' : 'text-emerald-600'
+                          }`} />
+                          <div className={`font-medium ${
+                            isDarkMode ? 'text-white' : 'text-slate-800'
+                          }`}>
+                            {client.adresse}
+                          </div>
+                          <div className={`text-sm ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                          }`}>
+                            Adresse
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`${
+                        isDarkMode 
+                          ? 'bg-slate-800/30 border-slate-700/50' 
+                          : 'bg-slate-50/50 border-slate-200/50'
+                      }`}>
+                        <CardContent className="p-4 text-center">
+                          <User className={`h-8 w-8 mx-auto mb-2 ${
+                            isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                          }`} />
+                          <div className={`font-medium ${
+                            isDarkMode ? 'text-white' : 'text-slate-800'
+                          }`}>
+                            {client.type}
+                          </div>
+                          <div className={`text-sm ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                          }`}>
+                            Type de client
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className={`${
+                        isDarkMode 
+                          ? 'bg-slate-800/30 border-slate-700/50' 
+                          : 'bg-slate-50/50 border-slate-200/50'
+                      }`}>
+                        <CardContent className="p-4 text-center">
+                          <Calendar className={`h-8 w-8 mx-auto mb-2 ${
+                            isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
+                          }`} />
+                          <div className={`font-medium ${
+                            isDarkMode ? 'text-white' : 'text-slate-800'
+                          }`}>
+                            {new Date(client.created_at).toLocaleDateString('fr-FR')}
+                          </div>
+                          <div className={`text-sm ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                          }`}>
+                            Inscription
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </motion.div>
+
+                  <Separator />
+
+                  {/* Historique des ventes */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className={`text-xl font-semibold ${
+                        isDarkMode ? 'text-white' : 'text-slate-800'
+                      }`}>
+                        Historique des ventes
+                      </h3>
+                      <div className="flex items-center space-x-2">
+                        <ShoppingBag className={`h-5 w-5 ${
+                          isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                        }`} />
+                        <span className={`text-sm ${
+                          isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                        }`}>
+                          {nombreVentes} vente{nombreVentes > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
+
+                    {client.ventes?.length === 0 ? (
+                      <Card className={`${
+                        isDarkMode 
+                          ? 'bg-slate-800/30 border-slate-700/50' 
+                          : 'bg-slate-50/50 border-slate-200/50'
+                      }`}>
+                        <CardContent className="p-8 text-center">
+                          <ShoppingBag className={`h-16 w-16 mx-auto mb-4 ${
+                            isDarkMode ? 'text-slate-600' : 'text-slate-400'
+                          }`} />
+                          <h4 className={`text-lg font-medium mb-2 ${
+                            isDarkMode ? 'text-white' : 'text-slate-800'
+                          }`}>
+                            Aucune vente
+                          </h4>
+                          <p className={`${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                          }`}>
+                            Ce client n'a encore effectué aucun achat
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <div className="space-y-6">
+                        {client.ventes.map((vente, index) => (
+                          <motion.div
+                            key={vente.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + index * 0.1 }}
+                          >
+                            <Card className={`border-purple-500/20 ${
+                              isDarkMode 
+                                ? 'bg-slate-800/50 border-slate-700/50' 
+                                : 'bg-white/80 border-slate-200/50'
+                            }`}>
+                              <CardHeader className="pb-4">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500">
+                                      <CreditCard className="h-5 w-5 text-white" />
+                                    </div>
+                                    <div>
+                                      <h4 className={`font-semibold ${
+                                        isDarkMode ? 'text-white' : 'text-slate-800'
+                                      }`}>
+                                        Vente #{vente.id}
+                                      </h4>
+                                      <div className="flex items-center space-x-2 text-sm">
+                                        <Clock className={`h-3 w-3 ${
+                                          isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                        }`} />
+                                        <span className={`${
+                                          isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                        }`}>
+                                          {formatDate(vente.created_at)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                                      {formatAmount(vente.montant_total)}
+                                    </div>
+                                    <div className={`text-sm ${
+                                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                    }`}>
+                                      Total
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              
+                              <CardContent>
+                                <div className="overflow-x-auto">
+                                  <Table>
+                                    <TableHeader>
+                                      <TableRow>
+                                        <TableHead className="flex items-center space-x-2">
+                                          <Package className="h-4 w-4" />
+                                          <span>Produit</span>
+                                        </TableHead>
+                                        <TableHead className="text-center">
+                                          <div className="flex items-center justify-center space-x-2">
+                                            <Hash className="h-4 w-4" />
+                                            <span>Quantité</span>
+                                          </div>
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                          <div className="flex items-center justify-end space-x-2">
+                                            <DollarSign className="h-4 w-4" />
+                                            <span>Prix unitaire</span>
+                                          </div>
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                          <div className="flex items-center justify-end space-x-2">
+                                            <TrendingUp className="h-4 w-4" />
+                                            <span>Montant total</span>
+                                          </div>
+                                        </TableHead>
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {vente.produits.map((produit) => (
+                                        <TableRow key={produit.id}>
+                                          <TableCell className="font-medium">
+                                            {produit.nom}
+                                          </TableCell>
+                                          <TableCell className="text-center">
+                                            <Badge variant="outline">
+                                              {produit.pivot.quantite}
+                                            </Badge>
+                                          </TableCell>
+                                          <TableCell className="text-right">
+                                            {formatAmount(produit.pivot.prix_unitaire)}
+                                          </TableCell>
+                                          <TableCell className="text-right font-semibold">
+                                            {formatAmount(produit.pivot.montant_total)}
+                                          </TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                </div>
+              </ScrollArea>
+
+              {/* Bouton de fermeture */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-6 text-center"
+              >
+                <Button
+                  onClick={onClose}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Fermer
+                </Button>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
 }
+
+export default ClientDetailModal

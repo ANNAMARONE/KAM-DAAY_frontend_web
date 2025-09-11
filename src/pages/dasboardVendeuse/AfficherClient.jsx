@@ -61,7 +61,7 @@ function AfficherClient() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
+      setIsDarkMode(savedTheme === 'light');
     }
     const isDark = document.documentElement.classList.contains('dark');
     setIsDarkMode(isDark);
