@@ -31,14 +31,14 @@ import { PRODUCT_BASE_URL } from '../../services/ApiService';
 import Swal from 'sweetalert2'
 import { PROFILE_BASE_URL } from '../../services/ApiService';
 import ApiService from '../../services/ApiService';
-
+import { useNavigate } from "react-router-dom";
 function AfficherVente() {
   const [ventes, setVentes] = useState([])
   const [loading, setLoading] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [openDropdownId, setOpenDropdownId] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
-
+  const navigate = useNavigate();
   // Détection mobile
   useEffect(() => {
     const checkMobile = () => {
@@ -443,9 +443,11 @@ function AfficherVente() {
             </Button>
             <Button 
               className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+              onClick={() => navigate('/ventes')}
             >
               <Plus className="h-4 w-4 mr-2" />
               Nouvelle Vente
+              
             </Button>
           </div>
         </motion.div>
