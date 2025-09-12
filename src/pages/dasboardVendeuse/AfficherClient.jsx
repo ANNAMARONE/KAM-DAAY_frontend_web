@@ -53,7 +53,7 @@ function AfficherClient() {
   const [showExportOptions, setShowExportOptions] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const clientsPerPage = 8;
