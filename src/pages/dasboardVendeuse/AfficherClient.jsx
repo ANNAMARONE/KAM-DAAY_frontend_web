@@ -23,7 +23,8 @@ import {
   Sun,
   Moon,
   Sparkles,
-  Zap
+  Zap,
+  Menu
 } from 'lucide-react';
 import ApiService from '../../services/ApiService';
 import ClientDetailModal from './ClientDetailModal';
@@ -39,6 +40,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { Separator } from "../../components/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../../components/ui/sheet";
 
 function AfficherClient() {
   const [clients, setClients] = useState([]);
@@ -53,9 +55,21 @@ function AfficherClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const clientsPerPage = 8;
 
   const navigate = useNavigate();
+
+  // Détection mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Gestion du thème
   useEffect(() => {
@@ -184,6 +198,161 @@ function AfficherClient() {
     setShowFilter(false);
   };
 
+  // Composant Card Client pour mobile
+  const ClientCard = ({ client, index }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+      whileHover={{ scale: 1.02 }}
+      className={`p-4 rounded-xl transition-all duration-300 ${
+        isDarkMode 
+          ? 'bg-slate-800/60 border border-slate-600/30 hover:bg-slate-700/40' 
+          : 'bg-white/60 border border-slate-200/50 hover:bg-slate-50/80'
+      }`}
+    >
+      {/* Header avec avatar et infos principales */}
+      <div className="flex items-start space-x-4 mb-4">
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Avatar className="h-14 w-14 border-2 border-purple-500/30">
+            <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-600 text-white text-lg">
+              {client.nom?.charAt(0)}{client.prenom?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+        </motion.div>
+        <div className="flex-1 min-w-0">
+          <h3 className={`text-lg mb-1 truncate ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+            {client.nom} {client.prenom}
+          </h3>
+          <div className="flex flex-wrap gap-2 mb-2">
+            <Badge variant="outline" className={`text-xs ${
+              isDarkMode 
+                ? 'border-slate-500 text-slate-400' 
+                : 'border-slate-300 text-slate-600'
+            }`}>
+              ID: {client.id}
+            </Badge>
+            <Badge 
+              variant={client.type === 'Entreprise' ? 'default' : 'secondary'}
+              className={`text-xs ${
+                client.type === 'Entreprise' 
+                  ? isDarkMode 
+                    ? 'bg-purple-600/20 text-purple-300 border-purple-500/30' 
+                    : 'bg-purple-100 text-purple-700 border-purple-300'
+                  : isDarkMode 
+                    ? 'bg-blue-600/20 text-blue-300 border-blue-500/30' 
+                    : 'bg-blue-100 text-blue-700 border-blue-300'
+              }`}
+            >
+              {client.type === 'Entreprise' ? (
+                <Building className="h-3 w-3 mr-1" />
+              ) : (
+                <Users className="h-3 w-3 mr-1" />
+              )}
+              {client.type}
+            </Badge>
+          </div>
+          <Badge 
+            variant={client.statut === 'actif' ? 'default' : 'destructive'}
+            className={`text-xs flex items-center w-fit ${
+              client.statut === 'actif' 
+                ? 'bg-green-600/20 text-green-600 border-green-500/30' 
+                : 'bg-red-600/20 text-red-300 border-red-500/30'
+            }`}
+          >
+            <motion.div 
+              className={`w-2 h-2 rounded-full mr-2 ${
+                client.statut === 'actif' ? 'bg-green-600' : 'bg-red-400'
+              }`}
+              animate={{ 
+                scale: client.statut === 'actif' ? [1, 1.2, 1] : 1,
+                opacity: client.statut === 'actif' ? [1, 0.7, 1] : 1
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: client.statut === 'actif' ? Infinity : 0 
+              }}
+            />
+            {client.statut}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Informations de contact */}
+      <div className="space-y-3 mb-4">
+        <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+          <Phone className="h-4 w-4 mr-3 text-green-500 flex-shrink-0" />
+          <span className="truncate">{client.telephone}</span>
+        </div>
+        <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+          <MapPin className="h-4 w-4 mr-3 text-red-500 flex-shrink-0" />
+          <span className="truncate">{client.adresse || 'Non renseignée'}</span>
+        </div>
+        <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+          <Calendar className="h-4 w-4 mr-3 text-blue-500 flex-shrink-0" />
+          <span>{new Date(client.created_at).toLocaleDateString('fr-FR')}</span>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex justify-end space-x-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setSelectedClientId(client.id)}
+                  className={`rounded-lg p-2 ${
+                    isDarkMode 
+                      ? 'border-blue-600 bg-blue-900/20 text-blue-300 hover:bg-blue-800/30' 
+                      : 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  }`}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Voir les détails</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleWhatsappClick(client.id)}
+                  className="rounded-lg p-2 bg-green-600/20 text-green-600 border-green-500/30 hover:bg-green-500/30"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Contacter via WhatsApp</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    </motion.div>
+  );
+
   if (isLoading) {
     return (
       <div className={`flex items-center justify-center h-screen transition-colors duration-300 ${
@@ -220,15 +389,15 @@ function AfficherClient() {
         ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
         : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
     }`}>
-      <div className="p-8 space-y-8">
-        {/* Header */}
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
+        {/* Header - Responsive */}
         <motion.div 
-          className="flex flex-col space-y-6 md:flex-row md:items-center md:justify-between md:space-y-0"
+          className="flex flex-col space-y-4 sm:space-y-6 md:flex-row md:items-center md:justify-between md:space-y-0"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4 sm:space-x-6">
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -246,9 +415,9 @@ function AfficherClient() {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </motion.div>
-            <div className="space-y-2">
+            <div className="space-y-1 sm:space-y-2">
               <motion.h1 
-                className={`text-5xl tracking-tight bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent`}
+                className={`text-3xl sm:text-4xl lg:text-5xl tracking-tight bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent`}
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -256,7 +425,7 @@ function AfficherClient() {
                 Mes Clients
               </motion.h1>
               <motion.p 
-                className={`text-lg ${isDarkMode ? 'text-purple-200' : 'text-indigo-600'}`}
+                className={`text-sm sm:text-base lg:text-lg ${isDarkMode ? 'text-purple-200' : 'text-indigo-600'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
@@ -267,7 +436,7 @@ function AfficherClient() {
           </div>
 
           <motion.div 
-            className="flex space-x-4"
+            className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -281,14 +450,14 @@ function AfficherClient() {
                   : 'border-purple-500 bg-white/50 text-purple-600 hover:bg-purple-50'
               }`}
             >
-              <UserPlus className="mr-2 h-5 w-5" />
+              <UserPlus className="mr-2 h-4 w-4" />
               Ajouter Client
             </Button>
           </motion.div>
         </motion.div>
 
-        {/* Stats Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {/* Stats Cards - Responsive */}
+        <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -301,29 +470,29 @@ function AfficherClient() {
                 : 'bg-gradient-to-br from-blue-100/80 to-blue-50/60 border-blue-200/50 backdrop-blur-sm hover:shadow-blue-500/15'
             }`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className={`text-sm ${isDarkMode ? 'text-blue-100' : 'text-blue-700'}`}>
+                <CardTitle className={`text-xs sm:text-sm ${isDarkMode ? 'text-blue-100' : 'text-blue-700'}`}>
                   Total Clients
                 </CardTitle>
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <Users className={`h-6 w-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <Users className={`h-4 w-4 sm:h-6 sm:w-6 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                 </motion.div>
               </CardHeader>
               <CardContent>
                 <motion.div 
-                  className={`text-3xl ${isDarkMode ? 'text-white' : 'text-blue-900'}`}
+                  className={`text-2xl sm:text-4xl lg:text-6xl ${isDarkMode ? 'text-white' : 'text-blue-900'}`}
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   {safeFilteredClients.length}
                 </motion.div>
-                <div className={`flex items-center text-sm ${isDarkMode ? 'text-blue-200' : 'text-blue-600'}`}>
-                  <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                <div className={`flex items-center text-xs sm:text-sm ${isDarkMode ? 'text-blue-200' : 'text-blue-600'}`}>
+                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
                   <span className="text-green-500">+12%</span>
-                  <span className="ml-1">ce mois</span>
+                  <span className="ml-1 hidden sm:inline">ce mois</span>
                 </div>
               </CardContent>
             </Card>
@@ -341,28 +510,29 @@ function AfficherClient() {
                 : 'bg-gradient-to-br from-green-100/80 to-green-50/60 border-green-200/50 backdrop-blur-sm hover:shadow-green-500/15'
             }`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className={`text-sm ${isDarkMode ? 'text-green-100' : 'text-green-700'}`}>
+                <CardTitle className={`text-xs sm:text-sm ${isDarkMode ? 'text-green-100' : 'text-green-700'}`}>
                   Clients Actifs
                 </CardTitle>
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <CheckCircle className={`h-6 w-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                  <CheckCircle className={`h-4 w-4 sm:h-6 sm:w-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
                 </motion.div>
               </CardHeader>
               <CardContent>
                 <motion.div 
-                  className={`text-3xl ${isDarkMode ? 'text-white' : 'text-green-900'}`}
+                  className={`text-2xl sm:text-3xl ${isDarkMode ? 'text-white' : 'text-green-900'}`}
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                 >
                   {safeFilteredClients.filter(c => c.statut === 'actif').length}
                 </motion.div>
-                <div className={`flex items-center text-sm ${isDarkMode ? 'text-green-200' : 'text-green-600'}`}>
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                  <span>Statut actif</span>
+                <div className={`flex items-center text-xs sm:text-sm ${isDarkMode ? 'text-green-200' : 'text-green-600'}`}>
+                  <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
+                  <span className="hidden sm:inline">Statut </span>
+                  <span>actif</span>
                 </div>
               </CardContent>
             </Card>
@@ -380,28 +550,29 @@ function AfficherClient() {
                 : 'bg-gradient-to-br from-purple-100/80 to-purple-50/60 border-purple-200/50 backdrop-blur-sm hover:shadow-purple-500/15'
             }`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className={`text-sm ${isDarkMode ? 'text-purple-100' : 'text-purple-700'}`}>
+                <CardTitle className={`text-xs sm:text-sm ${isDarkMode ? 'text-purple-100' : 'text-purple-700'}`}>
                   Entreprises
                 </CardTitle>
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <Building className={`h-6 w-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                  <Building className={`h-4 w-4 sm:h-6 sm:w-6 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`} />
                 </motion.div>
               </CardHeader>
               <CardContent>
                 <motion.div 
-                  className={`text-3xl ${isDarkMode ? 'text-white' : 'text-purple-900'}`}
+                  className={`text-2xl sm:text-3xl ${isDarkMode ? 'text-white' : 'text-purple-900'}`}
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   {safeFilteredClients.filter(c => c.type === 'Entreprise').length}
                 </motion.div>
-                <div className={`flex items-center text-sm ${isDarkMode ? 'text-purple-200' : 'text-purple-600'}`}>
-                  <Building className="h-4 w-4 text-purple-500 mr-1" />
-                  <span>Clients B2B</span>
+                <div className={`flex items-center text-xs sm:text-sm ${isDarkMode ? 'text-purple-200' : 'text-purple-600'}`}>
+                  <Building className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 mr-1" />
+                  <span className="hidden sm:inline">Clients </span>
+                  <span>B2B</span>
                 </div>
               </CardContent>
             </Card>
@@ -412,6 +583,7 @@ function AfficherClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             whileHover={{ scale: 1.02, y: -5 }}
+            className="col-span-2 lg:col-span-1"
           >
             <Card className={`transition-all duration-300 hover:shadow-2xl ${
               isDarkMode 
@@ -419,19 +591,19 @@ function AfficherClient() {
                 : 'bg-gradient-to-br from-orange-100/80 to-orange-50/60 border-orange-200/50 backdrop-blur-sm hover:shadow-orange-500/15'
             }`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className={`text-sm ${isDarkMode ? 'text-orange-100' : 'text-orange-700'}`}>
+                <CardTitle className={`text-xs sm:text-sm ${isDarkMode ? 'text-orange-100' : 'text-orange-700'}`}>
                   Ajoutés ce mois
                 </CardTitle>
                 <motion.div
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <Calendar className={`h-6 w-6 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                  <Calendar className={`h-4 w-4 sm:h-6 sm:w-6 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`} />
                 </motion.div>
               </CardHeader>
               <CardContent>
                 <motion.div 
-                  className={`text-3xl ${isDarkMode ? 'text-white' : 'text-orange-900'}`}
+                  className={`text-2xl sm:text-3xl ${isDarkMode ? 'text-white' : 'text-orange-900'}`}
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
@@ -443,8 +615,8 @@ function AfficherClient() {
                            clientDate.getFullYear() === currentDate.getFullYear();
                   }).length}
                 </motion.div>
-                <div className={`flex items-center text-sm ${isDarkMode ? 'text-orange-200' : 'text-orange-600'}`}>
-                  <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                <div className={`flex items-center text-xs sm:text-sm ${isDarkMode ? 'text-orange-200' : 'text-orange-600'}`}>
+                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mr-1" />
                   <span className="text-green-500">Nouveau</span>
                 </div>
               </CardContent>
@@ -452,7 +624,7 @@ function AfficherClient() {
           </motion.div>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters and Search - Responsive */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -464,9 +636,9 @@ function AfficherClient() {
               : 'bg-white/60 border-slate-200/50 backdrop-blur-sm'
           }`}>
             <CardHeader className="pb-4">
-              <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+              <div className="space-y-4">
                 {/* Search Bar */}
-                <div className="relative flex-1 max-w-md">
+                <div className="relative w-full">
                   <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
                     isDarkMode ? 'text-slate-400' : 'text-slate-500'
                   }`} />
@@ -493,10 +665,10 @@ function AfficherClient() {
                   )}
                 </div>
 
-                {/* Filter Controls */}
-                <div className="flex items-center space-x-4">
+                {/* Filter Controls - Stack on mobile */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
                   <Select value={filterStatut} onValueChange={setFilterStatut}>
-                    <SelectTrigger className={`w-[180px] rounded-xl ${
+                    <SelectTrigger className={`rounded-xl ${
                       isDarkMode 
                         ? 'bg-slate-700/50 border-slate-600 text-white' 
                         : 'bg-white/50 border-slate-300 text-slate-800'
@@ -520,23 +692,25 @@ function AfficherClient() {
                     }`}
                   >
                     <Filter className="mr-2 h-4 w-4" />
-                    Filtrer par date
+                    <span className="hidden sm:inline">Filtrer par date</span>
+                    <span className="sm:hidden">Filtrer</span>
                   </Button>
 
-                  {/* Export and Print */}
-                  <div className="flex items-center space-x-2">
+                  {/* Export and Print - Responsive */}
+                  <div className="flex gap-2">
                     <DropdownMenu open={showExportOptions} onOpenChange={setShowExportOptions}>
                       <DropdownMenuTrigger asChild>
                         <Button 
                           variant="outline"
-                          className={`rounded-xl transition-all duration-300 ${
+                          className={`rounded-xl transition-all duration-300 flex-1 sm:flex-none ${
                             isDarkMode 
                               ? 'border-green-600 bg-green-900/20 text-green-300 hover:bg-green-800/30' 
                               : 'border-green-600 bg-green-50 text-green-700 hover:bg-green-100'
                           }`}
                         >
                           <FileDown className="mr-2 h-4 w-4" />
-                          Exporter
+                          <span className="hidden sm:inline">Exporter</span>
+                          <span className="sm:hidden">Export</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -552,14 +726,15 @@ function AfficherClient() {
                     <Button 
                       variant="outline"
                       onClick={handlePrint}
-                      className={`rounded-xl transition-all duration-300 ${
+                      className={`rounded-xl transition-all duration-300 flex-1 sm:flex-none ${
                         isDarkMode 
                           ? 'border-blue-600 bg-blue-900/20 text-blue-300 hover:bg-blue-800/30' 
                           : 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100'
                       }`}
                     >
                       <Printer className="mr-2 h-4 w-4" />
-                      Imprimer
+                      <span className="hidden sm:inline">Imprimer</span>
+                      <span className="sm:hidden">Print</span>
                     </Button>
                   </div>
                 </div>
@@ -575,8 +750,8 @@ function AfficherClient() {
                     transition={{ duration: 0.3 }}
                     className="mt-4 pt-4 border-t border-slate-600/30"
                   >
-                    <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-                      <div className="flex items-center space-x-2">
+                    <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                         <label className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                           Du:
                         </label>
@@ -591,7 +766,7 @@ function AfficherClient() {
                           }`}
                         />
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                         <label className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                           Au:
                         </label>
@@ -608,7 +783,7 @@ function AfficherClient() {
                       </div>
                       <Button
                         onClick={() => setShowFilter(false)}
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl w-full sm:w-auto"
                       >
                         Appliquer
                       </Button>
@@ -620,7 +795,7 @@ function AfficherClient() {
           </Card>
         </motion.div>
 
-        {/* Clients Table */}
+        {/* Clients Display - Responsive Table/Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -632,12 +807,12 @@ function AfficherClient() {
               : 'bg-white/60 border-slate-200/50 backdrop-blur-sm'
           }`}>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className={`text-2xl flex items-center ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
-                  <Users className="mr-3 h-7 w-7 text-blue-500" />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <CardTitle className={`text-xl sm:text-2xl flex items-center ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+                  <Users className="mr-2 sm:mr-3 h-6 w-6 sm:h-7 sm:w-7 text-blue-500" />
                   Liste des Clients
                 </CardTitle>
-                <Badge variant="secondary" className={`text-lg px-4 py-2 ${
+                <Badge variant="secondary" className={`text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2 w-fit ${
                   isDarkMode 
                     ? 'bg-purple-600/20 text-purple-300 border-purple-500/30' 
                     : 'bg-purple-100 text-purple-700 border-purple-300'
@@ -647,235 +822,283 @@ function AfficherClient() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="rounded-xl overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className={`${isDarkMode ? 'border-slate-600/50' : 'border-slate-200/50'}`}>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Client</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Contact</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Type</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Adresse</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Statut</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Date</TableHead>
-                      <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <AnimatePresence>
-                      {currentClients.length > 0 ? (
-                        currentClients.map((client, index) => (
-                          <motion.tr 
-                            key={client.id}
-                            className={`transition-colors hover:scale-[1.01] ${
-                              isDarkMode 
-                                ? 'border-slate-600/30 hover:bg-slate-700/30' 
-                                : 'border-slate-200/30 hover:bg-slate-50/50'
-                            }`}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.4, delay: index * 0.05 }}
-                            whileHover={{ scale: 1.01 }}
-                          >
-                            <TableCell>
-                              <div className="flex items-center space-x-4">
-                                <motion.div
-                                  whileHover={{ scale: 1.1 }}
-                                  transition={{ duration: 0.2 }}
-                                >
-                                  <Avatar className="h-12 w-12 border-2 border-purple-500/30">
-                                    <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-600 text-white text-lg">
-                                      {client.nom?.charAt(0)}{client.prenom?.charAt(0)}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                </motion.div>
-                                <div>
-                                  <p className={`leading-none mb-1 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
-                                    {client.nom} {client.prenom}
-                                  </p>
-                                  <Badge variant="outline" className={`text-xs ${
-                                    isDarkMode 
-                                      ? 'border-slate-500 text-slate-400' 
-                                      : 'border-slate-300 text-slate-600'
-                                  }`}>
-                                    ID: {client.id}
-                                  </Badge>
+              {/* Desktop Table */}
+              {!isMobile ? (
+                <div className="rounded-xl overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className={`${isDarkMode ? 'border-slate-600/50' : 'border-slate-200/50'}`}>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Client</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Contact</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Type</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Adresse</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Statut</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Date</TableHead>
+                        <TableHead className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <AnimatePresence>
+                        {currentClients.length > 0 ? (
+                          currentClients.map((client, index) => (
+                            <motion.tr 
+                              key={client.id}
+                              className={`transition-colors hover:scale-[1.01] ${
+                                isDarkMode 
+                                  ? 'border-slate-600/30 hover:bg-slate-700/30' 
+                                  : 'border-slate-200/30 hover:bg-slate-50/50'
+                              }`}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -20 }}
+                              transition={{ duration: 0.4, delay: index * 0.05 }}
+                              whileHover={{ scale: 1.01 }}
+                            >
+                              <TableCell>
+                                <div className="flex items-center space-x-4">
+                                  <motion.div
+                                    whileHover={{ scale: 1.1 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <Avatar className="h-12 w-12 border-2 border-purple-500/30">
+                                      <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-600 text-white text-2xl">
+                                        {client.nom?.charAt(0)}{client.prenom?.charAt(0)}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  </motion.div>
+                                  <div>
+                                    <p className={`leading-none mb-1 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+                                      {client.nom} {client.prenom}
+                                    </p>
+                                    <Badge variant="outline" className={`text-xs ${
+                                      isDarkMode 
+                                        ? 'border-slate-500 text-slate-400' 
+                                        : 'border-slate-300 text-slate-600'
+                                    }`}>
+                                      ID: {client.id}
+                                    </Badge>
+                                  </div>
                                 </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="space-y-1">
-                                <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-                                  <Phone className="h-4 w-4 mr-2 text-green-500" />
-                                  {client.telephone}
+                              </TableCell>
+                              <TableCell>
+                                <div className="space-y-1">
+                                  <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                                    <Phone className="h-4 w-4 mr-2 text-green-500" />
+                                    {client.telephone}
+                                  </div>
                                 </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge 
-                                variant={client.type === 'Entreprise' ? 'default' : 'secondary'}
-                                className={`px-3 py-1 ${
-                                  client.type === 'Entreprise' 
-                                    ? isDarkMode 
-                                      ? 'bg-purple-600/20 text-purple-300 border-purple-500/30' 
-                                      : 'bg-purple-100 text-purple-700 border-purple-300'
-                                    : isDarkMode 
-                                      ? 'bg-blue-600/20 text-blue-300 border-blue-500/30' 
-                                      : 'bg-blue-100 text-blue-700 border-blue-300'
-                                }`}
-                              >
-                                {client.type === 'Entreprise' ? (
-                                  <Building className="h-3 w-3 mr-1" />
-                                ) : (
-                                  <Users className="h-3 w-3 mr-1" />
-                                )}
-                                {client.type}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-                                <MapPin className="h-4 w-4 mr-2 text-red-500" />
-                                <span className="truncate max-w-[150px]">
-                                  {client.adresse || 'Non renseignée'}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ duration: 0.2 }}
-                              >
+                              </TableCell>
+                              <TableCell>
                                 <Badge 
-                                  variant={client.statut === 'actif' ? 'default' : 'destructive'}
-                                  className={`px-3 py-1 flex items-center w-fit ${
-                                    client.statut === 'actif' 
-                                      ? 'bg-green-600/20 text-green-300 border-green-500/30' 
-                                      : 'bg-red-600/20 text-red-300 border-red-500/30'
+                                  variant={client.type === 'Entreprise' ? 'default' : 'secondary'}
+                                  className={`px-3 py-1 ${
+                                    client.type === 'Entreprise' 
+                                      ? isDarkMode 
+                                        ? 'bg-purple-600/20 text-purple-300 border-purple-500/30' 
+                                        : 'bg-purple-100 text-purple-700 border-purple-300'
+                                      : isDarkMode 
+                                        ? 'bg-blue-600/20 text-blue-300 border-blue-500/30' 
+                                        : 'bg-blue-100 text-blue-700 border-blue-300'
                                   }`}
                                 >
-                                  <motion.div 
-                                    className={`w-2 h-2 rounded-full mr-2 ${
-                                      client.statut === 'actif' ? 'bg-green-400' : 'bg-red-400'
-                                    }`}
-                                    animate={{ 
-                                      scale: client.statut === 'actif' ? [1, 1.2, 1] : 1,
-                                      opacity: client.statut === 'actif' ? [1, 0.7, 1] : 1
-                                    }}
-                                    transition={{ 
-                                      duration: 2, 
-                                      repeat: client.statut === 'actif' ? Infinity : 0 
-                                    }}
-                                  />
-                                  {client.statut}
+                                  {client.type === 'Entreprise' ? (
+                                    <Building className="h-3 w-3 mr-1" />
+                                  ) : (
+                                    <Users className="h-3 w-3 mr-1" />
+                                  )}
+                                  {client.type}
                                 </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <div className={`flex items-center text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                                  <MapPin className="h-4 w-4 mr-2 text-red-500" />
+                                  <span className="truncate max-w-[150px]">
+                                    {client.adresse || 'Non renseignée'}
+                                  </span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <motion.div
+                                  whileHover={{ scale: 1.05 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  <Badge 
+                                    variant={client.statut === 'actif' ? 'default' : 'destructive'}
+                                    className={`px-3 py-1 flex items-center w-fit ${
+                                      client.statut === 'actif' 
+                                        ? 'bg-green-600/20 text-green-600 border-green-500/30' 
+                                        : 'bg-red-600/20 text-red-300 border-red-500/30'
+                                    }`}
+                                  >
+                                    <motion.div 
+                                      className={`w-2 h-2 rounded-full mr-2 ${
+                                        client.statut === 'actif' ? 'bg-green-600' : 'bg-red-400'
+                                      }`}
+                                      animate={{ 
+                                        scale: client.statut === 'actif' ? [1, 1.2, 1] : 1,
+                                        opacity: client.statut === 'actif' ? [1, 0.7, 1] : 1
+                                      }}
+                                      transition={{ 
+                                        duration: 2, 
+                                        repeat: client.statut === 'actif' ? Infinity : 0 
+                                      }}
+                                    />
+                                    {client.statut}
+                                  </Badge>
+                                </motion.div>
+                              </TableCell>
+                              <TableCell className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                                {new Date(client.created_at).toLocaleDateString('fr-FR')}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center space-x-2">
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <motion.div
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                        >
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm"
+                                            onClick={() => setSelectedClientId(client.id)}
+                                            className={`rounded-lg p-2 ${
+                                              isDarkMode 
+                                                ? 'border-blue-600 bg-blue-900/20 text-blue-300 hover:bg-blue-800/30' 
+                                                : 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                                            }`}
+                                          >
+                                            <Eye className="h-4 w-4" />
+                                          </Button>
+                                        </motion.div>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>Voir les détails</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <motion.div
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                        >
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm"
+                                            onClick={() => handleWhatsappClick(client.id)}
+                                            className="rounded-lg p-2 bg-green-600/20 text-green-600 border-green-500/30 hover:bg-green-500/30"
+                                          >
+                                            <MessageCircle className="h-4 w-4" />
+                                          </Button>
+                                        </motion.div>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>Contacter via WhatsApp</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
+                              </TableCell>
+                            </motion.tr>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan="7" className="text-center py-12">
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6 }}
+                                className="flex flex-col items-center space-y-4"
+                              >
+                                <div className={`rounded-full p-6 ${
+                                  isDarkMode ? 'bg-slate-700/50' : 'bg-slate-100/50'
+                                }`}>
+                                  <Users className={`h-12 w-12 ${
+                                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                                  }`} />
+                                </div>
+                                <div className="text-center">
+                                  <h3 className={`text-lg mb-2 ${
+                                    isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                                  }`}>
+                                    Aucun client trouvé
+                                  </h3>
+                                  <p className={`text-sm ${
+                                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                                  }`}>
+                                    Ajustez vos critères de recherche ou ajoutez de nouveaux clients
+                                  </p>
+                                </div>
+                                <Button 
+                                  onClick={() => navigate('/ventes')}
+                                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
+                                >
+                                  <UserPlus className="mr-2 h-4 w-4" />
+                                  Ajouter un client
+                                </Button>
                               </motion.div>
                             </TableCell>
-                            <TableCell className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                              {new Date(client.created_at).toLocaleDateString('fr-FR')}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center space-x-2">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <motion.div
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                      >
-                                        <Button 
-                                          variant="outline" 
-                                          size="sm"
-                                          onClick={() => setSelectedClientId(client.id)}
-                                          className={`rounded-lg p-2 ${
-                                            isDarkMode 
-                                              ? 'border-blue-600 bg-blue-900/20 text-blue-300 hover:bg-blue-800/30' 
-                                              : 'border-blue-600 bg-blue-50 text-blue-700 hover:bg-blue-100'
-                                          }`}
-                                        >
-                                          <Eye className="h-4 w-4" />
-                                        </Button>
-                                      </motion.div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Voir les détails</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
+                          </TableRow>
+                        )}
+                      </AnimatePresence>
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                // Mobile Cards Layout
+                <div className="space-y-4">
+                  <AnimatePresence>
+                    {currentClients.length > 0 ? (
+                      currentClients.map((client, index) => (
+                        <ClientCard key={client.id} client={client} index={index} />
+                      ))
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="flex flex-col items-center space-y-4 py-12"
+                      >
+                        <div className={`rounded-full p-6 ${
+                          isDarkMode ? 'bg-slate-700/50' : 'bg-slate-100/50'
+                        }`}>
+                          <Users className={`h-12 w-12 ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                          }`} />
+                        </div>
+                        <div className="text-center">
+                          <h3 className={`text-lg mb-2 ${
+                            isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                          }`}>
+                            Aucun client trouvé
+                          </h3>
+                          <p className={`text-sm ${
+                            isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                          }`}>
+                            Ajustez vos critères de recherche ou ajoutez de nouveaux clients
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={() => navigate('/ventes')}
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
+                        >
+                          <UserPlus className="mr-2 h-4 w-4" />
+                          Ajouter un client
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
 
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <motion.div
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                      >
-                                        <Button 
-                                          variant="outline" 
-                                          size="sm"
-                                          onClick={() => handleWhatsappClick(client.id)}
-                                          className="rounded-lg p-2 bg-green-600/20 text-green-300 border-green-500/30 hover:bg-green-500/30"
-                                        >
-                                          <MessageCircle className="h-4 w-4" />
-                                        </Button>
-                                      </motion.div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Contacter via WhatsApp</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                            </TableCell>
-                          </motion.tr>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan="7" className="text-center py-12">
-                            <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.6 }}
-                              className="flex flex-col items-center space-y-4"
-                            >
-                              <div className={`rounded-full p-6 ${
-                                isDarkMode ? 'bg-slate-700/50' : 'bg-slate-100/50'
-                              }`}>
-                                <Users className={`h-12 w-12 ${
-                                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                                }`} />
-                              </div>
-                              <div className="text-center">
-                                <h3 className={`text-lg mb-2 ${
-                                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
-                                }`}>
-                                  Aucun client trouvé
-                                </h3>
-                                <p className={`text-sm ${
-                                  isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                                }`}>
-                                  Ajustez vos critères de recherche ou ajoutez de nouveaux clients
-                                </p>
-                              </div>
-                              <Button 
-                                onClick={() => navigate('/ventes')}
-                                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl"
-                              >
-                                <UserPlus className="mr-2 h-4 w-4" />
-                                Ajouter un client
-                              </Button>
-                            </motion.div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </AnimatePresence>
-                  </TableBody>
-                </Table>
-              </div>
-
-              {/* Pagination */}
+              {/* Pagination - Responsive */}
               {totalPages > 1 && (
                 <motion.div 
-                  className="flex items-center justify-center space-x-2 mt-8"
+                  className="flex flex-wrap items-center justify-center gap-2 mt-6 sm:mt-8"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.8 }}
@@ -890,7 +1113,7 @@ function AfficherClient() {
                         variant={page === currentPage ? "default" : "outline"}
                         size="sm"
                         onClick={() => setCurrentPage(page)}
-                        className={`rounded-lg ${
+                        className={`rounded-lg min-w-[40px] ${
                           page === currentPage 
                             ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
                             : isDarkMode 

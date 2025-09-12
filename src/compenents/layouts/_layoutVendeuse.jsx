@@ -21,81 +21,31 @@ import {
   ChevronRight,
   Zap
 } from 'lucide-react'
-import Logo from '../../assets/images/logo_light.png'
-import '../../styles/_layouts.css'
-import '../../styles/theme.css'
-import '../../index.css'
-import ApiService, { PROFILE_BASE_URL } from '../../services/ApiService'
 
-// Classes CSS pour remplacer les composants shadcn temporairement
-const buttonStyles = {
-  base: "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500",
-  primary: "bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg",
-  outline: "border border-slate-300 bg-white/50 text-slate-700 hover:bg-slate-100/70 dark:border-slate-600 dark:bg-slate-800/50 dark:text-slate-300 dark:hover:bg-slate-700/50",
-  icon: "h-10 w-10"
-}
+// Import du hook pour le thème
+import { useTheme } from '/hooks/useTheme'
 
-const avatarStyles = "h-10 w-10 rounded-full border-2 border-purple-500/30 bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center text-white font-semibold"
+// Import des composants shadcn/ui
+import { Button } from "../../components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
+import { Badge } from "../../components/ui/badge"
+import { Separator } from "../../components/ui/separator"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip"
 
-const badgeStyles = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-500 text-white"
-
-// Composants temporaires pour remplacer shadcn
-const Button = ({ children, variant = "primary", size = "default", className = "", onClick, ...props }) => {
-  const sizeClass = size === "icon" ? buttonStyles.icon : "";
-  const variantClass = variant === "outline" ? buttonStyles.outline : buttonStyles.primary;
-  
-  return (
-    <button 
-      className={`${buttonStyles.base} ${variantClass} ${sizeClass} ${className}`}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-const Avatar = ({ children, className = "" }) => (
-  <div className={`${avatarStyles} ${className}`}>
-    {children}
-  </div>
-);
-
-const Badge = ({ children, className = "" }) => (
-  <span className={`${badgeStyles} ${className}`}>
-    {children}
-  </span>
-);
-
-const Separator = ({ className = "" }) => (
-  <hr className={`border-slate-300 dark:border-slate-600 ${className}`} />
-);
-
-const Tooltip = ({ children }) => children;
-const TooltipProvider = ({ children }) => children;
-const TooltipTrigger = ({ children, asChild }) => children;
-const TooltipContent = ({ children }) => (
-  <div className="absolute z-50 rounded-md bg-slate-900 px-2 py-1 text-xs text-white shadow-lg">
-    {children}
-  </div>
-);
+// Services API (ajustez selon votre configuration)
+import ApiService from '../../services/ApiService';
+import { PROFILE_BASE_URL } from '../../services/ApiService';
 
 function LayoutVendeuse({ onSearch }) {
+  // Hook pour le thème global
+  const { isDarkMode, toggleTheme, getThemeClasses } = useTheme();
+  const themeClasses = getThemeClasses();
+
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const [showAIAssistant, setShowAIAssistant] = useState(false)
-
-  // Gestion du thème
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === 'light')
-    }
-  }, [])
-
 
   // Déconnexion
   const handleLogout = () => {
@@ -176,10 +126,6 @@ function LayoutVendeuse({ onSearch }) {
     }
   ]
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
   const handleAIAssistant = () => {
     setShowAIAssistant(!showAIAssistant)
     console.log('Ouverture de l\'assistant IA...')
@@ -187,18 +133,10 @@ function LayoutVendeuse({ onSearch }) {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode 
-        ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
-        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
-    }`}>
+    <div className={themeClasses.page}>
       {/* HEADER */}
       <motion.header 
-        className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
-          isDarkMode 
-            ? 'bg-slate-900/80 border-slate-700/50' 
-            : 'bg-white/80 border-slate-200/50'
-        }`}
+        className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${themeClasses.card} border-primary/20`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
@@ -210,22 +148,14 @@ function LayoutVendeuse({ onSearch }) {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <div className={`p-2 rounded-xl ${
-                isDarkMode 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
-                  : 'bg-gradient-to-r from-blue-600 to-indigo-600'
-              }`}>
+              <div className="p-2 rounded-xl bg-gradient-primary">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <div className="hidden md:block">
-                <h1 className={`text-xl font-bold ${
-                  isDarkMode ? 'text-white' : 'text-slate-800'
-                }`}>
+                <h1 className="text-subtitle text-theme-primary">
                   KAM-DAAY
                 </h1>
-                <p className={`text-sm ${
-                  isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                }`}>
+                <p className="text-caption text-theme-secondary">
                   Plateforme de vente moderne
                 </p>
               </div>
@@ -241,14 +171,10 @@ function LayoutVendeuse({ onSearch }) {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                <h2 className={`text-lg font-semibold ${
-                  isDarkMode ? 'text-white' : 'text-slate-800'
-                }`}>
+                <h2 className="text-subtitle text-theme-primary">
                   Bonjour, {user.username} ✨
                 </h2>
-                <p className={`text-sm ${
-                  isDarkMode ? 'text-purple-300' : 'text-indigo-600'
-                }`}>
+                <p className="text-caption text-theme-secondary">
                   Prêt à conquérir de nouveaux marchés ?
                 </p>
               </motion.div>
@@ -261,17 +187,11 @@ function LayoutVendeuse({ onSearch }) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
-                isDarkMode ? 'text-slate-400' : 'text-slate-500'
-              }`} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-theme-muted" />
               <input
                 type="text"
                 placeholder="Rechercher..."
-                className={`pl-10 pr-4 py-2 rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                  isDarkMode 
-                    ? 'bg-slate-800/50 border-slate-600 text-white placeholder-slate-400' 
-                    : 'bg-white/50 border-slate-300 text-slate-800 placeholder-slate-500'
-                }`}
+                className={`pl-10 pr-4 py-2 rounded-xl border transition-all duration-300 focus:ring-2 focus:ring-primary focus:border-transparent ${themeClasses.input}`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -289,11 +209,7 @@ function LayoutVendeuse({ onSearch }) {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className={`rounded-xl ${
-                        isDarkMode 
-                          ? 'border-slate-600 bg-slate-800/50 hover:bg-slate-700/50' 
-                          : 'border-slate-300 bg-white/50 hover:bg-slate-100/50'
-                      }`}
+                      className={`rounded-xl ${themeClasses.card} border-primary/30 hover:bg-primary/10`}
                     >
                       <Bell className="h-4 w-4" />
                     </Button>
@@ -303,7 +219,51 @@ function LayoutVendeuse({ onSearch }) {
                   </motion.div>
                 </TooltipTrigger>
                 <TooltipContent>
-                
+                  <p>Notifications</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* Toggle du thème */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <motion.button
+                    onClick={toggleTheme}
+                    className={`${themeClasses.card} p-3 rounded-xl flex items-center space-x-2 hover:scale-105 transition-all border-primary/30 hover:bg-primary/10`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {isDarkMode ? (
+                      <Sun className="h-4 w-4 text-yellow-500" />
+                    ) : (
+                      <Moon className="h-4 w-4 text-blue-500" />
+                    )}
+                  </motion.button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{isDarkMode ? 'Mode Clair' : 'Mode Sombre'}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* Bouton de déconnexion */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      onClick={handleLogout}
+                      variant="outline"
+                      size="icon"
+                      className="rounded-xl border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-600 hover:border-red-500/50"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Déconnexion</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -318,17 +278,16 @@ function LayoutVendeuse({ onSearch }) {
               >
                 <NavLink to="/profile">
                   <motion.div whileHover={{ scale: 1.05 }}>
-                    <Avatar className="h-10 w-10 border-2 border-purple-500/30">
+                    <Avatar className="h-10 w-10 border-2 border-primary/30">
                       {user.profile ? (
-                        <img 
+                        <AvatarImage 
                           src={`${PROFILE_BASE_URL}/${user.profile}`} 
                           alt="Profil" 
-                          className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-white font-semibold">
+                        <AvatarFallback className="bg-gradient-primary text-white">
                           {user.username.charAt(0)}
-                        </span>
+                        </AvatarFallback>
                       )}
                     </Avatar>
                   </motion.div>
@@ -340,11 +299,7 @@ function LayoutVendeuse({ onSearch }) {
             <Button
               variant="outline"
               size="icon"
-              className={`md:hidden rounded-xl ${
-                isDarkMode 
-                  ? 'border-slate-600 bg-slate-800/50' 
-                  : 'border-slate-300 bg-white/50'
-              }`}
+              className={`md:hidden rounded-xl ${themeClasses.card} border-primary/30`}
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -358,11 +313,7 @@ function LayoutVendeuse({ onSearch }) {
         {/* SIDEBAR */}
         <AnimatePresence>
           <motion.aside 
-            className={`fixed left-0 top-[73px] h-[calc(100vh-73px)] w-80 border-r backdrop-blur-md transition-all duration-300 z-40 ${
-              isDarkMode 
-                ? 'bg-slate-900/90 border-slate-700/50' 
-                : 'bg-white/90 border-slate-200/50'
-            } ${menuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+            className={`fixed left-0 top-[73px] h-[calc(100vh-73px)] w-80 border-r backdrop-blur-md transition-all duration-300 z-40 ${themeClasses.card} border-primary/20 ${menuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
             initial={{ x: -320 }}
             animate={{ x: menuOpen || (typeof window !== 'undefined' && window.innerWidth >= 768) ? 0 : -320 }}
             exit={{ x: -320 }}
@@ -382,10 +333,8 @@ function LayoutVendeuse({ onSearch }) {
                       className={({ isActive }) => `
                         group relative flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02]
                         ${isActive 
-                          ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg shadow-purple-500/25` 
-                          : isDarkMode 
-                            ? 'hover:bg-slate-800/50 text-slate-300 hover:text-white' 
-                            : 'hover:bg-slate-100/50 text-slate-600 hover:text-slate-800'
+                          ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg ${themeClasses.shadow.lg}` 
+                          : `hover:bg-primary/10 text-theme-secondary hover:text-theme-primary`
                         }
                       `}
                       onClick={() => setMenuOpen(false)}
@@ -398,16 +347,14 @@ function LayoutVendeuse({ onSearch }) {
                             className={`p-2 rounded-xl ${
                               isActive 
                                 ? 'bg-white/20' 
-                                : isDarkMode 
-                                  ? 'bg-slate-700/50 group-hover:bg-slate-600/50' 
-                                  : 'bg-slate-200/50 group-hover:bg-slate-300/50'
+                                : 'bg-primary/10 group-hover:bg-primary/20'
                             }`}
                           >
                             <item.icon className="h-5 w-5" />
                           </motion.div>
                           <div className="flex-1">
-                            <h3 className="font-semibold text-base">{item.label}</h3>
-                            <p className={`text-sm opacity-75 ${isActive ? 'text-white/80' : ''}`}>
+                            <h3 className="text-body">{item.label}</h3>
+                            <p className={`text-caption opacity-75 ${isActive ? 'text-white/80' : 'text-theme-muted'}`}>
                               {item.description}
                             </p>
                           </div>
@@ -425,60 +372,10 @@ function LayoutVendeuse({ onSearch }) {
                 ))}
               </nav>
 
-              <Separator className={`my-6 ${isDarkMode ? 'bg-slate-700' : 'bg-slate-200'}`} />
+              <Separator className="my-6" />
 
-              {/* Section inférieure avec thème et IA */}
+              {/* Section inférieure avec Assistant IA */}
               <div className="space-y-4">
-                {/* Toggle thème */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                >
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          onClick={toggleTheme}
-                          className={`w-full justify-start space-x-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
-                            isDarkMode 
-                              ? 'border-slate-600 bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 hover:text-white' 
-                              : 'border-slate-300 bg-slate-100/50 hover:bg-slate-200/50 text-slate-600 hover:text-slate-800'
-                          }`}
-                        >
-                          <motion.div
-                            whileHover={{ rotate: 180 }}
-                            transition={{ duration: 0.6 }}
-                            className={`p-2 rounded-xl ${
-                              isDarkMode 
-                                ? 'bg-gradient-to-r from-yellow-500 to-orange-500' 
-                                : 'bg-gradient-to-r from-slate-600 to-slate-800'
-                            }`}
-                          >
-                            {isDarkMode ? (
-                              <Sun className="h-5 w-5 text-white" />
-                            ) : (
-                              <Moon className="h-5 w-5 text-white" />
-                            )}
-                          </motion.div>
-                          <div className="flex-1 text-left">
-                            <h3 className="font-semibold text-base">
-                              {isDarkMode ? 'Mode Clair' : 'Mode Sombre'}
-                            </h3>
-                            <p className="text-sm opacity-75">
-                              {isDarkMode ? 'Basculer vers le thème clair' : 'Basculer vers le thème sombre'}
-                            </p>
-                          </div>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Changer le thème</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </motion.div>
-
                 {/* Assistant IA */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -492,10 +389,8 @@ function LayoutVendeuse({ onSearch }) {
                           onClick={handleAIAssistant}
                           className={`w-full justify-start space-x-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] ${
                             showAIAssistant
-                              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25'
-                              : isDarkMode 
-                                ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white' 
-                                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white'
+                              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                              : themeClasses.button
                           }`}
                         >
                           <motion.div
@@ -514,11 +409,11 @@ function LayoutVendeuse({ onSearch }) {
                             <Bot className="h-5 w-5" />
                           </motion.div>
                           <div className="flex-1 text-left">
-                            <h3 className="font-semibold text-base flex items-center">
+                            <h3 className="text-body flex items-center">
                               Assistant IA
                               <Zap className="h-4 w-4 ml-2" />
                             </h3>
-                            <p className="text-sm opacity-90">
+                            <p className="text-caption opacity-90">
                               Aide intelligente 24/7
                             </p>
                           </div>
@@ -549,10 +444,8 @@ function LayoutVendeuse({ onSearch }) {
                     className={({ isActive }) => `
                       group flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02]
                       ${isActive 
-                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25' 
-                        : isDarkMode 
-                          ? 'hover:bg-slate-800/50 text-slate-300 hover:text-white' 
-                          : 'hover:bg-slate-100/50 text-slate-600 hover:text-slate-800'
+                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg' 
+                        : 'hover:bg-primary/10 text-theme-secondary hover:text-theme-primary'
                       }
                     `}
                     onClick={() => setMenuOpen(false)}
@@ -560,50 +453,17 @@ function LayoutVendeuse({ onSearch }) {
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
-                      className={`p-2 rounded-xl ${
-                        isDarkMode 
-                          ? 'bg-slate-700/50 group-hover:bg-slate-600/50' 
-                          : 'bg-slate-200/50 group-hover:bg-slate-300/50'
-                      }`}
+                      className="p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20"
                     >
                       <HelpCircle className="h-5 w-5" />
                     </motion.div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-base">Aide & Support</h3>
-                      <p className="text-sm opacity-75">
+                      <h3 className="text-body">Aide & Support</h3>
+                      <p className="text-caption opacity-75 text-theme-muted">
                         Documentation et tutoriels
                       </p>
                     </div>
                   </NavLink>
-                </motion.div>
-
-                <Separator className={`my-4 ${isDarkMode ? 'bg-slate-700' : 'bg-slate-200'}`} />
-
-                {/* Déconnexion */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
-                >
-                  <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    className={`w-full justify-start space-x-4 p-4 rounded-2xl transition-all duration-300 hover:scale-[1.02] border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-600 hover:border-red-500/50`}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 180 }}
-                      transition={{ duration: 0.6 }}
-                      className="p-2 rounded-xl bg-red-500/20"
-                    >
-                      <LogOut className="h-5 w-5" />
-                    </motion.div>
-                    <div className="flex-1 text-left">
-                      <h3 className="font-semibold text-base">Déconnexion</h3>
-                      <p className="text-sm opacity-75">
-                        Se déconnecter en toute sécurité
-                      </p>
-                    </div>
-                  </Button>
                 </motion.div>
               </div>
             </div>

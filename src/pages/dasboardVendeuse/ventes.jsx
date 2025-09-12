@@ -118,7 +118,7 @@ function VentesApp() {
     }
   }
 
-  const handleQuantiteChange = (produitI, newQuantite) => {
+  const handleQuantiteChange = (produitId, newQuantite) => {
     setVente(prev =>
       prev.map(p =>
         p.produit_id === produitId
@@ -545,7 +545,7 @@ function VentesApp() {
                             }>
                               <SelectValue placeholder="-- Sélectionner un client --" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white/80 backdrop-blur-md text-gray-800 border border-gray-300 shadow-lg">
                               {clients.map((c) => (
                                 <SelectItem key={c.id} value={c.id}>
                                   {c.prenom} {c.nom} - {c.telephone}

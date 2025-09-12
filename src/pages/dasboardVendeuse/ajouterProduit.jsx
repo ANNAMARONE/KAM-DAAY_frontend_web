@@ -7,7 +7,7 @@ import { Label } from '../../components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import ApiService from '../../services/ApiService'
 import Swal from 'sweetalert2'
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
 function AjouterProduits({ onClose }) {
   const [formData, setFormData] = useState({
     nom: '',
@@ -174,17 +174,30 @@ function AjouterProduits({ onClose }) {
                   className="border-gray-300 bg-white/50"
                 />
               </motion.div>
+              <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.4 }}
+  className="space-y-2"
+>
+  <Label className="text-gray-700">Unité *</Label>
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="space-y-2">
-                <Label className="text-gray-700">Unité</Label>
-                <Input
-                  name="unite"
-                  placeholder="Ex: pièce, kg, litre"
-                  value={formData.unite}
-                  onChange={handleChange}
-                  className="border-gray-300 bg-white/50"
-                />
-              </motion.div>
+  <Select
+    value={formData.unite}
+    onValueChange={(value) => setFormData({ ...formData, unite: value })}
+  >
+    <SelectTrigger className="w-full bg-white/50 border border-gray-300">
+      <SelectValue placeholder="Ex: pièce, kg, litre" />
+    </SelectTrigger>
+
+    <SelectContent className="bg-white/80 backdrop-blur-md text-gray-800 border border-gray-300 shadow-lg">
+    <SelectItem value="kg">Kilogramme</SelectItem>
+    <SelectItem value="litre">Litre</SelectItem>
+    <SelectItem value="unite">Unité</SelectItem>
+    </SelectContent>
+  </Select>
+</motion.div>
+
             </div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="space-y-2">

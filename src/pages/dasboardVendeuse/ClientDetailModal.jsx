@@ -23,12 +23,11 @@ import { Separator } from '../../components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { ScrollArea } from '../../components/ui/scroll-area'
 import ApiService from '../../services/ApiService';
-import { PROFILE_BASE_URL } from '../../services/ApiService';
 import Swal from 'sweetalert2'
 
 
 function ClientDetailModal({ clientId, onClose }) {
-  const [client, setClient] = useState<ClientDetail | null>(null)
+  const [client, setClient] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true)
 
@@ -62,6 +61,7 @@ function ClientDetailModal({ clientId, onClose }) {
   }
 
   const formatDate = (dateString) => {
+    if (!dateString) return "Non défini"
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
@@ -72,7 +72,10 @@ function ClientDetailModal({ clientId, onClose }) {
   }
 
   const formatAmount = (amount) => {
-    return amount.toLocaleString('fr-FR') + ' FCFA'
+    if (amount == null || isNaN(amount)) {
+      return "0 FCFA"
+    }
+    return Number(amount).toLocaleString('fr-FR') + ' FCFA'
   }
 
   const getStatutColor = (statut) => {
@@ -84,7 +87,7 @@ function ClientDetailModal({ clientId, onClose }) {
     }
   }
 
-  const totalVentes = client?.ventes?.reduce((sum, vente) => sum + vente.montant_total, 0) || 0
+  const totalVentes = client?.ventes?.reduce((sum, vente) => sum + (vente.montant_total || 0), 0) || 0
   const nombreVentes = client?.ventes?.length || 0
 
   if (loading) {
@@ -132,6 +135,7 @@ function ClientDetailModal({ clientId, onClose }) {
               ? 'bg-slate-900/95 border-slate-700/50' 
               : 'bg-white/95 border-slate-200/50'
           } backdrop-blur-md shadow-2xl`}>
+            
             {/* En-tête */}
             <CardHeader className="relative pb-6">
               <Button
@@ -199,265 +203,118 @@ function ClientDetailModal({ clientId, onClose }) {
             <CardContent>
               <ScrollArea className="h-[60vh] pr-4">
                 <div className="space-y-8">
-                  {/* Informations personnelles */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <h3 className={`text-xl font-semibold mb-4 ${
-                      isDarkMode ? 'text-white' : 'text-slate-800'
-                    }`}>
-                      Informations personnelles
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <Card className={`${
-                        isDarkMode 
-                          ? 'bg-slate-800/30 border-slate-700/50' 
-                          : 'bg-slate-50/50 border-slate-200/50'
-                      }`}>
-                        <CardContent className="p-4 text-center">
-                          <Phone className={`h-8 w-8 mx-auto mb-2 ${
-                            isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                          }`} />
-                          <div className={`font-medium ${
-                            isDarkMode ? 'text-white' : 'text-slate-800'
-                          }`}>
-                            {client.telephone}
-                          </div>
-                          <div className={`text-sm ${
-                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                          }`}>
-                            Téléphone
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className={`${
-                        isDarkMode 
-                          ? 'bg-slate-800/30 border-slate-700/50' 
-                          : 'bg-slate-50/50 border-slate-200/50'
-                      }`}>
-                        <CardContent className="p-4 text-center">
-                          <MapPin className={`h-8 w-8 mx-auto mb-2 ${
-                            isDarkMode ? 'text-emerald-400' : 'text-emerald-600'
-                          }`} />
-                          <div className={`font-medium ${
-                            isDarkMode ? 'text-white' : 'text-slate-800'
-                          }`}>
-                            {client.adresse}
-                          </div>
-                          <div className={`text-sm ${
-                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                          }`}>
-                            Adresse
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className={`${
-                        isDarkMode 
-                          ? 'bg-slate-800/30 border-slate-700/50' 
-                          : 'bg-slate-50/50 border-slate-200/50'
-                      }`}>
-                        <CardContent className="p-4 text-center">
-                          <User className={`h-8 w-8 mx-auto mb-2 ${
-                            isDarkMode ? 'text-purple-400' : 'text-purple-600'
-                          }`} />
-                          <div className={`font-medium ${
-                            isDarkMode ? 'text-white' : 'text-slate-800'
-                          }`}>
-                            {client.type}
-                          </div>
-                          <div className={`text-sm ${
-                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                          }`}>
-                            Type de client
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card className={`${
-                        isDarkMode 
-                          ? 'bg-slate-800/30 border-slate-700/50' 
-                          : 'bg-slate-50/50 border-slate-200/50'
-                      }`}>
-                        <CardContent className="p-4 text-center">
-                          <Calendar className={`h-8 w-8 mx-auto mb-2 ${
-                            isDarkMode ? 'text-yellow-400' : 'text-yellow-600'
-                          }`} />
-                          <div className={`font-medium ${
-                            isDarkMode ? 'text-white' : 'text-slate-800'
-                          }`}>
-                            {new Date(client.created_at).toLocaleDateString('fr-FR')}
-                          </div>
-                          <div className={`text-sm ${
-                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                          }`}>
-                            Inscription
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </motion.div>
-
-                  <Separator />
-
+                  
                   {/* Historique des ventes */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className={`text-xl font-semibold ${
-                        isDarkMode ? 'text-white' : 'text-slate-800'
-                      }`}>
-                        Historique des ventes
-                      </h3>
-                      <div className="flex items-center space-x-2">
-                        <ShoppingBag className={`h-5 w-5 ${
-                          isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                  {client.ventes?.length > 0 ? (
+                    <div className="space-y-6">
+                      {client.ventes.map((vente, index) => (
+                        <motion.div
+                          key={vente.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 + index * 0.1 }}
+                        >
+                          <Card className={`border-purple-500/20 ${
+                            isDarkMode 
+                              ? 'bg-slate-800/50 border-slate-700/50' 
+                              : 'bg-white/80 border-slate-200/50'
+                          }`}>
+                            <CardHeader className="pb-4">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500">
+                                    <CreditCard className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div>
+                                    <h4 className={`font-semibold ${
+                                      isDarkMode ? 'text-white' : 'text-slate-800'
+                                    }`}>
+                                      Vente #{vente.id}
+                                    </h4>
+                                    <div className="flex items-center space-x-2 text-sm">
+                                      <Clock className={`h-3 w-3 ${
+                                        isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                      }`} />
+                                      <span className={`${
+                                        isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                      }`}>
+                                        {formatDate(vente.created_at)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                                    {formatAmount(vente.montant_total)}
+                                  </div>
+                                  <div className={`text-sm ${
+                                    isDarkMode ? 'text-slate-400' : 'text-slate-600'
+                                  }`}>
+                                    Total
+                                  </div>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            
+                            <CardContent>
+                              <div className="overflow-x-auto">
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead>Produit</TableHead>
+                                      <TableHead className="text-center">Quantité</TableHead>
+                                      <TableHead className="text-right">Prix unitaire</TableHead>
+                                      <TableHead className="text-right">Montant total</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    {vente.produits?.map((produit) => (
+                                      <TableRow key={produit.id}>
+                                        <TableCell>{produit.nom}</TableCell>
+                                        <TableCell className="text-center">
+                                          <Badge variant="outline">
+                                            {produit.pivot?.quantite ?? 0}
+                                          </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                          {formatAmount(produit.pivot?.prix_unitaire ?? 0)}
+                                        </TableCell>
+                                        <TableCell className="text-right font-semibold">
+                                          {formatAmount(produit.pivot?.montant_total ?? 0)}
+                                        </TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Card className={`${
+                      isDarkMode 
+                        ? 'bg-slate-800/30 border-slate-700/50' 
+                        : 'bg-slate-50/50 border-slate-200/50'
+                    }`}>
+                      <CardContent className="p-8 text-center">
+                        <ShoppingBag className={`h-16 w-16 mx-auto mb-4 ${
+                          isDarkMode ? 'text-slate-600' : 'text-slate-400'
                         }`} />
-                        <span className={`text-sm ${
+                        <h4 className={`text-lg font-medium mb-2 ${
+                          isDarkMode ? 'text-white' : 'text-slate-800'
+                        }`}>
+                          Aucune vente
+                        </h4>
+                        <p className={`${
                           isDarkMode ? 'text-slate-400' : 'text-slate-600'
                         }`}>
-                          {nombreVentes} vente{nombreVentes > 1 ? 's' : ''}
-                        </span>
-                      </div>
-                    </div>
-
-                    {client.ventes?.length === 0 ? (
-                      <Card className={`${
-                        isDarkMode 
-                          ? 'bg-slate-800/30 border-slate-700/50' 
-                          : 'bg-slate-50/50 border-slate-200/50'
-                      }`}>
-                        <CardContent className="p-8 text-center">
-                          <ShoppingBag className={`h-16 w-16 mx-auto mb-4 ${
-                            isDarkMode ? 'text-slate-600' : 'text-slate-400'
-                          }`} />
-                          <h4 className={`text-lg font-medium mb-2 ${
-                            isDarkMode ? 'text-white' : 'text-slate-800'
-                          }`}>
-                            Aucune vente
-                          </h4>
-                          <p className={`${
-                            isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                          }`}>
-                            Ce client n'a encore effectué aucun achat
-                          </p>
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <div className="space-y-6">
-                        {client.ventes.map((vente, index) => (
-                          <motion.div
-                            key={vente.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 + index * 0.1 }}
-                          >
-                            <Card className={`border-purple-500/20 ${
-                              isDarkMode 
-                                ? 'bg-slate-800/50 border-slate-700/50' 
-                                : 'bg-white/80 border-slate-200/50'
-                            }`}>
-                              <CardHeader className="pb-4">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center space-x-3">
-                                    <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500">
-                                      <CreditCard className="h-5 w-5 text-white" />
-                                    </div>
-                                    <div>
-                                      <h4 className={`font-semibold ${
-                                        isDarkMode ? 'text-white' : 'text-slate-800'
-                                      }`}>
-                                        Vente #{vente.id}
-                                      </h4>
-                                      <div className="flex items-center space-x-2 text-sm">
-                                        <Clock className={`h-3 w-3 ${
-                                          isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                                        }`} />
-                                        <span className={`${
-                                          isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                                        }`}>
-                                          {formatDate(vente.created_at)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                                      {formatAmount(vente.montant_total)}
-                                    </div>
-                                    <div className={`text-sm ${
-                                      isDarkMode ? 'text-slate-400' : 'text-slate-600'
-                                    }`}>
-                                      Total
-                                    </div>
-                                  </div>
-                                </div>
-                              </CardHeader>
-                              
-                              <CardContent>
-                                <div className="overflow-x-auto">
-                                  <Table>
-                                    <TableHeader>
-                                      <TableRow>
-                                        <TableHead className="flex items-center space-x-2">
-                                          <Package className="h-4 w-4" />
-                                          <span>Produit</span>
-                                        </TableHead>
-                                        <TableHead className="text-center">
-                                          <div className="flex items-center justify-center space-x-2">
-                                            <Hash className="h-4 w-4" />
-                                            <span>Quantité</span>
-                                          </div>
-                                        </TableHead>
-                                        <TableHead className="text-right">
-                                          <div className="flex items-center justify-end space-x-2">
-                                            <DollarSign className="h-4 w-4" />
-                                            <span>Prix unitaire</span>
-                                          </div>
-                                        </TableHead>
-                                        <TableHead className="text-right">
-                                          <div className="flex items-center justify-end space-x-2">
-                                            <TrendingUp className="h-4 w-4" />
-                                            <span>Montant total</span>
-                                          </div>
-                                        </TableHead>
-                                      </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                      {vente.produits.map((produit) => (
-                                        <TableRow key={produit.id}>
-                                          <TableCell className="font-medium">
-                                            {produit.nom}
-                                          </TableCell>
-                                          <TableCell className="text-center">
-                                            <Badge variant="outline">
-                                              {produit.pivot.quantite}
-                                            </Badge>
-                                          </TableCell>
-                                          <TableCell className="text-right">
-                                            {formatAmount(produit.pivot.prix_unitaire)}
-                                          </TableCell>
-                                          <TableCell className="text-right font-semibold">
-                                            {formatAmount(produit.pivot.montant_total)}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
+                          Ce client n'a encore effectué aucun achat
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </ScrollArea>
 

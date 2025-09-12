@@ -253,16 +253,15 @@ supprimerVente: (id) => api.delete(`/ventes/${id}`),
   getClientsAdmin: () => api.get('/clients'),
   getVentes: () =>api.get('/ventes'),
   getProduitsAdmin:()=>api.get('/admin/produits'),
-  async getActivites() {           // ← AJOUTER CETTE MÉTHODE
-    return axios.get("/api/activites"); // adapter selon ton endpoint réel
-  },
+
   getprofile:() =>api.get('/user', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }),
   
-  
+    getRecentActions: ()=> api.get("/recent-actions"),
+    
   updateProfile(data) {
     return api.post('/user/update-profile', data, {
       headers: {
