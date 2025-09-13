@@ -5,9 +5,9 @@ import axios from 'axios';
 // export const PRODUCT_BASE_URL = 'http://127.0.0.1:8000/storage';
 
 // Après (production)
-const API_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/api';
-export const PROFILE_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/images/profiles';
-export const PRODUCT_BASE_URL = 'https://maroon-stingray-625742.hostingersite.com/storage';
+const API_BASE_URL = 'https://back.kam-daay.com/api';
+ export const PROFILE_BASE_URL = 'https://back.kam-daay.com/images/profiles';
+ export const PRODUCT_BASE_URL = 'https://back.kam-daay.com/storage';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -17,7 +17,7 @@ const api = axios.create({
 });
 
 // Ajout automatique du token à chaque requête
-//[====================]
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
